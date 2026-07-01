@@ -24,6 +24,7 @@ import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authentic
 import { Route as AuthenticatedCatalogRouteImport } from './routes/_authenticated/catalog'
 import { Route as AuthenticatedBlogAdminRouteImport } from './routes/_authenticated/blog-admin'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ApiPublicBookingIcalIdRouteImport } from './routes/api/public/booking-ical.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -99,6 +100,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicBookingIcalIdRoute = ApiPublicBookingIcalIdRouteImport.update({
+  id: '/api/public/booking-ical/$id',
+  path: '/api/public/booking-ical/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -115,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/catalog': typeof AuthenticatedCatalogRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -131,6 +138,7 @@ export interface FileRoutesByTo {
   '/catalog': typeof AuthenticatedCatalogRoute
   '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -149,6 +157,7 @@ export interface FileRoutesById {
   '/_authenticated/catalog': typeof AuthenticatedCatalogRoute
   '/_authenticated/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/my-bookings'
     | '/blog/$slug'
+    | '/api/public/booking-ical/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/catalog'
     | '/my-bookings'
     | '/blog/$slug'
+    | '/api/public/booking-ical/$id'
   id:
     | '__root__'
     | '/'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/_authenticated/catalog'
     | '/_authenticated/my-bookings'
     | '/blog/$slug'
+    | '/api/public/booking-ical/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   HowItWorksRoute: typeof HowItWorksRoute
   PricingRoute: typeof PricingRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiPublicBookingIcalIdRoute: typeof ApiPublicBookingIcalIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -322,6 +335,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/booking-ical/$id': {
+      id: '/api/public/booking-ical/$id'
+      path: '/api/public/booking-ical/$id'
+      fullPath: '/api/public/booking-ical/$id'
+      preLoaderRoute: typeof ApiPublicBookingIcalIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -363,6 +383,7 @@ const rootRouteChildren: RootRouteChildren = {
   HowItWorksRoute: HowItWorksRoute,
   PricingRoute: PricingRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiPublicBookingIcalIdRoute: ApiPublicBookingIcalIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

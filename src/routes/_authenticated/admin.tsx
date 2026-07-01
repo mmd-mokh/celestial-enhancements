@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AnalyticsCharts } from "@/components/AnalyticsCharts";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "پنل مدیریت | گیمیو" }, { name: "robots", content: "noindex" }] }),
@@ -65,6 +68,9 @@ function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkStatus, setBulkStatus] = useState<string>("");
+  const [detail, setDetail] = useState<Booking | null>(null);
+  const [detailNotes, setDetailNotes] = useState("");
+  const [savingNotes, setSavingNotes] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -122,6 +128,23 @@ function AdminPage() {
     const { error } = await supabase.from("bookings").delete().eq("id", id);
     if (error) return toast.error(error.message);
     setRows((r) => r.filter((b) => b.id !== id));
+    if (detail?.id === id) setDetail(null);
+  };
+
+  const openDetail = (b: Booking) => {
+    setDetail(b);
+    setDetailNotes(b.notes ?? "");
+  };
+
+  const saveNotes = async () => {
+    if (!detail) return;
+    setSavingNotes(true);
+    const { error } = await supabase.from("bookings").update({ notes: detailNotes || null }).eq("id", detail.id);
+    setSavingNotes(false);
+    if (error) return toast.error(error.message);
+    toast.success("یادداشت ذخیره شد");
+    setRows((r) => r.map((x) => x.id === detail.id ? { ...x, notes: detailNotes || null } : x));
+    setDetail((d) => d ? { ...d, notes: detailNotes || null } : d);
   };
 
   const toggleOne = (id: string) => {
@@ -273,8 +296,8 @@ function AdminPage() {
               </TableHeader>
               <TableBody>
                 {rows.map((b) => (
-                  <TableRow key={b.id} data-state={selected.has(b.id) ? "selected" : undefined}>
-                    <TableCell>
+                  <TableRow key={b.id} data-state={selected.has(b.id) ? "selected" : undefined} className="cursor-pointer" onClick={() => openDetail(b)}>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
                       <Checkbox
                         aria-label={`انتخاب ${b.name}`}
                         checked={selected.has(b.id)}
@@ -290,7 +313,7 @@ function AdminPage() {
                       {b.start_date ? `${b.start_date} → ${b.end_date}` : "—"}
                     </TableCell>
                     <TableCell className="max-w-xs truncate">{b.notes ?? "—"}</TableCell>
-                    <TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
                       <Select value={b.status} onValueChange={(v) => updateStatus(b.id, v)}>
                         <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
                         <SelectContent>
@@ -300,7 +323,7 @@ function AdminPage() {
                         </SelectContent>
                       </Select>
                     </TableCell>
-                    <TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
                       <Button variant="destructive" size="sm" onClick={() => remove(b.id)}>حذف</Button>
                     </TableCell>
                   </TableRow>
@@ -371,6 +394,48 @@ SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
         </Card>
 
       </div>
+
+      <Sheet open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
+        <SheetContent side="left" dir="rtl" className="w-full sm:max-w-md overflow-y-auto">
+          {detail && (
+            <>
+              <SheetHeader>
+                <SheetTitle>جزئیات رزرو</SheetTitle>
+                <SheetDescription dir="ltr" className="font-mono text-xs">{detail.id}</SheetDescription>
+              </SheetHeader>
+              <div className="space-y-4 mt-4 text-sm">
+                <div className="grid grid-cols-2 gap-3">
+                  <div><div className="text-xs text-muted-foreground">نام</div><div>{detail.name}</div></div>
+                  <div><div className="text-xs text-muted-foreground">تلفن</div><div dir="ltr" className="font-mono">{detail.phone}</div></div>
+                  <div><div className="text-xs text-muted-foreground">کنسول</div><div>{detail.console_type ?? "—"}</div></div>
+                  <div><div className="text-xs text-muted-foreground">پکیج</div><div>{detail.package_type ?? "—"}</div></div>
+                  <div><div className="text-xs text-muted-foreground">شروع</div><div dir="ltr">{detail.start_date ?? "—"}</div></div>
+                  <div><div className="text-xs text-muted-foreground">پایان</div><div dir="ltr">{detail.end_date ?? "—"}</div></div>
+                  <div><div className="text-xs text-muted-foreground">وضعیت</div><Badge variant="secondary">{STATUS_LABEL[detail.status] ?? detail.status}</Badge></div>
+                  <div><div className="text-xs text-muted-foreground">ثبت</div><div className="text-xs">{new Date(detail.created_at).toLocaleString("fa-IR")}</div></div>
+                </div>
+                <div className="space-y-2">
+                  <Label>یادداشت</Label>
+                  <Textarea rows={4} value={detailNotes} onChange={(e) => setDetailNotes(e.target.value)} />
+                  <Button size="sm" onClick={saveNotes} disabled={savingNotes}>ذخیره یادداشت</Button>
+                </div>
+                <div className="flex gap-2 pt-2 border-t">
+                  <Button asChild variant="outline" size="sm" className="flex-1">
+                    <a href={`tel:${detail.phone}`}><i className="bi bi-telephone ml-2" />تماس</a>
+                  </Button>
+                  {detail.start_date && (
+                    <Button asChild variant="outline" size="sm" className="flex-1">
+                      <a href={`/api/public/booking-ical/${detail.id}`} download>
+                        <i className="bi bi-calendar-plus ml-2" />iCal
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

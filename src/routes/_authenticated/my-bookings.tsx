@@ -183,7 +183,20 @@ function MyBookingsPage() {
                             <div className="flex gap-2">
                               <Button size="sm" variant="outline" onClick={() => { setRescheduleFor(b); setRange(b.start_date && b.end_date ? { from: new Date(b.start_date), to: new Date(b.end_date) } : undefined); }}>تغییر تاریخ</Button>
                               <Button size="sm" variant="destructive" onClick={() => setCancelId(b.id)}>لغو</Button>
+                              {b.start_date && (
+                                <Button size="sm" variant="ghost" asChild>
+                                  <a href={`/api/public/booking-ical/${b.id}`} download title="افزودن به تقویم">
+                                    <i className="bi bi-calendar-plus" />
+                                  </a>
+                                </Button>
+                              )}
                             </div>
+                          ) : b.start_date ? (
+                            <Button size="sm" variant="ghost" asChild>
+                              <a href={`/api/public/booking-ical/${b.id}`} download title="افزودن به تقویم">
+                                <i className="bi bi-calendar-plus" />
+                              </a>
+                            </Button>
                           ) : <span className="text-xs text-muted-foreground">—</span>}
                         </TableCell>
                       </motion.tr>

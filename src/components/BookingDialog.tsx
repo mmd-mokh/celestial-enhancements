@@ -231,6 +231,8 @@ export function BookingDialog({
       } else if (msg.includes("past_date")) {
         toast.error("تاریخ شروع نمی‌تواند در گذشته باشد.");
         setStep(2);
+      } else if (msg.includes("rate_limited")) {
+        toast.error("تعداد رزروهای اخیر شما زیاد است. لطفاً یک ساعت دیگر تلاش کنید.");
       } else {
         toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
       }
@@ -265,6 +267,13 @@ export function BookingDialog({
                 <div className="text-muted-foreground text-xs mb-1">کد پیگیری</div>
                 <div dir="ltr" className="font-mono text-xs break-all">{reservationId}</div>
               </div>
+            )}
+            {reservationId && (
+              <Button asChild variant="outline" className="w-full">
+                <a href={`/api/public/booking-ical/${reservationId}`} download>
+                  <i className="bi bi-calendar-plus ml-2" /> افزودن به تقویم (.ics)
+                </a>
+              </Button>
             )}
             <Button className="w-full" onClick={close}>بستن</Button>
           </div>
