@@ -18,31 +18,37 @@ export type Database = {
         Row: {
           console_type: string | null
           created_at: string
+          end_date: string | null
           id: string
           name: string
           notes: string | null
           package_type: string | null
           phone: string
+          start_date: string | null
           status: string
         }
         Insert: {
           console_type?: string | null
           created_at?: string
+          end_date?: string | null
           id?: string
           name: string
           notes?: string | null
           package_type?: string | null
           phone: string
+          start_date?: string | null
           status?: string
         }
         Update: {
           console_type?: string | null
           created_at?: string
+          end_date?: string | null
           id?: string
           name?: string
           notes?: string | null
           package_type?: string | null
           phone?: string
+          start_date?: string | null
           status?: string
         }
         Relationships: []
@@ -60,6 +66,7 @@ export type Database = {
           id: string
           image_url: string | null
           name: string
+          quantity: number
           slug: string
           sort_order: number
           tagline: string | null
@@ -77,6 +84,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name: string
+          quantity?: number
           slug: string
           sort_order?: number
           tagline?: string | null
@@ -94,6 +102,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name?: string
+          quantity?: number
           slug?: string
           sort_order?: number
           tagline?: string | null
@@ -211,6 +220,26 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_booking: {
+        Args: {
+          _console_type: string
+          _end_date: string
+          _name: string
+          _notes?: string
+          _package_type: string
+          _phone: string
+          _start_date: string
+        }
+        Returns: string
+      }
+      get_console_availability: {
+        Args: { _console_slug: string; _from: string; _to: string }
+        Returns: {
+          booked: number
+          capacity: number
+          day: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
