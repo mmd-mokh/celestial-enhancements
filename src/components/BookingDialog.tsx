@@ -271,7 +271,7 @@ export function BookingDialog({
             {reservationId && (
               <Button asChild variant="outline" className="w-full">
                 <a href={`/api/public/booking-ical/${reservationId}`} download>
-                  <i className="bi bi-calendar-plus ml-2" /> افزودن به تقویم (.ics)
+                  <CalendarPlus className="h-4 w-4 me-2" /> افزودن به تقویم (.ics)
                 </a>
               </Button>
             )}

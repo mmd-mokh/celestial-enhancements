@@ -21,10 +21,14 @@ export function LandingPage({ scrollTo }: Props) {
 
   useEffect(() => {
     const s = document.createElement("script");
-    s.src = "/gamio.js";
-    s.defer = true;
-    s.dataset.gamio = "1";
-    document.body.appendChild(s);
+    let appended = false;
+    if (!document.querySelector('script[data-gamio="1"]')) {
+      s.src = "/gamio.js";
+      s.defer = true;
+      s.dataset.gamio = "1";
+      document.body.appendChild(s);
+      appended = true;
+    }
 
     const pkgMap: Record<string, string> = {
       "روزانه": "daily",
@@ -57,7 +61,7 @@ export function LandingPage({ scrollTo }: Props) {
     }
     document.addEventListener("click", onClick);
     return () => {
-      s.remove();
+      if (appended) s.remove();
       document.removeEventListener("click", onClick);
     };
   }, []);
@@ -75,7 +79,6 @@ export function LandingPage({ scrollTo }: Props) {
   return (
     <>
       <SiteHeader />
-      <main id="main">
       <div
         className="tw-flex tw-min-h-[100dvh] tw-flex-col tw-bg-white"
         dangerouslySetInnerHTML={{ __html: gamioBody }}
@@ -89,7 +92,6 @@ export function LandingPage({ scrollTo }: Props) {
       <ConsoleCards />
       <FaqAccordion />
       <NewsletterForm />
-      </main>
       <SiteFooter />
       <AccountChip />
       <BookingDialog
