@@ -130,14 +130,20 @@ export function BookingDialog({
     if (!open) return;
     setStep(0);
     setReservationId(null);
-    form.reset({
-      consoleType: defaultConsole ?? form.getValues("consoleType") ?? "ps5",
-      packageType: defaultPackage ?? form.getValues("packageType") ?? "weekend",
-      startDate: undefined as unknown as Date,
-      name: form.getValues("name") ?? "",
-      phone: form.getValues("phone") ?? "",
-      notes: form.getValues("notes") ?? "",
-    });
+    (async () => {
+      const { data: u } = await supabase.auth.getUser();
+      const meta = (u.user?.user_metadata ?? {}) as { full_name?: string; name?: string; phone?: string };
+      const prefillName = form.getValues("name") || meta.full_name || meta.name || "";
+      const prefillPhone = form.getValues("phone") || meta.phone || u.user?.phone || "";
+      form.reset({
+        consoleType: defaultConsole ?? form.getValues("consoleType") ?? "ps5",
+        packageType: defaultPackage ?? form.getValues("packageType") ?? "weekend",
+        startDate: undefined as unknown as Date,
+        name: prefillName,
+        phone: prefillPhone,
+        notes: form.getValues("notes") ?? "",
+      });
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, defaultConsole, defaultPackage]);
 
