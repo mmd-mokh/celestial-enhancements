@@ -120,7 +120,7 @@ function MyBookingsPage() {
   }
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background p-6" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
+    <div dir="rtl" className="min-h-dvh bg-background p-6" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
       <div className="mx-auto max-w-5xl space-y-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
