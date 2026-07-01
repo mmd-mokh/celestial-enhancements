@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+import { AnalyticsCharts } from "@/components/AnalyticsCharts";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "پنل مدیریت | گیمیو" }, { name: "robots", content: "noindex" }] }),
