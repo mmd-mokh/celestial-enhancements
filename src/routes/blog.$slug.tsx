@@ -64,9 +64,9 @@ function PostPage() {
   useEffect(() => {
     // Simple line-break + paragraph rendering (content is plain text/markdown-ish).
     setHtml(
-      post.content
+      (post.content as string)
         .split(/\n{2,}/)
-        .map((para) => `<p>${para.replace(/\n/g, "<br/>")}</p>`)
+        .map((para: string) => `<p>${para.replace(/\n/g, "<br/>")}</p>`)
         .join(""),
     );
   }, [post.content]);
@@ -86,7 +86,7 @@ function PostPage() {
           )}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
-              {post.tags.map((t) => (
+              {(post.tags as string[]).map((t: string) => (
                 <span key={t} className="inline-block text-xs bg-muted px-2 py-1 rounded">{t}</span>
               ))}
             </div>
