@@ -20,6 +20,7 @@ import { CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { addDays, format, differenceInCalendarDays } from "date-fns";
+import { motion } from "framer-motion";
 
 type Props = {
   open: boolean;
@@ -442,7 +443,7 @@ export function BookingDialog({
                       </div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               )}
 
               <DialogFooter className="flex-row-reverse gap-2 sm:justify-between">
