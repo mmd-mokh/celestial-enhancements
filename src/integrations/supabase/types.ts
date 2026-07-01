@@ -26,6 +26,7 @@ export type Database = {
           phone: string
           start_date: string | null
           status: string
+          user_id: string | null
         }
         Insert: {
           console_type?: string | null
@@ -38,6 +39,7 @@ export type Database = {
           phone: string
           start_date?: string | null
           status?: string
+          user_id?: string | null
         }
         Update: {
           console_type?: string | null
@@ -50,6 +52,7 @@ export type Database = {
           phone?: string
           start_date?: string | null
           status?: string
+          user_id?: string | null
         }
         Relationships: []
       }
