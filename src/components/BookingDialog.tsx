@@ -213,7 +213,7 @@ export function BookingDialog({
       _package_type: data.packageType,
       _start_date: format(start, "yyyy-MM-dd"),
       _end_date: format(end, "yyyy-MM-dd"),
-      _notes: data.notes?.trim() || null,
+      _notes: data.notes?.trim() || undefined,
     });
     if (error) {
       console.error(error);
