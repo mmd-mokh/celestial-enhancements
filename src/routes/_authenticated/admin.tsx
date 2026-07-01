@@ -83,6 +83,28 @@ function AdminPage() {
     navigate({ to: "/auth", replace: true });
   };
 
+  const exportCsv = () => {
+    if (rows.length === 0) return;
+    const headers = ["id", "created_at", "name", "phone", "console_type", "package_type", "status", "notes"];
+    const escape = (v: unknown) => {
+      const s = v == null ? "" : String(v);
+      return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const csv = [
+      headers.join(","),
+      ...rows.map((r) => headers.map((h) => escape((r as Record<string, unknown>)[h])).join(",")),
+    ].join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `bookings-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
   if (loading) {
     return <div dir="rtl" className="min-h-screen flex items-center justify-center">در حال بارگذاری…</div>;
   }
@@ -113,6 +135,7 @@ function AdminPage() {
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={load}>بروزرسانی</Button>
+            <Button variant="outline" onClick={exportCsv} disabled={rows.length === 0}>خروجی CSV</Button>
             <Button variant="outline" onClick={signOut}>خروج</Button>
           </div>
         </div>
