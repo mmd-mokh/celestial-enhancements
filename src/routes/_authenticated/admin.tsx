@@ -24,6 +24,24 @@ type Booking = {
   created_at: string;
 };
 
+type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  subject: string | null;
+  message: string;
+  status: string;
+  created_at: string;
+};
+
+const MSG_STATUSES = ["new", "read", "replied"];
+const MSG_STATUS_LABEL: Record<string, string> = {
+  new: "جدید",
+  read: "خوانده شده",
+  replied: "پاسخ داده شده",
+};
+
 const STATUSES = ["new", "contacted", "confirmed", "completed", "cancelled"];
 const STATUS_LABEL: Record<string, string> = {
   new: "جدید",
@@ -38,6 +56,7 @@ function AdminPage() {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [email, setEmail] = useState<string>("");
   const [rows, setRows] = useState<Booking[]>([]);
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,6 +82,25 @@ function AdminPage() {
       .order("created_at", { ascending: false });
     if (error) return toast.error(error.message);
     setRows((data ?? []) as Booking[]);
+    const { data: msgs, error: mErr } = await supabase
+      .from("contact_messages")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (mErr) return toast.error(mErr.message);
+    setMessages((msgs ?? []) as ContactMessage[]);
+  };
+
+  const updateMsgStatus = async (id: string, status: string) => {
+    const { error } = await supabase.from("contact_messages").update({ status }).eq("id", id);
+    if (error) return toast.error(error.message);
+    setMessages((m) => m.map((x) => (x.id === id ? { ...x, status } : x)));
+  };
+
+  const removeMsg = async (id: string) => {
+    if (!confirm("حذف این پیام؟")) return;
+    const { error } = await supabase.from("contact_messages").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    setMessages((m) => m.filter((x) => x.id !== id));
   };
 
   const updateStatus = async (id: string, status: string) => {
