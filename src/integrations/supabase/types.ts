@@ -47,6 +47,45 @@ export type Database = {
         }
         Relationships: []
       }
+      consoles: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          hourly_rate: number | null
+          id: string
+          image_url: string | null
+          name: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          hourly_rate?: number | null
+          id?: string
+          image_url?: string | null
+          name: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          hourly_rate?: number | null
+          id?: string
+          image_url?: string | null
+          name?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string
@@ -79,6 +118,54 @@ export type Database = {
           phone?: string | null
           status?: string
           subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      packages: {
+        Row: {
+          active: boolean
+          badge: string | null
+          created_at: string
+          description: string | null
+          duration_hours: number | null
+          features: Json
+          id: string
+          name: string
+          popular: boolean
+          price: number
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          badge?: string | null
+          created_at?: string
+          description?: string | null
+          duration_hours?: number | null
+          features?: Json
+          id?: string
+          name: string
+          popular?: boolean
+          price: number
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          badge?: string | null
+          created_at?: string
+          description?: string | null
+          duration_hours?: number | null
+          features?: Json
+          id?: string
+          name?: string
+          popular?: boolean
+          price?: number
+          slug?: string
+          sort_order?: number
           updated_at?: string
         }
         Relationships: []
