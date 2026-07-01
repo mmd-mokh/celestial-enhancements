@@ -31,6 +31,11 @@ type ConsoleRow = {
   hourly_rate: number | null;
   sort_order: number;
   active: boolean;
+  tagline: string | null;
+  features: string[];
+  icon: string | null;
+  accent_from: string | null;
+  accent_to: string | null;
 };
 
 type PackageRow = {
@@ -76,6 +81,12 @@ function CatalogPage() {
     if (c.error) return toast.error(c.error.message);
     if (p.error) return toast.error(p.error.message);
     setConsoles((c.data ?? []) as ConsoleRow[]);
+    setConsoles(
+      ((c.data ?? []) as any[]).map((r) => ({
+        ...r,
+        features: Array.isArray(r.features) ? r.features : [],
+      })) as ConsoleRow[],
+    );
     setPackages(
       ((p.data ?? []) as any[]).map((r) => ({
         ...r,
