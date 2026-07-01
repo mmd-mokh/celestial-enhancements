@@ -1,0 +1,1993 @@
+
+        <!-- RGB mesh gradient background (decorative, hidden from assistive tech) -->
+        <div class="mesh-gradient-container" aria-hidden="true">
+            <div class="mesh-orb mesh-orb-1"></div>
+            <div class="mesh-orb mesh-orb-2"></div>
+            <div class="mesh-orb mesh-orb-3"></div>
+            <div class="mesh-orb mesh-orb-4"></div>
+            <div class="mesh-orb mesh-orb-5"></div>
+            <div class="mesh-orb mesh-orb-6"></div>
+        </div>
+
+        <!-- Site header: sticky on scroll, frosted glass after threshold -->
+        <header class="site-header" role="banner" data-site-header>
+            <div class="header-gradient" aria-hidden="true"></div>
+
+            <div class="site-header__inner">
+                <!-- Brand -->
+                <a class="nav-logo" href="" aria-label="گیمیو - صفحه اصلی">
+                    <img
+                        src="/assets/logo/logo1.png"
+                        alt=""
+                        class="nav-logo__img logo-shrink"
+                        width="44"
+                        height="44"
+                    />
+                </a>
+
+                <!-- Primary navigation (desktop) -->
+                <nav
+                    id="primary-navigation"
+                    class="primary-nav"
+                    aria-label="منوی اصلی"
+                >
+                    <ul class="primary-nav__list" role="list">
+                        <li class="primary-nav__item">
+                            <a
+                                class="primary-nav__link header-links"
+                                href="#consoles"
+                                data-nav-link
+                            >
+                                <span>کنسول‌ها</span>
+                            </a>
+                        </li>
+                        <li class="primary-nav__item">
+                            <a
+                                class="primary-nav__link header-links"
+                                href="#how-it-works"
+                                data-nav-link
+                            >
+                                <span>چطور کار می‌کنه؟</span>
+                            </a>
+                        </li>
+                        <li class="primary-nav__item">
+                            <a
+                                class="primary-nav__link header-links"
+                                href="#pricing"
+                                data-nav-link
+                            >
+                                <span>قیمت‌ها</span>
+                            </a>
+                        </li>
+                        <li class="primary-nav__item">
+                            <a
+                                class="primary-nav__link header-links"
+                                href="#faq"
+                                data-nav-link
+                            >
+                                <span>سوالات متداول</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Center cluster: theme toggle at the exact center of the header.
+                     The nav-cta is a separate sibling, positioned absolutely next to it. -->
+                <div class="nav-center">
+                    <button
+                        class="theme-toggle"
+                        id="theme-toggle"
+                        type="button"
+                        aria-label="تغییر به تم تاریک"
+                        title="تغییر تم"
+                    >
+                        <i class="bi bi-sun-fill" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <!-- Nav-CTA: positioned absolutely relative to the header inner,
+                     sitting immediately to the left of the centered toggle. -->
+                <a
+                    href="#pricing"
+                    aria-label="رزرو کنسول"
+                    class="btn btn-enhanced nav-cta"
+                >
+                    <span>همین الان رزرو کن</span>
+                    <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                </a>
+
+                <!-- Action cluster: hamburger (mobile only).
+                     DOM order matters in RTL: first child renders rightmost. -->
+                <div class="nav-actions">
+                    <button
+                        class="nav-hamburger"
+                        id="collapse-btn"
+                        type="button"
+                        aria-label="باز کردن منو"
+                        aria-expanded="false"
+                        aria-controls="mobile-drawer"
+                    >
+                        <i class="bi bi-list" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile drawer (hidden by default; shown < 1024px) -->
+            <div
+                class="mobile-drawer"
+                id="mobile-drawer"
+                data-mobile-drawer
+                aria-hidden="true"
+                hidden
+            >
+                <div class="mobile-drawer__backdrop" data-drawer-close></div>
+                <aside
+                    class="mobile-drawer__panel"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label="منوی موبایل"
+                    tabindex="-1"
+                >
+                    <div class="mobile-drawer__header">
+                        <a
+                            class="nav-logo"
+                            href=""
+                            aria-label="گیمیو - صفحه اصلی"
+                        >
+                            <img
+                                src="/assets/logo/logo1.png"
+                                alt=""
+                                class="nav-logo__img"
+                                width="36"
+                                height="36"
+                            />
+                        </a>
+                        <button
+                            class="mobile-drawer__close"
+                            type="button"
+                            data-drawer-close
+                            aria-label="بستن منو"
+                        >
+                            <i class="bi bi-x-lg" aria-hidden="true"></i>
+                        </button>
+                    </div>
+
+                    <nav aria-label="منوی موبایل">
+                        <ul class="mobile-drawer__list" role="list">
+                            <li>
+                                <a
+                                    class="mobile-drawer__link header-links"
+                                    href="#consoles"
+                                >
+                                    <i
+                                        class="bi bi-controller"
+                                        aria-hidden="true"
+                                    ></i>
+                                    <span>کنسول‌ها</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    class="mobile-drawer__link header-links"
+                                    href="#how-it-works"
+                                >
+                                    <i
+                                        class="bi bi-lightning-charge-fill"
+                                        aria-hidden="true"
+                                    ></i>
+                                    <span>چطور کار می‌کنه؟</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    class="mobile-drawer__link header-links"
+                                    href="#pricing"
+                                >
+                                    <i
+                                        class="bi bi-tag-fill"
+                                        aria-hidden="true"
+                                    ></i>
+                                    <span>قیمت‌ها</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    class="mobile-drawer__link header-links"
+                                    href="#faq"
+                                >
+                                    <i
+                                        class="bi bi-question-circle-fill"
+                                        aria-hidden="true"
+                                    ></i>
+                                    <span>سوالات متداول</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="mobile-drawer__footer">
+                        <a
+                            href="#pricing"
+                            class="btn btn-enhanced mobile-drawer__cta"
+                        >
+                            <span>همین الان رزرو کن</span>
+                            <i class="bi bi-arrow-left" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </aside>
+            </div>
+        </header>
+
+        <main role="main" id="main">
+            <section
+                role="region"
+                aria-labelledby="hero-heading"
+                class="tw-relative tw-flex tw-min-h-[100vh] tw-w-full tw-flex-col tw-overflow-hidden tw-px-6 tw-py-16 md:tw-px-12 lg:tw-px-20 max-md:tw-mt-[50px] tw-bg-white"
+                id="hero"
+            >
+                <div
+                    class="tw-flex tw-h-full tw-min-h-[100vh] tw-w-full tw-flex-col tw-place-content-center tw-gap-6 tw-p-[5%] max-xl:tw-place-items-center"
+                >
+                    <div
+                        class="tw-flex tw-flex-col tw-place-content-center tw-items-center"
+                    >
+                        <h1
+                            id="hero-heading"
+                            class="tw-text-center tw-text-3xl sm:tw-text-4xl md:tw-text-5xl lg:tw-text-6xl tw-font-bold tw-leading-tight sm:tw-leading-snug md:tw-leading-tight"
+                        >
+                            <span class="tw-block"
+                                >تجربه PS و Xbox از امشب،</span
+                            >
+                            <span class="tw-block"
+                                >بدون پرداخت میلیون‌ها تومان</span
+                            >
+                        </h1>
+
+                        <!-- Tagline with distinct badge-like styling -->
+                        <div class="tw-mt-6 tw-flex tw-justify-center">
+                            <span
+                                class="tw-inline-flex tw-items-center tw-gap-2 tw-rounded-full tw-bg-primary-100 tw-px-4 tw-py-2 tw-text-sm tw-font-semibold tw-text-primary-700 tw-border tw-border-primary-200"
+                            >
+                                <i
+                                    class="bi bi-star-fill tw-text-primary-600"
+                                ></i>
+                                گیمیو = دنیای گیمینگ بدون محدودیت مالی
+                            </span>
+                        </div>
+
+                        <p
+                            class="tw-mt-6 tw-max-w-full sm:tw-max-w-[500px] md:tw-max-w-[650px] tw-mx-auto tw-px-4 tw-text-center tw-text-base sm:tw-text-lg tw-leading-relaxed tw-text-gray-700"
+                        >
+                            اجاره کنسول‌های نسل جدید با چند کلیک. انعطاف کامل،
+                            بازی‌های انحصاری، و تحویل سریع به درب منزل.
+                        </p>
+
+                        <div
+                            class="tw-mt-8 tw-flex tw-place-items-center tw-gap-4 tw-overflow-hidden tw-p-2 max-md:tw-flex-col"
+                        >
+                            <!-- Primary CTA - Most prominent -->
+                            <a
+                                class="btn btn-enhanced tw-whitespace-nowrap tw-text-lg tw-px-8 tw-py-4 tw-shadow-lg"
+                                href="#pricing"
+                            >
+                                همین الان رزرو کن
+                            </a>
+                            <!-- Secondary CTA - Outline style -->
+                            <a
+                                class="btn-secondary-enhanced tw-whitespace-nowrap tw-rounded-full tw-border-2 tw-border-primary tw-bg-transparent tw-px-6 tw-py-3 tw-text-base tw-font-semibold tw-text-primary"
+                                href="#pricing"
+                            >
+                                <span>
+                                    <i
+                                        class="bi bi-tag-fill"
+                                        aria-hidden="true"
+                                    ></i>
+                                    مشاهده تعرفه‌ها
+                                </span>
+                            </a>
+                        </div>
+
+                        <div
+                            class="hero-trust-badges reveal"
+                            role="list"
+                            aria-label="مزایای سریع"
+                        >
+                            <span class="hero-trust-badge" role="listitem">
+                                <i class="bi bi-truck" aria-hidden="true"></i>
+                                <span>تحویل رایگان در تهران</span>
+                            </span>
+                            <span class="hero-trust-badge" role="listitem">
+                                <i
+                                    class="bi bi-shield-check"
+                                    aria-hidden="true"
+                                ></i>
+                                <span>بدون نیاز به ضمانت</span>
+                            </span>
+                            <span class="hero-trust-badge" role="listitem">
+                                <i class="bi bi-headset" aria-hidden="true"></i>
+                                <span>پشتیبانی ۲۴/۷</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Trust Badges Section -->
+            <section
+                role="region"
+                aria-labelledby="trust-badges-heading"
+                class="tw-relative tw-flex tw-w-full tw-flex-col tw-place-content-center tw-place-items-center tw-px-6 tw-py-12 md:tw-px-12 lg:tw-px-20 tw-bg-gray-50"
+                id="trust-badges"
+            >
+                <h2 id="trust-badges-heading" class="tw-sr-only">
+                    آمار و اعتماد
+                </h2>
+                <div class="tw-max-w-7xl tw-mx-auto tw-w-full">
+                    <div class="tw-mb-8 tw-text-center">
+                        <p
+                            class="tw-text-lg tw-font-semibold tw-text-gray-800 tw-mb-2"
+                        >
+                            مورد اعتماد هزاران گیمر ایرانی
+                        </p>
+                        <p class="tw-text-sm tw-text-gray-700">
+                            آمار واقعی از عملکرد ما
+                        </p>
+                    </div>
+                    <div
+                        class="tw-flex tw-w-full tw-place-content-center tw-gap-8 md:tw-gap-12 tw-flex-wrap"
+                    >
+                        <!-- Trust Metric 1 -->
+                        <div
+                            class="tw-flex tw-flex-col tw-items-center tw-gap-3 tw-p-4 tw-min-w-[140px] trust-badge"
+                        >
+                            <div
+                                class="tw-w-12 tw-h-12 tw-rounded-full tw-bg-primary-100 tw-flex tw-items-center tw-justify-center"
+                            >
+                                <i
+                                    class="bi bi-people-fill tw-text-2xl tw-text-primary icon-standard"
+                                ></i>
+                            </div>
+                            <div
+                                class="tw-text-4xl tw-font-bold tw-text-primary"
+                            >
+                                +۵۰۰۰
+                            </div>
+                            <div
+                                class="tw-text-sm tw-font-medium tw-text-gray-700"
+                            >
+                                اجاره موفق
+                            </div>
+                        </div>
+                        <!-- Trust Metric 2 -->
+                        <div
+                            class="tw-flex tw-flex-col tw-items-center tw-gap-3 tw-p-4 tw-min-w-[140px] trust-badge"
+                        >
+                            <div
+                                class="tw-w-12 tw-h-12 tw-rounded-full tw-bg-primary-100 tw-flex tw-items-center tw-justify-center"
+                            >
+                                <i
+                                    class="bi bi-star-fill tw-text-2xl tw-text-primary icon-standard"
+                                ></i>
+                            </div>
+                            <div
+                                class="tw-text-4xl tw-font-bold tw-text-primary"
+                            >
+                                ۹۸٪
+                            </div>
+                            <div
+                                class="tw-text-sm tw-font-medium tw-text-gray-700"
+                            >
+                                رضایت مشتریان
+                            </div>
+                        </div>
+                        <!-- Trust Metric 3 -->
+                        <div
+                            class="tw-flex tw-flex-col tw-items-center tw-gap-3 tw-p-4 tw-min-w-[140px] trust-badge"
+                        >
+                            <div
+                                class="tw-w-12 tw-h-12 tw-rounded-full tw-bg-primary-100 tw-flex tw-items-center tw-justify-center"
+                            >
+                                <i
+                                    class="bi bi-headset tw-text-2xl tw-text-primary icon-standard"
+                                ></i>
+                            </div>
+                            <div
+                                class="tw-text-4xl tw-font-bold tw-text-primary"
+                            >
+                                ۲۴/۷
+                            </div>
+                            <div
+                                class="tw-text-sm tw-font-medium tw-text-gray-700"
+                            >
+                                پشتیبانی
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Available Consoles Section -->
+            <section
+                role="region"
+                aria-labelledby="consoles-heading"
+                class="tw-relative tw-flex tw-w-full tw-flex-col tw-place-content-center tw-place-items-center tw-px-6 tw-py-16 md:tw-px-12 lg:tw-px-20 tw-bg-white"
+                id="consoles"
+            >
+                <div class="tw-max-w-7xl tw-mx-auto tw-w-full">
+                    <div
+                        class="tw-mx-auto tw-flex tw-max-w-[850px] tw-flex-col tw-gap-5 tw-text-center"
+                    >
+                        <h2
+                            id="consoles-heading"
+                            class="tw-mt-10 tw-text-center tw-text-4xl tw-font-bold max-lg:tw-text-2xl"
+                        >
+                            <span class="tw-text-primary"
+                                >کنسول‌های نسل جدید</span
+                            >
+                            در دسترست
+                        </h2>
+
+                        <div
+                            class="tw-text-center tw-text-gray-700 tw-text-lg tw-leading-relaxed"
+                        >
+                            دسترسی فوری به قدرتمندترین کنسول‌های بازی دنیا.
+                            <strong>PlayStation 5</strong> با گرافیک خیره‌کننده
+                            و بازی‌های انحصاری مثل God of War و Spider-Man.
+                            <strong>Xbox Series X</strong> با Game Pass نامحدود
+                            و قدرت پردازشی بی‌نظیر.
+                            <strong>Nintendo Switch</strong> برای بازی‌های
+                            خانوادگی و سرگرمی همه‌جا. هر کدوم رو که انتخاب کنی،
+                            دنیای جدیدی از هیجان و ماجراجویی در انتظارته.
+                        </div>
+
+                        <a
+                            href="#pricing"
+                            class="btn-secondary-enhanced tw-mx-auto tw-mt-4 tw-inline-block tw-rounded-full tw-border-2 tw-border-primary tw-bg-transparent tw-px-6 tw-py-3 tw-text-base tw-font-semibold tw-text-primary"
+                        >
+                            همین الان کنسول موردعلاقه‌ات رو انتخاب کن
+                        </a>
+                    </div>
+
+                    <!-- Console Cards Grid -->
+                    <div
+                        class="tw-mt-12 tw-grid tw-grid-cols-1 md:tw-grid-cols-3 tw-gap-6 tw-w-full"
+                        role="list"
+                        aria-label="کنسول‌های موجود"
+                    >
+                        <!-- PS5 Card -->
+                        <article
+                            class="console-card"
+                            role="listitem"
+                            style="
+                                --console-accent-from: #0070d1;
+                                --console-accent-to: #00b4d8;
+                            "
+                        >
+                            <div class="console-card-icon" aria-hidden="true">
+                                <i class="bi bi-playstation"></i>
+                            </div>
+                            <h3 class="console-card-title">PlayStation 5</h3>
+                            <p class="console-card-tagline">
+                                نسل جدید بازی با گرافیک 4K و سرعت فوق‌العاده
+                            </p>
+                            <ul
+                                class="console-card-features"
+                                aria-label="ویژگی‌های PS5"
+                            >
+                                <li class="console-card-feature">
+                                    <i
+                                        class="bi bi-check-circle-fill"
+                                        aria-hidden="true"
+                                    ></i
+                                    ><span>۲ دسته بی‌سیم</span>
+                                </li>
+                                <li class="console-card-feature">
+                                    <i
+                                        class="bi bi-check-circle-fill"
+                                        aria-hidden="true"
+                                    ></i
+                                    ><span>بازی‌های انحصاری</span>
+                                </li>
+                                <li class="console-card-feature">
+                                    <i
+                                        class="bi bi-check-circle-fill"
+                                        aria-hidden="true"
+                                    ></i
+                                    ><span>تحویل رایگان در تهران</span>
+                                </li>
+                            </ul>
+                        </article>
+
+                        <!-- Xbox Card -->
+                        <article
+                            class="console-card"
+                            role="listitem"
+                            style="
+                                --console-accent-from: #107c10;
+                                --console-accent-to: #00b894;
+                            "
+                        >
+                            <div class="console-card-icon" aria-hidden="true">
+                                <i class="bi bi-xbox"></i>
+                            </div>
+                            <h3 class="console-card-title">Xbox Series X</h3>
+                            <p class="console-card-tagline">
+                                قدرتمندترین کنسول با Game Pass نامحدود
+                            </p>
+                            <ul
+                                class="console-card-features"
+                                aria-label="ویژگی‌های Xbox"
+                            >
+                                <li class="console-card-feature">
+                                    <i
+                                        class="bi bi-check-circle-fill"
+                                        aria-hidden="true"
+                                    ></i
+                                    ><span>Game Pass یک ماهه</span>
+                                </li>
+                                <li class="console-card-feature">
+                                    <i
+                                        class="bi bi-check-circle-fill"
+                                        aria-hidden="true"
+                                    ></i
+                                    ><span>سازگاری با نسل قبل</span>
+                                </li>
+                                <li class="console-card-feature">
+                                    <i
+                                        class="bi bi-check-circle-fill"
+                                        aria-hidden="true"
+                                    ></i
+                                    ><span>۴K واقعی با ۱۲۰ فریم</span>
+                                </li>
+                            </ul>
+                        </article>
+
+                        <!-- Nintendo Switch Card -->
+                        <article
+                            class="console-card"
+                            role="listitem"
+                            style="
+                                --console-accent-from: #e60012;
+                                --console-accent-to: #ff6b6b;
+                            "
+                        >
+                            <div class="console-card-icon" aria-hidden="true">
+                                <i class="bi bi-nintendo-switch"></i>
+                            </div>
+                            <h3 class="console-card-title">Nintendo Switch</h3>
+                            <p class="console-card-tagline">
+                                بازی خانوادگی و قابل حمل برای هر جا
+                            </p>
+                            <ul
+                                class="console-card-features"
+                                aria-label="ویژگی‌های Switch"
+                            >
+                                <li class="console-card-feature">
+                                    <i
+                                        class="bi bi-check-circle-fill"
+                                        aria-hidden="true"
+                                    ></i
+                                    ><span>قابل حمل و خانگی</span>
+                                </li>
+                                <li class="console-card-feature">
+                                    <i
+                                        class="bi bi-check-circle-fill"
+                                        aria-hidden="true"
+                                    ></i
+                                    ><span>بازی‌های خانوادگی</span>
+                                </li>
+                                <li class="console-card-feature">
+                                    <i
+                                        class="bi bi-check-circle-fill"
+                                        aria-hidden="true"
+                                    ></i
+                                    ><span>۴ دسته Joy-Con</span>
+                                </li>
+                            </ul>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why Choose Gamio Section -->
+            <section
+                role="region"
+                aria-labelledby="why-choose-heading"
+                class="tw-relative tw-flex tw-w-full tw-flex-col tw-place-content-center tw-place-items-center tw-px-6 tw-py-16 md:tw-px-12 lg:tw-px-20 tw-bg-gray-50"
+                id="why-choose"
+            >
+                <div class="tw-max-w-7xl tw-mx-auto tw-w-full">
+                    <div
+                        class="tw-mt-8 tw-flex tw-flex-col tw-place-items-center tw-gap-5"
+                    >
+                        <div
+                            class="tw-mt-5 tw-flex tw-flex-col tw-gap-3 tw-text-center"
+                        >
+                            <h3
+                                class="tw-text-xl tw-text-primary tw-font-semibold"
+                            >
+                                دسترسی به دنیای گیمینگ حرفه‌ای
+                            </h3>
+                            <h2
+                                id="why-choose-heading"
+                                class="tw-text-2xl md:tw-text-4xl tw-font-bold"
+                            >
+                                چرا گیمیو بهترین انتخابه؟
+                            </h2>
+                        </div>
+                        <div
+                            class="tw-mt-8 tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6 tw-w-full"
+                        >
+                            <!-- Benefit 1 -->
+                            <div
+                                class="card-standard tw-flex tw-flex-col tw-gap-4 tw-text-center"
+                            >
+                                <i
+                                    class="bi bi-piggy-bank-fill tw-text-5xl tw-text-primary icon-standard"
+                                ></i>
+                                <h4
+                                    class="tw-text-lg md:tw-text-xl tw-font-bold"
+                                >
+                                    تجربه کن، نخر - پول‌ات رو ذخیره کن
+                                </h4>
+                                <p class="tw-text-gray-700 tw-leading-relaxed">
+                                    چرا ۳۰ میلیون تومان برای PS5 بدی وقتی
+                                    می‌تونی با کسری از این مبلغ، هر ماه کنسول
+                                    جدیدی رو تجربه کنی؟ با گیمیو، بودجه‌ات رو
+                                    برای بازی‌های بیشتر و تجربه‌های متنوع‌تر نگه
+                                    دار.
+                                </p>
+                            </div>
+
+                            <!-- Benefit 2 -->
+                            <div
+                                class="card-standard tw-flex tw-flex-col tw-gap-4 tw-text-center"
+                            >
+                                <i
+                                    class="bi bi-shuffle tw-text-5xl tw-text-primary icon-standard"
+                                ></i>
+                                <h4
+                                    class="tw-text-lg md:tw-text-xl tw-font-bold"
+                                >
+                                    امروز PS5، فردا Xbox - تو تصمیم می‌گیری
+                                </h4>
+                                <p class="tw-text-gray-700 tw-leading-relaxed">
+                                    دیگه نیازی نیست خودت رو به یک کنسول محدود
+                                    کنی. هر هفته می‌تونی کنسول عوض کنی، بازی‌های
+                                    انحصاری همه پلتفرم‌ها رو تجربه کنی، و همیشه
+                                    با جدیدترین تکنولوژی گیمینگ همراه باشی.
+                                </p>
+                            </div>
+
+                            <!-- Benefit 3 -->
+                            <div
+                                class="card-standard tw-flex tw-flex-col tw-gap-4 tw-text-center"
+                            >
+                                <i
+                                    class="bi bi-shield-check tw-text-5xl tw-text-primary icon-standard"
+                                ></i>
+                                <h4
+                                    class="tw-text-lg md:tw-text-xl tw-font-bold"
+                                >
+                                    فراموش کن نگهداری، آپدیت، و تعمیر
+                                </h4>
+                                <p class="tw-text-gray-700 tw-leading-relaxed">
+                                    ما مراقب همه چیز هستیم. کنسول‌های تمیز و
+                                    کاملاً تست‌شده، پشتیبانی ۲۴/۷، و اگر مشکلی
+                                    پیش اومد فوراً جایگزین می‌کنیم. تو فقط بازی
+                                    کن و لذت ببر.
+                                </p>
+                            </div>
+
+                            <!-- Benefit 4 -->
+                            <div
+                                class="card-standard tw-flex tw-flex-col tw-gap-4 tw-text-center"
+                            >
+                                <i
+                                    class="bi bi-people-fill tw-text-5xl tw-text-primary icon-standard"
+                                ></i>
+                                <h4
+                                    class="tw-text-lg md:tw-text-xl tw-font-bold"
+                                >
+                                    مهمونی، دورهمی، تعطیلات - همیشه آماده
+                                </h4>
+                                <p class="tw-text-gray-700 tw-leading-relaxed">
+                                    جشن تولد داری؟ دوستات میان خونه؟ تعطیلات
+                                    نوروز؟ با اجاره کنسول از گیمیو، هر جمع‌ای رو
+                                    به یه تجربه فراموش‌نشدنی تبدیل کن. سرگرمی
+                                    حرفه‌ای برای همه سنین.
+                                </p>
+                            </div>
+
+                            <!-- Benefit 5 -->
+                            <div
+                                class="card-standard tw-flex tw-flex-col tw-gap-4 tw-text-center"
+                            >
+                                <i
+                                    class="bi bi-check-circle-fill tw-text-5xl tw-text-primary icon-standard"
+                                ></i>
+                                <h4
+                                    class="tw-text-lg md:tw-text-xl tw-font-bold"
+                                >
+                                    مطمئن شو قبل از اینکه سرمایه‌گذاری کنی
+                                </h4>
+                                <p class="tw-text-gray-700 tw-leading-relaxed">
+                                    نمی‌دونی PS5 بگیری یا Xbox؟ نینتندو سوییچ
+                                    واقعاً برات مناسبه؟ با اجاره از گیمیو، اول
+                                    امتحان کن، بعد تصمیم بگیر. ریسک صفر، اطمینان
+                                    صد درصد.
+                                </p>
+                            </div>
+
+                            <!-- Benefit 6 -->
+                            <div
+                                class="card-standard tw-flex tw-flex-col tw-gap-4 tw-text-center"
+                            >
+                                <i
+                                    class="bi bi-truck tw-text-5xl tw-text-primary icon-standard"
+                                ></i>
+                                <h4
+                                    class="tw-text-lg md:tw-text-xl tw-font-bold"
+                                >
+                                    رزرو آنلاین، تحویل درب منزل، بازگشت بدون
+                                    دردسر
+                                </h4>
+                                <p class="tw-text-gray-700 tw-leading-relaxed">
+                                    کافیه آنلاین رزرو کنی، ما کنسول رو با تمام
+                                    لوازم جانبی تحویل می‌دیم. وقتی تموم شد، راحت
+                                    پس می‌دی. هیچ پیچیدگی، هیچ استرسی، فقط بازی
+                                    و لذت.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works Section -->
+            <section
+                class="tw-relative tw-flex tw-w-full tw-flex-col tw-place-content-center tw-place-items-center tw-px-6 tw-py-16 md:tw-px-12 lg:tw-px-20 tw-bg-white"
+                id="how-it-works"
+            >
+                <div
+                    class="tw-max-w-7xl tw-mx-auto tw-w-full tw-flex tw-flex-col tw-place-items-center tw-gap-8"
+                >
+                    <div class="tw-flex tw-flex-col tw-gap-3 tw-text-center">
+                        <h3 class="tw-text-xl tw-text-primary tw-font-semibold">
+                            از رزرو آنلاین تا تحویل درب منزل - همه چی سریع و
+                            راحت
+                        </h3>
+                        <h2 class="tw-text-2xl md:tw-text-4xl tw-font-bold">
+                            اجاره کنسول در ۴ قدم ساده
+                        </h2>
+                    </div>
+
+                    <div
+                        class="tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-8 tw-w-full"
+                    >
+                        <!-- Step 1 -->
+                        <div
+                            class="tw-flex tw-flex-col tw-items-center tw-text-center tw-gap-4"
+                        >
+                            <div
+                                class="step-number tw-w-16 tw-h-16 tw-rounded-full tw-bg-primary tw-flex tw-items-center tw-justify-center tw-text-white tw-text-2xl tw-font-bold"
+                            >
+                                ۱
+                            </div>
+                            <h4 class="tw-text-lg md:tw-text-xl tw-font-bold">
+                                کنسول و بازه زمانی رو انتخاب کن
+                            </h4>
+                            <p class="tw-text-gray-700 tw-leading-relaxed">
+                                از بین PS5، Xbox Series X، یا Nintendo Switch
+                                انتخاب کن. بازه اجاره رو مشخص کن: روزانه، آخر
+                                هفته، هفتگی، یا ماهانه. قیمت رو ببین و ادامه
+                                بده.
+                            </p>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div
+                            class="tw-flex tw-flex-col tw-items-center tw-text-center tw-gap-4"
+                        >
+                            <div
+                                class="step-number tw-w-16 tw-h-16 tw-rounded-full tw-bg-primary tw-flex tw-items-center tw-justify-center tw-text-white tw-text-2xl tw-font-bold"
+                            >
+                                ۲
+                            </div>
+                            <h4 class="tw-text-lg md:tw-text-xl tw-font-bold">
+                                رزرو آنلاین رو تکمیل کن
+                            </h4>
+                            <p class="tw-text-gray-700 tw-leading-relaxed">
+                                فرم ساده رو پر کن، تاریخ تحویل رو انتخاب کن، و
+                                پرداخت امن رو انجام بده. کمتر از ۳ دقیقه طول
+                                می‌کشه. تأییدیه فوری دریافت می‌کنی.
+                            </p>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div
+                            class="tw-flex tw-flex-col tw-items-center tw-text-center tw-gap-4"
+                        >
+                            <div
+                                class="step-number tw-w-16 tw-h-16 tw-rounded-full tw-bg-primary tw-flex tw-items-center tw-justify-center tw-text-white tw-text-2xl tw-font-bold"
+                            >
+                                ۳
+                            </div>
+                            <h4 class="tw-text-lg md:tw-text-xl tw-font-bold">
+                                کنسول رو تحویل بگیر و شروع کن
+                            </h4>
+                            <p class="tw-text-gray-700 tw-leading-relaxed">
+                                کنسول با تمام لوازم (دسته‌ها، کابل‌ها، و راهنما)
+                                به درب منزلت می‌رسه. همه چی آماده و تست‌شده‌ست.
+                                فقط وصل کن و بازی رو شروع کن.
+                            </p>
+                        </div>
+
+                        <!-- Step 4 -->
+                        <div
+                            class="tw-flex tw-flex-col tw-items-center tw-text-center tw-gap-4"
+                        >
+                            <div
+                                class="step-number tw-w-16 tw-h-16 tw-rounded-full tw-bg-primary tw-flex tw-items-center tw-justify-center tw-text-white tw-text-2xl tw-font-bold"
+                            >
+                                ۴
+                            </div>
+                            <h4 class="tw-text-lg md:tw-text-xl tw-font-bold">
+                                لذت ببر و راحت پس بده
+                            </h4>
+                            <p class="tw-text-gray-700 tw-leading-relaxed">
+                                تا آخر مدت اجاره، بازی کن و از کنسول نهایت
+                                استفاده رو ببر. وقتی تموم شد، با یه تماس ساده یا
+                                درخواست آنلاین، کنسول رو پس بده. ما می‌آیم و
+                                تحویل می‌گیریم.
+                            </p>
+                        </div>
+                    </div>
+
+                    <a
+                        href="#pricing"
+                        class="btn-secondary-enhanced tw-mt-8 tw-inline-block tw-rounded-full tw-border-2 tw-border-primary tw-bg-transparent tw-px-6 tw-py-3 tw-text-base tw-font-semibold tw-text-primary"
+                    >
+                        همین الان شروع کن
+                    </a>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section
+                class="tw-flex tw-w-full tw-flex-col tw-place-items-center tw-px-6 tw-py-16 md:tw-px-12 lg:tw-px-20 tw-bg-gray-50"
+                id="testimonials"
+            >
+                <div class="tw-max-w-7xl tw-mx-auto tw-w-full">
+                    <div
+                        class="tw-flex tw-flex-col tw-gap-3 tw-text-center tw-mb-8"
+                    >
+                        <h3 class="tw-text-xl tw-text-primary tw-font-semibold">
+                            تجربه واقعی مشتریان ما
+                        </h3>
+                        <h2 class="tw-text-2xl md:tw-text-4xl tw-font-bold">
+                            گیمرها درباره گیمیو چی می‌گن؟
+                        </h2>
+                    </div>
+                    <!-- Testimonials -->
+                    <div
+                        class="tw-mt-8 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6 tw-w-full"
+                    >
+                        <!-- Testimonial 1: امیرحسین -->
+                        <div
+                            class="testimonial-enhanced tw-flex tw-flex-col tw-rounded-lg tw-p-6 tw-shadow-lg tw-bg-white"
+                        >
+                            <i
+                                class="bi bi-chat-quote-fill testimonial-quote"
+                                aria-hidden="true"
+                            ></i>
+                            <div class="tw-flex tw-place-items-center tw-gap-3">
+                                <div
+                                    class="testimonial-avatar tw-h-[50px] tw-w-[50px] tw-overflow-hidden tw-rounded-full tw-border-[2px] tw-border-solid tw-border-primary"
+                                >
+                                    <img
+                                        src="/assets/images/people/man.jpg"
+                                        class="tw-h-full tw-w-full tw-object-cover"
+                                        alt="امیرحسین"
+                                        width="50"
+                                        height="50"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                <div class="tw-flex tw-flex-col tw-gap-1">
+                                    <div class="tw-font-bold">امیرحسین</div>
+                                    <div class="tw-text-gray-700 tw-text-sm">
+                                        دانشجوی کامپیوتر، ۲۲ سال
+                                    </div>
+                                </div>
+                            </div>
+                            <p
+                                class="tw-mt-4 tw-text-gray-700 tw-leading-relaxed"
+                            >
+                                واقعاً عالی بود! با بودجه محدود دانشجویی
+                                نمی‌تونستم PS5 بخرم، ولی با گیمیو تونستم برای
+                                آخر هفته با دوستام اجاره کنم. کنسول تمیز و سالم
+                                بود، تحویل سر وقت، و قیمتش خیلی منطقی. حتماً
+                                دوباره استفاده می‌کنم. ممنون گیمیو!
+                            </p>
+                        </div>
+
+                        <!-- Testimonial 2: سارا -->
+                        <div
+                            class="testimonial-enhanced tw-flex tw-flex-col tw-rounded-lg tw-p-6 tw-shadow-lg tw-bg-white"
+                        >
+                            <i
+                                class="bi bi-chat-quote-fill testimonial-quote"
+                                aria-hidden="true"
+                            ></i>
+                            <div class="tw-flex tw-place-items-center tw-gap-3">
+                                <div
+                                    class="testimonial-avatar tw-h-[50px] tw-w-[50px] tw-overflow-hidden tw-rounded-full tw-border-[2px] tw-border-solid tw-border-primary"
+                                >
+                                    <img
+                                        src="/assets/images/people/women.jpg"
+                                        class="tw-h-full tw-w-full tw-object-cover"
+                                        alt="سارا"
+                                        width="50"
+                                        height="50"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                <div class="tw-flex tw-flex-col tw-gap-1">
+                                    <div class="tw-font-bold">سارا</div>
+                                    <div class="tw-text-gray-700 tw-text-sm">
+                                        مادر دو فرزند، ۳۵ سال
+                                    </div>
+                                </div>
+                            </div>
+                            <p
+                                class="tw-mt-4 tw-text-gray-700 tw-leading-relaxed"
+                            >
+                                برای تولد پسرم Nintendo Switch اجاره کردم.
+                                بچه‌ها عاشقش شدن! خیلی راحت بود، از سایت رزرو
+                                کردم و همون روز آوردن. پشتیبانی‌شون هم
+                                فوق‌العاده بود و بهم کمک کردن تا نصب کنم. یه
+                                تجربه خانوادگی فوق‌العاده بود. قطعاً برای
+                                مناسبت‌های بعدی هم استفاده می‌کنیم.
+                            </p>
+                        </div>
+
+                        <!-- Testimonial 3: پوریا -->
+                        <div
+                            class="testimonial-enhanced tw-flex tw-flex-col tw-rounded-lg tw-p-6 tw-shadow-lg tw-bg-white"
+                        >
+                            <i
+                                class="bi bi-chat-quote-fill testimonial-quote"
+                                aria-hidden="true"
+                            ></i>
+                            <div class="tw-flex tw-place-items-center tw-gap-3">
+                                <div
+                                    class="testimonial-avatar tw-h-[50px] tw-w-[50px] tw-overflow-hidden tw-rounded-full tw-border-[2px] tw-border-solid tw-border-primary"
+                                >
+                                    <img
+                                        src="/assets/images/people/man2.jpg"
+                                        class="tw-h-full tw-w-full tw-object-cover"
+                                        alt="پوریا"
+                                        width="50"
+                                        height="50"
+                                        loading="lazy"
+                                    />
+                                </div>
+                                <div class="tw-flex tw-flex-col tw-gap-1">
+                                    <div class="tw-font-bold">پوریا</div>
+                                    <div class="tw-text-gray-700 tw-text-sm">
+                                        گیمر حرفه‌ای، ۲۸ سال
+                                    </div>
+                                </div>
+                            </div>
+                            <p
+                                class="tw-mt-4 tw-text-gray-700 tw-leading-relaxed"
+                            >
+                                من قبل از خرید Xbox Series X می‌خواستم ببینم
+                                واقعاً ارزشش رو داره یا نه. یه هفته از گیمیو
+                                اجاره کردم و تمام بازی‌های Game Pass رو تست
+                                کردم. کیفیت کنسول عالی بود، انگار نو بود. الان
+                                مطمئنم که می‌خوام بخرمش. ممنون که این امکان رو
+                                دادین. خدمات حرفه‌ای و قابل اعتماد.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pricing Section -->
+            <section
+                role="region"
+                aria-labelledby="pricing-heading"
+                class="tw-flex tw-w-full tw-flex-col tw-place-items-center tw-px-6 tw-py-16 md:tw-px-12 lg:tw-px-20 tw-bg-white"
+                id="pricing"
+            >
+                <div class="tw-max-w-7xl tw-mx-auto tw-w-full">
+                    <div
+                        class="tw-flex tw-flex-col tw-gap-3 tw-text-center tw-mb-8"
+                    >
+                        <h3 class="tw-text-xl tw-text-primary tw-font-semibold">
+                            بدون هزینه پنهان
+                        </h3>
+                        <h2
+                            id="pricing-heading"
+                            class="tw-text-2xl md:tw-text-4xl tw-font-bold"
+                        >
+                            پکیج‌های اجاره منعطف برای هر نیازی
+                        </h2>
+                        <p
+                            class="tw-text-gray-700 tw-mt-4 tw-max-w-[700px] tw-mx-auto tw-leading-relaxed"
+                        >
+                            قیمت‌گذاری شفاف، بدون هزینه پنهان. هر پکیجی که
+                            انتخاب کنی، شامل کنسول کامل با تمام لوازم جانبی،
+                            پشتیبانی ۲۴/۷، و ضمانت کیفیت می‌شه. هرچه مدت اجاره
+                            بیشتر، صرفه‌جویی بیشتر.
+                        </p>
+                    </div>
+
+                    <div
+                        class="pricing-grid tw-mt-10 tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-6"
+                    >
+                        <!-- Package 1: Daily -->
+                        <div
+                            class="pricing-card-enhanced tw-flex tw-flex-col tw-place-items-center tw-gap-4 tw-rounded-xl tw-p-4 md:tw-p-6 lg:tw-p-8 tw-shadow-lg tw-bg-white"
+                        >
+                            <i
+                                class="bi bi-joystick tw-text-primary tw-text-5xl icon-standard"
+                            ></i>
+                            <h4
+                                class="tw-text-2xl tw-font-bold tw-text-gray-800"
+                            >
+                                اجاره روزانه
+                            </h4>
+                            <p
+                                class="tw-text-center tw-text-gray-700 tw-text-sm"
+                            >
+                                برای تست سریع یا مهمونی یک‌شبه
+                            </p>
+                            <div class="tw-text-center tw-my-2">
+                                <div
+                                    class="tw-text-5xl tw-font-bold tw-text-primary"
+                                >
+                                    ۲۵۰,۰۰۰
+                                </div>
+                                <div
+                                    class="tw-text-gray-700 tw-text-base tw-mt-1"
+                                >
+                                    تومان/روز
+                                </div>
+                            </div>
+                            <hr class="tw-w-full tw-border-gray-200" />
+                            <ul
+                                class="tw-flex tw-flex-col tw-gap-3 tw-text-right tw-w-full tw-text-sm"
+                            >
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >کنسول اورجینال و تست‌شده</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >دو دسته بازی (کنترلر)</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >تمام کابل‌ها و لوازم</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >پشتیبانی ۲۴/۷</span
+                                    >
+                                </li>
+                            </ul>
+                            <a
+                                href="#"
+                                class="btn btn-enhanced tw-mt-4 !tw-w-full"
+                            >
+                                رزرو کن
+                            </a>
+                        </div>
+
+                        <!-- Package 2: Weekend (Featured/Recommended) -->
+                        <div
+                            class="pricing-card-enhanced pricing-card-featured tw-flex tw-flex-col tw-place-items-center tw-gap-4 tw-rounded-xl tw-p-4 md:tw-p-6 lg:tw-p-8 tw-shadow-2xl tw-bg-gradient-to-br tw-from-primary-50 tw-to-white tw-border-[3px] tw-border-primary tw-relative tw-scale-100 lg:tw-scale-105"
+                        >
+                            <span
+                                class="pricing-card-accent-stripe"
+                                aria-hidden="true"
+                            ></span>
+                            <span
+                                class="pricing-card-featured-glow"
+                                aria-hidden="true"
+                            ></span>
+                            <i
+                                class="bi bi-trophy-fill tw-text-primary tw-text-5xl icon-standard"
+                            ></i>
+                            <h4
+                                class="tw-text-2xl tw-font-bold tw-text-gray-800"
+                            >
+                                اجاره آخر هفته
+                            </h4>
+                            <p
+                                class="tw-text-center tw-text-gray-700 tw-text-sm tw-font-semibold"
+                            >
+                                بهترین گزینه برای تعطیلات پرهیجان
+                            </p>
+                            <div class="tw-text-center tw-my-2">
+                                <div
+                                    class="pricing-featured-price tw-text-6xl tw-font-bold tw-text-primary"
+                                >
+                                    ۶۵۰,۰۰۰
+                                </div>
+                                <div
+                                    class="tw-text-gray-700 tw-text-base tw-mt-1"
+                                >
+                                    تومان/آخر هفته
+                                </div>
+                                <div
+                                    class="tw-inline-block tw-text-xs tw-text-white tw-bg-green-600 tw-px-3 tw-py-1 tw-rounded-full tw-font-semibold tw-mt-3"
+                                >
+                                    ۱۳٪ صرفه‌جویی
+                                </div>
+                            </div>
+                            <hr class="tw-w-full tw-border-primary-200" />
+                            <ul
+                                class="tw-flex tw-flex-col tw-gap-3 tw-text-right tw-w-full tw-text-sm"
+                            >
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span
+                                        class="tw-text-gray-700 tw-font-medium"
+                                        >۳ روز بازی بدون وقفه</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span
+                                        class="tw-text-gray-700 tw-font-medium"
+                                        >تحویل و بازگشت رایگان</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span
+                                        class="tw-text-gray-700 tw-font-medium"
+                                        >بیمه کامل دستگاه</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span
+                                        class="tw-text-gray-700 tw-font-medium"
+                                        >امکان تمدید آسان</span
+                                    >
+                                </li>
+                            </ul>
+                            <a
+                                href="#"
+                                class="btn btn-enhanced tw-mt-4 !tw-w-full !tw-shadow-lg"
+                            >
+                                رزرو کن
+                            </a>
+                        </div>
+
+                        <!-- Package 3: Weekly -->
+                        <div
+                            class="pricing-card-enhanced tw-flex tw-flex-col tw-place-items-center tw-gap-4 tw-rounded-xl tw-p-4 md:tw-p-6 lg:tw-p-8 tw-shadow-lg tw-bg-white"
+                        >
+                            <i
+                                class="bi bi-clock-history tw-text-primary tw-text-5xl icon-standard"
+                            ></i>
+                            <h4
+                                class="tw-text-2xl tw-font-bold tw-text-gray-800"
+                            >
+                                اجاره هفتگی
+                            </h4>
+                            <p
+                                class="tw-text-center tw-text-gray-700 tw-text-sm"
+                            >
+                                یک هفته کامل، تجربه کامل
+                            </p>
+                            <div class="tw-text-center tw-my-2">
+                                <div
+                                    class="tw-text-5xl tw-font-bold tw-text-primary"
+                                >
+                                    ۱,۴۰۰,۰۰۰
+                                </div>
+                                <div
+                                    class="tw-text-gray-700 tw-text-base tw-mt-1"
+                                >
+                                    تومان/هفته
+                                </div>
+                                <div
+                                    class="tw-inline-block tw-text-xs tw-text-white tw-bg-green-600 tw-px-3 tw-py-1 tw-rounded-full tw-font-semibold tw-mt-3"
+                                >
+                                    ۲۰٪ صرفه‌جویی
+                                </div>
+                            </div>
+                            <hr class="tw-w-full tw-border-gray-200" />
+                            <ul
+                                class="tw-flex tw-flex-col tw-gap-3 tw-text-right tw-w-full tw-text-sm"
+                            >
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >۷ روز فرصت کامل</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >بهترین ارزش در مقابل قیمت</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >تخفیف ویژه نسبت به روزانه</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >پشتیبانی اختصاصی</span
+                                    >
+                                </li>
+                            </ul>
+                            <a
+                                href="#"
+                                class="btn btn-enhanced tw-mt-4 !tw-w-full"
+                            >
+                                رزرو کن
+                            </a>
+                        </div>
+
+                        <!-- Package 4: Monthly -->
+                        <div
+                            class="pricing-card-enhanced tw-flex tw-flex-col tw-place-items-center tw-gap-4 tw-rounded-xl tw-p-4 md:tw-p-6 lg:tw-p-8 tw-shadow-lg tw-bg-white"
+                        >
+                            <i
+                                class="bi bi-calendar-week tw-text-primary tw-text-5xl icon-standard"
+                            ></i>
+                            <h4
+                                class="tw-text-2xl tw-font-bold tw-text-gray-800"
+                            >
+                                اجاره ماهانه
+                            </h4>
+                            <p
+                                class="tw-text-center tw-text-gray-700 tw-text-sm"
+                            >
+                                برای گیمرهای حرفه‌ای و علاقه‌مندان جدی
+                            </p>
+                            <div class="tw-text-center tw-my-2">
+                                <div
+                                    class="tw-text-5xl tw-font-bold tw-text-primary"
+                                >
+                                    ۴,۵۰۰,۰۰۰
+                                </div>
+                                <div
+                                    class="tw-text-gray-700 tw-text-base tw-mt-1"
+                                >
+                                    تومان/ماه
+                                </div>
+                                <div
+                                    class="tw-inline-block tw-text-xs tw-text-white tw-bg-green-600 tw-px-3 tw-py-1 tw-rounded-full tw-font-semibold tw-mt-3"
+                                >
+                                    ۴۰٪ صرفه‌جویی
+                                </div>
+                            </div>
+                            <hr class="tw-w-full tw-border-gray-200" />
+                            <ul
+                                class="tw-flex tw-flex-col tw-gap-3 tw-text-right tw-w-full tw-text-sm"
+                            >
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >یک ماه کامل با کنسول</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >بیشترین صرفه‌جویی</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >انعطاف کامل در تمدید</span
+                                    >
+                                </li>
+                                <li class="tw-flex tw-items-start tw-gap-2">
+                                    <i
+                                        class="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base"
+                                    ></i>
+                                    <span class="tw-text-gray-700"
+                                        >پشتیبانی اختصاصی</span
+                                    >
+                                </li>
+                            </ul>
+                            <a
+                                href="#"
+                                class="btn btn-enhanced tw-mt-4 !tw-w-full"
+                            >
+                                رزرو کن
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FAQ Section -->
+            <section
+                role="region"
+                aria-labelledby="faq-heading"
+                class="tw-flex tw-w-full tw-flex-col tw-place-items-center tw-px-6 tw-py-16 md:tw-px-12 lg:tw-px-20 tw-bg-gray-50"
+                id="faq"
+            >
+                <div class="tw-max-w-7xl tw-mx-auto tw-w-full">
+                    <div
+                        class="tw-flex tw-flex-col tw-gap-3 tw-text-center tw-mb-12"
+                    >
+                        <h3 class="tw-text-xl tw-text-primary tw-font-semibold">
+                            پاسخ سوالاتی که ممکنه داشته باشی
+                        </h3>
+                        <h2
+                            id="faq-heading"
+                            class="tw-text-2xl md:tw-text-4xl tw-font-bold"
+                        >
+                            سوالات متداول
+                        </h2>
+                    </div>
+
+                    <div
+                        class="tw-max-w-4xl tw-mx-auto tw-w-full tw-flex tw-flex-col tw-gap-4"
+                    >
+                        <!-- FAQ 1 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span>چطور می‌تونم کنسول رزرو کنم؟</span>
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        خیلی سادست! از صفحه اصلی سایت، کنسول
+                                        موردنظرت رو انتخاب کن، بازه زمانی رو
+                                        مشخص کن، و فرم رزرو رو پر کن. بعد از
+                                        پرداخت آنلاین، تأییدیه فوری دریافت
+                                        می‌کنی. کل فرآیند کمتر از ۳ دقیقه طول
+                                        می‌کشه.
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- FAQ 2 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span>چه روش‌های پرداختی قبول می‌کنید؟</span>
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        تمام کارت‌های بانکی عضو شتاب، پرداخت
+                                        اینترنتی، و کیف پول‌های دیجیتال رو قبول
+                                        می‌کنیم. پرداخت کاملاً امن و از طریق
+                                        درگاه بانکی معتبر انجام می‌شه. همچنین
+                                        امکان پرداخت در محل هم وجود داره.
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- FAQ 3 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span>کنسول چطور تحویل داده می‌شه؟</span>
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        در تهران و حومه، تحویل درب منزل رایگانه
+                                        و توسط پیک ما انجام می‌شه. برای
+                                        شهرستان‌ها، از طریق پست پیشتاز یا باربری
+                                        معتبر ارسال می‌کنیم (هزینه ارسال جداگانه
+                                        محاسبه می‌شه). زمان تحویل رو خودت انتخاب
+                                        می‌کنی.
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- FAQ 4 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span
+                                    >اگه کنسول خراب بشه یا مشکلی پیش بیاد
+                                    چی؟</span
+                                >
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        نگران نباش! تمام کنسول‌ها قبل از تحویل
+                                        کاملاً تست می‌شن و بیمه دارن. اگه مشکل
+                                        فنی پیش اومد که خطای شما نباشه، فوراً
+                                        جایگزین می‌کنیم یا تعمیر می‌کنیم بدون
+                                        هیچ هزینه اضافی. پشتیبانی ۲۴/۷ ما همیشه
+                                        در دسترسه.
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- FAQ 5 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span>آیا باید ودیعه یا سپرده بذارم؟</span>
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        بله، برای اطمینان از بازگشت سالم کنسول،
+                                        یک مبلغ ودیعه قابل برگشت دریافت می‌کنیم
+                                        که بعد از تحویل کنسول در شرایط سالم،
+                                        کاملاً بهت برمی‌گردونیم. مبلغ ودیعه بسته
+                                        به نوع کنسول متفاوته و در زمان رزرو بهت
+                                        اطلاع داده می‌شه.
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- FAQ 6 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span>می‌تونم مدت اجاره رو تمدید کنم؟</span>
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        قطعاً! اگه می‌خوای بیشتر از کنسول
+                                        استفاده کنی، کافیه قبل از پایان مدت
+                                        اجاره، از طریق سایت یا تماس با پشتیبانی،
+                                        درخواست تمدید بدی. اگه کنسول رزرو بعدی
+                                        نداشته باشه، راحت تمدید می‌شه.
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- FAQ 7 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span>بازی‌ها هم همراه کنسول میاد؟</span>
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        کنسول‌ها با چند بازی پیش‌نصب و دمو میان،
+                                        ولی برای بازی‌های خاص، می‌تونی از
+                                        پکیج‌های اضافه ما استفاده کنی یا
+                                        بازی‌های دیجیتال رو از استور خودت دانلود
+                                        کنی. همچنین امکان اجاره دیسک بازی‌های
+                                        فیزیکی هم وجود داره.
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- FAQ 8 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span
+                                    >اگه زودتر از موعد کنسول رو پس بدم، پول
+                                    برمی‌گرده؟</span
+                                >
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        متأسفانه برای بازگشت زودتر، استرداد وجه
+                                        نداریم، ولی می‌تونی کنسول رو نگه داری تا
+                                        آخر مدت اجاره. البته اگه شرایط خاصی
+                                        داری، با پشتیبانی تماس بگیر تا بهترین
+                                        راه‌حل رو پیدا کنیم.
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- FAQ 9 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span>پشتیبانی شما چطوریه؟</span>
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        تیم پشتیبانی ما ۲۴ ساعته، ۷ روز هفته در
+                                        دسترسه. از طریق تلفن، واتساپ، تلگرام، یا
+                                        چت آنلاین سایت می‌تونی باهامون در تماس
+                                        باشی. سعی می‌کنیم در کمترین زمان ممکن به
+                                        سوالات و مشکلات پاسخ بدیم.
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+
+                        <!-- FAQ 10 -->
+                        <details
+                            class="faq-enhanced tw-group tw-bg-white tw-rounded-lg tw-shadow-md tw-p-6 tw-border tw-border-transparent"
+                        >
+                            <summary
+                                class="tw-cursor-pointer tw-font-bold tw-text-lg tw-flex tw-justify-between tw-items-center tw-gap-4 tw-text-gray-800 hover:tw-text-primary tw-transition-colors"
+                            >
+                                <span>در چه شهرهایی خدمات ارائه می‌دید؟</span>
+                                <i
+                                    class="bi bi-chevron-down faq-chevron tw-text-primary tw-text-xl group-open:tw-rotate-180 tw-transition-transform tw-duration-300 tw-flex-shrink-0"
+                                ></i>
+                            </summary>
+                            <div class="faq-content">
+                                <div>
+                                    <p
+                                        class="tw-text-gray-700 tw-leading-relaxed"
+                                    >
+                                        در حال حاضر خدمات کامل ما (تحویل درب
+                                        منزل رایگان) در تهران و کرج فعاله. برای
+                                        سایر شهرهای بزرگ مثل اصفهان، مشهد،
+                                        شیراز، و تبریز هم ارسال داریم ولی با
+                                        هزینه پست. داریم به شهرهای بیشتری گسترش
+                                        می‌دیم!
+                                    </p>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+
+                    <div class="tw-mt-12 tw-text-center">
+                        <p class="tw-text-gray-700 tw-mb-4">
+                            سوال دیگه‌ای داری؟
+                        </p>
+                        <a
+                            href="#"
+                            class="btn-secondary-enhanced tw-inline-block tw-rounded-full tw-border-2 tw-border-primary tw-bg-transparent tw-px-6 tw-py-3 tw-text-base tw-font-semibold tw-text-primary"
+                        >
+                            با پشتیبانی تماس بگیر
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Final CTA Section -->
+            <section
+                role="region"
+                aria-labelledby="final-cta-heading"
+                class="tw-flex tw-w-full tw-flex-col tw-place-content-center tw-place-items-center tw-gap-6 tw-px-6 tw-py-20 md:tw-px-12 lg:tw-px-20 tw-bg-gradient-to-r tw-from-purple-600 tw-to-blue-600 tw-text-white"
+            >
+                <div
+                    class="tw-max-w-7xl tw-mx-auto tw-w-full tw-flex tw-flex-col tw-items-center tw-gap-6"
+                >
+                    <h2
+                        id="final-cta-heading"
+                        class="tw-text-4xl md:tw-text-5xl tw-font-bold tw-text-center"
+                    >
+                        آماده‌ای دنیای گیمینگ رو بدون محدودیت تجربه کنی؟
+                    </h2>
+                    <p
+                        class="tw-text-lg md:tw-text-xl tw-text-center tw-max-w-3xl tw-leading-relaxed"
+                    >
+                        هزاران گیمر ایرانی الان دارن با گیمیو، بهترین کنسول‌های
+                        دنیا رو بدون نگرانی مالی تجربه می‌کنن. نوبت توئه که به
+                        این جمع بپیوندی. دیگه وقتشه که محدودیت‌های مالی جلوی لذت
+                        بازی‌کردنت رو نگیره. همین الان شروع کن!
+                    </p>
+                    <a
+                        href="#pricing"
+                        class="btn-secondary-enhanced tw-inline-block tw-rounded-full tw-bg-white tw-text-primary tw-text-lg md:tw-text-xl tw-px-8 tw-py-4 tw-font-bold tw-shadow-lg"
+                    >
+                        الان کنسولت رو رزرو کن
+                    </a>
+                    <div
+                        class="tw-flex tw-flex-wrap tw-justify-center tw-gap-6 md:tw-gap-8 tw-mt-6 tw-text-sm md:tw-text-base"
+                    >
+                        <div class="tw-flex tw-items-center tw-gap-2">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>بیش از ۵۰۰۰ اجاره موفق</span>
+                        </div>
+                        <div class="tw-flex tw-items-center tw-gap-2">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>رضایت ۹۸٪ مشتریان</span>
+                        </div>
+                        <div class="tw-flex tw-items-center tw-gap-2">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>پشتیبانی ۲۴/۷</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Newsletter Section -->
+            <section
+                role="region"
+                aria-labelledby="newsletter-heading"
+                class="tw-flex tw-w-full tw-flex-col tw-place-content-center tw-place-items-center tw-px-6 tw-py-16 md:tw-px-12 lg:tw-px-20 tw-bg-white"
+            >
+                <div class="tw-max-w-7xl tw-mx-auto tw-w-full">
+                    <div
+                        class="tw-flex tw-w-full tw-flex-col tw-place-content-center tw-place-items-center tw-gap-3"
+                    >
+                        <h2
+                            id="newsletter-heading"
+                            class="tw-text-2xl md:tw-text-3xl tw-text-primary tw-font-bold tw-text-center"
+                        >
+                            عضویت در خبرنامه
+                        </h2>
+                        <p
+                            class="tw-text-base md:tw-text-lg tw-text-center tw-text-gray-700 tw-max-w-2xl"
+                        >
+                            از جدیدترین کنسول‌ها، تخفیف‌های ویژه، و اخبار دنیای
+                            گیمینگ باخبر شو!
+                        </p>
+
+                        <form
+                            class="tw-flex tw-flex-col tw-w-full tw-max-w-md tw-gap-4 tw-mt-6"
+                            id="newsletter-form"
+                            novalidate
+                        >
+                            <div class="tw-flex tw-flex-col tw-gap-2">
+                                <label
+                                    for="newsletter-email"
+                                    class="tw-text-sm tw-font-semibold tw-text-gray-700 tw-text-right"
+                                >
+                                    آدرس ایمیل شما
+                                </label>
+                                <input
+                                    type="email"
+                                    id="newsletter-email"
+                                    name="email"
+                                    class="input newsletter-input tw-w-full tw-h-12 tw-px-4 tw-outline-none tw-border-2 tw-border-gray-300 focus:tw-border-primary tw-rounded-lg tw-transition-colors"
+                                    placeholder="example@email.com"
+                                    required
+                                    aria-required="true"
+                                    aria-label="ایمیل برای خبرنامه"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                class="btn-secondary-enhanced tw-w-full tw-h-12 tw-px-6 tw-rounded-full tw-border-2 tw-border-primary tw-bg-transparent tw-font-semibold tw-text-primary"
+                            >
+                                عضویت در خبرنامه
+                            </button>
+                            <p
+                                class="tw-text-xs tw-text-gray-700 tw-text-center tw-leading-relaxed"
+                            >
+                                با عضویت در خبرنامه، شما
+                                <a
+                                    href="#"
+                                    class="tw-text-primary tw-underline hover:tw-text-primary-700"
+                                    aria-label="مشاهده شرایط و قوانین"
+                                    >شرایط و قوانین</a
+                                >
+                                و
+                                <a
+                                    href="#"
+                                    class="tw-text-primary tw-underline hover:tw-text-primary-700"
+                                    aria-label="مشاهده حریم خصوصی"
+                                    >حریم خصوصی</a
+                                >
+                                ما را می‌پذیرید.
+                            </p>
+                        </form>
+                        <div
+                            id="newsletter-message"
+                            class="tw-text-sm tw-mt-2 tw-hidden tw-font-semibold"
+                            aria-live="polite"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer
+            role="contentinfo"
+            class="tw-flex tw-w-full tw-px-6 tw-py-16 md:tw-px-12 lg:tw-px-20 tw-text-black tw-bg-gray-50"
+        >
+            <div
+                class="tw-max-w-7xl tw-mx-auto tw-w-full tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-4 tw-gap-8"
+            >
+                <!-- About Section -->
+                <div class="tw-flex tw-flex-col tw-gap-4">
+                    <img
+                        src="/assets/logo/logo1.png"
+                        alt="گیمیو - اجاره کنسول بازی"
+                        class="tw-max-w-[120px]"
+                        width="120"
+                        height="120"
+                        loading="lazy"
+                    />
+                    <p class="tw-text-gray-700 tw-leading-relaxed tw-text-sm">
+                        گیمیو اولین و بزرگ‌ترین سرویس اجاره کنسول بازی در
+                        ایرانه. ما با هدف دموکراتیک‌کردن دسترسی به دنیای گیمینگ،
+                        امکان اجاره کنسول‌های نسل جدید رو با قیمت مناسب و کیفیت
+                        بالا فراهم کردیم.
+                    </p>
+                    <div
+                        class="tw-flex tw-flex-col tw-gap-2 tw-text-sm tw-text-gray-700"
+                    >
+                        <div class="tw-flex tw-items-center tw-gap-2">
+                            <i class="bi bi-geo-alt-fill tw-text-primary"></i>
+                            <span>تهران، ایران</span>
+                        </div>
+                        <div class="tw-flex tw-items-center tw-gap-2">
+                            <i class="bi bi-telephone-fill tw-text-primary"></i>
+                            <span class="placeholder-text" dir="ltr"
+                                >۰۲۱-XXXX-XXXX</span
+                            >
+                            <span
+                                class="placeholder-tag"
+                                title="این اطلاعات نمونه است"
+                            >
+                                <i
+                                    class="bi bi-info-circle"
+                                    aria-hidden="true"
+                                ></i>
+                                <span>نمونه</span>
+                            </span>
+                        </div>
+                        <div class="tw-flex tw-items-center tw-gap-2">
+                            <i class="bi bi-envelope-fill tw-text-primary"></i>
+                            <span class="placeholder-text" dir="ltr"
+                                >info@gamio.ir</span
+                            >
+                            <span
+                                class="placeholder-tag"
+                                title="این اطلاعات نمونه است"
+                            >
+                                <i
+                                    class="bi bi-info-circle"
+                                    aria-hidden="true"
+                                ></i>
+                                <span>نمونه</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="tw-flex tw-flex-col tw-gap-4">
+                    <h4 class="tw-text-xl tw-font-bold">دسترسی سریع</h4>
+                    <div class="tw-flex tw-flex-col tw-gap-3 tw-text-sm">
+                        <a href="#consoles" class="footer-link link-enhanced"
+                            >کنسول‌های موجود</a
+                        >
+                        <a href="#pricing" class="footer-link link-enhanced"
+                            >پکیج‌های اجاره</a
+                        >
+                        <a
+                            href="#how-it-works"
+                            class="footer-link link-enhanced"
+                            >چطور کار می‌کنه؟</a
+                        >
+                        <a href="#faq" class="footer-link link-enhanced"
+                            >سوالات متداول</a
+                        >
+                        <a href="#" class="footer-link link-enhanced"
+                            >درباره ما</a
+                        >
+                        <a href="#" class="footer-link link-enhanced"
+                            >تماس با ما</a
+                        >
+                    </div>
+                </div>
+
+                <!-- Legal Links -->
+                <div class="tw-flex tw-flex-col tw-gap-4">
+                    <h4 class="tw-text-xl tw-font-bold">قوانین و مقررات</h4>
+                    <div class="tw-flex tw-flex-col tw-gap-3 tw-text-sm">
+                        <a href="#" class="footer-link link-enhanced"
+                            >شرایط استفاده</a
+                        >
+                        <a href="#" class="footer-link link-enhanced"
+                            >حریم خصوصی</a
+                        >
+                        <a href="#" class="footer-link link-enhanced"
+                            >قوانین اجاره</a
+                        >
+                        <a href="#" class="footer-link link-enhanced"
+                            >سیاست بازگشت</a
+                        >
+                        <a href="#" class="footer-link link-enhanced">وبلاگ</a>
+                    </div>
+                </div>
+
+                <!-- Social Media -->
+                <div class="tw-flex tw-flex-col tw-gap-4">
+                    <h4
+                        class="tw-text-xl tw-font-bold tw-flex tw-items-center tw-gap-2"
+                    >
+                        <span>ما را دنبال کنید</span>
+                        <span
+                            class="placeholder-tag"
+                            title="این لینک‌ها نمونه هستند"
+                        >
+                            <i class="bi bi-info-circle" aria-hidden="true"></i>
+                            <span>نمونه</span>
+                        </span>
+                    </h4>
+                    <div class="tw-flex tw-flex-col tw-gap-3 tw-text-sm">
+                        <a
+                            href="https://instagram.com/gamio.ir"
+                            class="footer-link link-enhanced tw-flex tw-items-center tw-gap-2"
+                            aria-label="اینستاگرام"
+                        >
+                            <i
+                                class="bi bi-instagram tw-text-xl icon-standard"
+                            ></i>
+                            <span>اینستاگرام</span>
+                        </a>
+                        <a
+                            href="https://t.me/gamioofficial"
+                            class="footer-link link-enhanced tw-flex tw-items-center tw-gap-2"
+                            aria-label="تلگرام"
+                        >
+                            <i
+                                class="bi bi-telegram tw-text-xl icon-standard"
+                            ></i>
+                            <span>تلگرام</span>
+                        </a>
+                        <a
+                            href="https://twitter.com/gamio_ir"
+                            class="footer-link link-enhanced tw-flex tw-items-center tw-gap-2"
+                            aria-label="توییتر"
+                        >
+                            <i
+                                class="bi bi-twitter tw-text-xl icon-standard"
+                            ></i>
+                            <span>توییتر</span>
+                        </a>
+                        <a
+                            href="https://youtube.com/@gamioiran"
+                            class="footer-link link-enhanced tw-flex tw-items-center tw-gap-2"
+                            aria-label="یوتیوب"
+                        >
+                            <i
+                                class="bi bi-youtube tw-text-xl icon-standard"
+                            ></i>
+                            <span>یوتیوب</span>
+                        </a>
+                    </div>
+                    <div class="tw-mt-4 tw-text-sm tw-text-gray-700">
+                        <p class="tw-font-semibold tw-mb-2">ساعات پاسخگویی:</p>
+                        <p>۲۴ ساعته، ۷ روز هفته</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Copyright -->
+        <div
+            class="tw-w-full tw-bg-gray-800 tw-text-white tw-text-center tw-py-4 tw-text-sm"
+        >
+            <p>© ۱۴۰۳ گیمیو. تمامی حقوق محفوظ است.</p>
+            <p class="tw-mt-1 tw-text-gray-400">
+                طراحی و توسعه با ❤️ برای گیمرهای ایرانی
+            </p>
+        </div>
+    

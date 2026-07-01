@@ -1,24 +1,27 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
+import gamioBody from "../gamio-body.html?raw";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  useEffect(() => {
+    const s = document.createElement("script");
+    s.src = "/gamio.js";
+    s.defer = true;
+    s.dataset.gamio = "1";
+    document.body.appendChild(s);
+    return () => {
+      s.remove();
+    };
+  }, []);
+
   return (
     <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+      className="tw-flex tw-min-h-[100vh] tw-flex-col tw-bg-white"
+      dangerouslySetInnerHTML={{ __html: gamioBody }}
+    />
   );
 }
