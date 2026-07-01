@@ -268,6 +268,13 @@ export function BookingDialog({
                 <div dir="ltr" className="font-mono text-xs break-all">{reservationId}</div>
               </div>
             )}
+            {reservationId && (
+              <Button asChild variant="outline" className="w-full">
+                <a href={`/api/public/booking-ical/${reservationId}`} download>
+                  <i className="bi bi-calendar-plus ml-2" /> افزودن به تقویم (.ics)
+                </a>
+              </Button>
+            )}
             <Button className="w-full" onClick={close}>بستن</Button>
           </div>
         ) : (
