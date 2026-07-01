@@ -27,15 +27,25 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const goByRole = async () => {
+    const { data: u } = await supabase.auth.getUser();
+    if (!u.user) return;
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: u.user.id,
+      _role: "admin",
+    });
+    navigate({ to: isAdmin ? "/admin" : "/my-bookings", replace: true });
+  };
+
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/admin", replace: true });
+      if (data.user) goByRole();
     });
-  }, [navigate]);
+  }, []);
 
   const afterAuth = async () => {
     await router.invalidate();
-    navigate({ to: "/admin", replace: true });
+    await goByRole();
   };
 
   const signIn = async (e: React.FormEvent) => {
@@ -54,7 +64,7 @@ function AuthPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: window.location.origin + "/admin" },
+        options: { emailRedirectTo: window.location.origin + "/my-bookings" },
     });
     setLoading(false);
     if (error) return toast.error(error.message);
