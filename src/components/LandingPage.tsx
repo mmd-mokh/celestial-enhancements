@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import gamioBody from "../gamio-body.html?raw";
 import { BookingDialog } from "@/components/BookingDialog";
+import { PricingCards } from "@/components/PricingCards";
 import { Toaster } from "@/components/ui/sonner";
 
 type Props = {
@@ -37,9 +38,13 @@ export function LandingPage({ scrollTo }: Props) {
       const card = btn.closest<HTMLElement>(".pricing-card-enhanced, [data-package]");
       let pkg: string | undefined;
       if (card) {
-        const heading = card.querySelector("h3, h4, .pricing-card-title");
-        const label = heading?.textContent?.trim();
-        if (label && pkgMap[label]) pkg = pkgMap[label];
+        const slug = card.getAttribute("data-package");
+        if (slug) pkg = slug;
+        else {
+          const heading = card.querySelector("h3, h4, .pricing-card-title");
+          const label = heading?.textContent?.trim();
+          if (label && pkgMap[label]) pkg = pkgMap[label];
+        }
       }
       setDefaultPackage(pkg);
       setBookingOpen(true);
@@ -66,6 +71,12 @@ export function LandingPage({ scrollTo }: Props) {
       <div
         className="tw-flex tw-min-h-[100vh] tw-flex-col tw-bg-white"
         dangerouslySetInnerHTML={{ __html: gamioBody }}
+      />
+      <PricingCards
+        onReserve={(slug) => {
+          setDefaultPackage(slug);
+          setBookingOpen(true);
+        }}
       />
       <BookingDialog
         open={bookingOpen}
