@@ -80,7 +80,6 @@ function CatalogPage() {
     ]);
     if (c.error) return toast.error(c.error.message);
     if (p.error) return toast.error(p.error.message);
-    setConsoles((c.data ?? []) as ConsoleRow[]);
     setConsoles(
       ((c.data ?? []) as any[]).map((r) => ({
         ...r,
