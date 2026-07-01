@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
+import { motion } from "framer-motion";
 
 export function AccountChip() {
   const [email, setEmail] = useState<string | null>(null);
@@ -17,14 +18,18 @@ export function AccountChip() {
   const label = email ? "رزروهای من" : "ورود / ثبت‌نام";
 
   return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4, duration: 0.4 }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.96 }}
+      style={{ position: "fixed", bottom: "16px", left: "16px", zIndex: 9999 }}
+    >
     <Link
       to={to}
       dir="rtl"
       style={{
-        position: "fixed",
-        bottom: "16px",
-        left: "16px",
-        zIndex: 9999,
         background: "rgba(15, 23, 42, 0.9)",
         color: "white",
         padding: "8px 14px",
@@ -42,5 +47,6 @@ export function AccountChip() {
       <i className="bi bi-person-circle" style={{ fontSize: "16px" }} />
       <span>{label}</span>
     </Link>
+    </motion.div>
   );
 }
