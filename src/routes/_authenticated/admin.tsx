@@ -177,6 +177,7 @@ function AdminPage() {
             <Button variant="outline" onClick={load}>بروزرسانی</Button>
             <Button variant="outline" onClick={exportCsv} disabled={rows.length === 0}>خروجی CSV</Button>
             <Button asChild variant="outline"><Link to="/catalog">مدیریت کاتالوگ</Link></Button>
+            <Button asChild variant="outline"><Link to="/my-bookings">رزروهای من</Link></Button>
             <Button variant="outline" onClick={signOut}>خروج</Button>
           </div>
         </div>
