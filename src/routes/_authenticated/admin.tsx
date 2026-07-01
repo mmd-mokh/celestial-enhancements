@@ -294,14 +294,6 @@ SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
           </CardContent>
         </Card>
 
-        <Card style={{ display: "none" }}>
-          <CardHeader><CardTitle>راهنمای تعیین مدیر</CardTitle></CardHeader>
-          <CardContent className="text-sm text-muted-foreground space-y-2">
-            <p>برای تبدیل یک کاربر به مدیر، این کوئری را در بک‌اند اجرا کنید:</p>
-            <pre dir="ltr" className="bg-muted p-3 rounded text-xs overflow-x-auto">{`INSERT INTO user_roles (user_id, role)
-SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
