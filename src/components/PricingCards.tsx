@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 type Pkg = {
   slug: string;
@@ -70,9 +71,14 @@ export function PricingCards({ onReserve }: Props) {
         const icon = ICONS[i % ICONS.length];
         const featured = !!p.popular;
         return (
-          <div
+          <motion.div
             key={p.slug}
             data-package={p.slug}
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
+            whileHover={{ y: -8, transition: { duration: 0.2 } }}
             className={cn(
               "pricing-card-enhanced tw-flex tw-flex-col tw-place-items-center tw-gap-4 tw-rounded-xl tw-p-4 md:tw-p-6 lg:tw-p-8 tw-bg-white",
               featured
@@ -125,7 +131,7 @@ export function PricingCards({ onReserve }: Props) {
             >
               رزرو کن
             </button>
-          </div>
+          </motion.div>
         );
       })}
     </>,

@@ -223,6 +223,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cancel_booking: { Args: { _booking_id: string }; Returns: undefined }
       create_booking: {
         Args: {
           _console_type: string
@@ -249,6 +250,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      reschedule_booking: {
+        Args: { _booking_id: string; _end_date: string; _start_date: string }
+        Returns: undefined
       }
     }
     Enums: {

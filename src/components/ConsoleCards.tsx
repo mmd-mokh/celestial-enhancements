@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { motion } from "framer-motion";
 
 type Console = {
   slug: string;
@@ -55,9 +56,14 @@ export function ConsoleCards() {
 
   return createPortal(
     <>
-      {items.map((c) => (
-        <article
+      {items.map((c, i) => (
+        <motion.article
           key={c.slug}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
+          whileHover={{ y: -6, transition: { duration: 0.2 } }}
           className="console-card"
           role="listitem"
           data-console={c.slug}
@@ -84,7 +90,7 @@ export function ConsoleCards() {
               </li>
             ))}
           </ul>
-        </article>
+        </motion.article>
       ))}
     </>,
     mount,

@@ -20,6 +20,7 @@ import { CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { addDays, format, differenceInCalendarDays } from "date-fns";
+import { motion } from "framer-motion";
 
 type Props = {
   open: boolean;
@@ -297,7 +298,7 @@ export function BookingDialog({
               className="space-y-4"
             >
               {step === 0 && (
-                <div className="grid grid-cols-1 gap-2">
+                <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }} className="grid grid-cols-1 gap-2">
                   {consoles.map((c) => (
                     <button
                       key={c.value}
@@ -314,11 +315,11 @@ export function BookingDialog({
                       <span className="font-medium">{c.label}</span>
                     </button>
                   ))}
-                </div>
+                </motion.div>
               )}
 
               {step === 1 && (
-                <div className="grid grid-cols-2 gap-2">
+                <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }} className="grid grid-cols-2 gap-2">
                   {packages.map((p) => (
                     <button
                       key={p.value}
@@ -335,11 +336,11 @@ export function BookingDialog({
                       <div className="text-xs text-muted-foreground mt-1">{p.desc}</div>
                     </button>
                   ))}
-                </div>
+                </motion.div>
               )}
 
               {step === 2 && (
-                <div className="space-y-3">
+                <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }} className="space-y-3">
                   <div className="text-xs text-muted-foreground text-center">
                     مدت رزرو: {packageDays} روز — تاریخ شروع را انتخاب کنید
                     {loadingAvailability && " (در حال بررسی موجودی...)"}
@@ -372,11 +373,11 @@ export function BookingDialog({
                       {form.formState.errors.startDate.message as string}
                     </p>
                   )}
-                </div>
+                </motion.div>
               )}
 
               {step === 3 && (
-                <div className="space-y-3">
+                <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }} className="space-y-3">
                   <div className="space-y-1.5">
                     <Label htmlFor="booking-name">نام و نام خانوادگی</Label>
                     <Input
@@ -442,7 +443,7 @@ export function BookingDialog({
                       </div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               )}
 
               <DialogFooter className="flex-row-reverse gap-2 sm:justify-between">
