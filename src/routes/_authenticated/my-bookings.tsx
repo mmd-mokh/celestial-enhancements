@@ -11,6 +11,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Calendar } from "@/components/ui/calendar";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DateRange } from "react-day-picker";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const Route = createFileRoute("/_authenticated/my-bookings")({
   head: () => ({ meta: [{ title: "رزروهای من | گیمیو" }, { name: "robots", content: "noindex" }] }),
@@ -127,6 +128,7 @@ function MyBookingsPage() {
             <p className="text-sm text-muted-foreground mt-1">{email}</p>
           </div>
           <div className="flex gap-2">
+            <ThemeToggle />
             <Button asChild variant="outline"><Link to="/">بازگشت به سایت</Link></Button>
             <Button variant="ghost" onClick={signOut}>خروج</Button>
           </div>
