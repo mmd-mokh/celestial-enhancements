@@ -4,6 +4,10 @@ import { BookingDialog } from "@/components/BookingDialog";
 import { PricingCards } from "@/components/PricingCards";
 import { ConsoleCards } from "@/components/ConsoleCards";
 import { AccountChip } from "@/components/AccountChip";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { FaqAccordion } from "@/components/FaqAccordion";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import { Toaster } from "@/components/ui/sonner";
 
 type Props = {
@@ -70,6 +74,7 @@ export function LandingPage({ scrollTo }: Props) {
 
   return (
     <>
+      <SiteHeader />
       <div
         className="tw-flex tw-min-h-[100vh] tw-flex-col tw-bg-white"
         dangerouslySetInnerHTML={{ __html: gamioBody }}
@@ -81,6 +86,9 @@ export function LandingPage({ scrollTo }: Props) {
         }}
       />
       <ConsoleCards />
+      <FaqAccordion />
+      <NewsletterForm />
+      <SiteFooter />
       <AccountChip />
       <BookingDialog
         open={bookingOpen}
