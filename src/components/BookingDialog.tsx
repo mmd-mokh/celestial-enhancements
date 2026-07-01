@@ -231,6 +231,8 @@ export function BookingDialog({
       } else if (msg.includes("past_date")) {
         toast.error("تاریخ شروع نمی‌تواند در گذشته باشد.");
         setStep(2);
+      } else if (msg.includes("rate_limited")) {
+        toast.error("تعداد رزروهای اخیر شما زیاد است. لطفاً یک ساعت دیگر تلاش کنید.");
       } else {
         toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
       }
