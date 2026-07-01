@@ -49,39 +49,54 @@ export type Database = {
       }
       consoles: {
         Row: {
+          accent_from: string | null
+          accent_to: string | null
           active: boolean
           created_at: string
           description: string | null
+          features: Json
           hourly_rate: number | null
+          icon: string | null
           id: string
           image_url: string | null
           name: string
           slug: string
           sort_order: number
+          tagline: string | null
           updated_at: string
         }
         Insert: {
+          accent_from?: string | null
+          accent_to?: string | null
           active?: boolean
           created_at?: string
           description?: string | null
+          features?: Json
           hourly_rate?: number | null
+          icon?: string | null
           id?: string
           image_url?: string | null
           name: string
           slug: string
           sort_order?: number
+          tagline?: string | null
           updated_at?: string
         }
         Update: {
+          accent_from?: string | null
+          accent_to?: string | null
           active?: boolean
           created_at?: string
           description?: string | null
+          features?: Json
           hourly_rate?: number | null
+          icon?: string | null
           id?: string
           image_url?: string | null
           name?: string
           slug?: string
           sort_order?: number
+          tagline?: string | null
           updated_at?: string
         }
         Relationships: []

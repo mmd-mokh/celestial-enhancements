@@ -31,6 +31,11 @@ type ConsoleRow = {
   hourly_rate: number | null;
   sort_order: number;
   active: boolean;
+  tagline: string | null;
+  features: string[];
+  icon: string | null;
+  accent_from: string | null;
+  accent_to: string | null;
 };
 
 type PackageRow = {
@@ -75,7 +80,12 @@ function CatalogPage() {
     ]);
     if (c.error) return toast.error(c.error.message);
     if (p.error) return toast.error(p.error.message);
-    setConsoles((c.data ?? []) as ConsoleRow[]);
+    setConsoles(
+      ((c.data ?? []) as any[]).map((r) => ({
+        ...r,
+        features: Array.isArray(r.features) ? r.features : [],
+      })) as ConsoleRow[],
+    );
     setPackages(
       ((p.data ?? []) as any[]).map((r) => ({
         ...r,
@@ -93,6 +103,11 @@ function CatalogPage() {
       hourly_rate: row.hourly_rate ?? null,
       sort_order: row.sort_order ?? 0,
       active: row.active ?? true,
+      tagline: row.tagline ?? null,
+      features: row.features ?? [],
+      icon: row.icon ?? null,
+      accent_from: row.accent_from ?? null,
+      accent_to: row.accent_to ?? null,
     };
     if (!payload.slug || !payload.name) return toast.error("اسلاگ و نام لازم است");
     const query = row.id
@@ -261,6 +276,13 @@ function CatalogPage() {
                 <div><Label>ترتیب</Label><Input type="number" value={editingConsole.sort_order ?? 0} onChange={(e) => setEditingConsole({ ...editingConsole, sort_order: Number(e.target.value) })} /></div>
               </div>
               <div><Label>لینک تصویر</Label><Input dir="ltr" value={editingConsole.image_url ?? ""} onChange={(e) => setEditingConsole({ ...editingConsole, image_url: e.target.value })} /></div>
+              <div><Label>شعار (tagline)</Label><Input value={editingConsole.tagline ?? ""} onChange={(e) => setEditingConsole({ ...editingConsole, tagline: e.target.value })} /></div>
+              <div><Label>ویژگی‌ها (هر خط یک مورد)</Label><Textarea rows={3} value={(editingConsole.features ?? []).join("\n")} onChange={(e) => setEditingConsole({ ...editingConsole, features: e.target.value.split("\n").map((s) => s.trim()).filter(Boolean) })} /></div>
+              <div className="grid grid-cols-3 gap-3">
+                <div><Label>آیکون (bootstrap)</Label><Input dir="ltr" placeholder="bi-playstation" value={editingConsole.icon ?? ""} onChange={(e) => setEditingConsole({ ...editingConsole, icon: e.target.value })} /></div>
+                <div><Label>رنگ شروع</Label><Input dir="ltr" type="color" value={editingConsole.accent_from ?? "#0070d1"} onChange={(e) => setEditingConsole({ ...editingConsole, accent_from: e.target.value })} /></div>
+                <div><Label>رنگ پایان</Label><Input dir="ltr" type="color" value={editingConsole.accent_to ?? "#00b4d8"} onChange={(e) => setEditingConsole({ ...editingConsole, accent_to: e.target.value })} /></div>
+              </div>
               <div className="flex items-center gap-2"><Switch checked={editingConsole.active ?? true} onCheckedChange={(v) => setEditingConsole({ ...editingConsole, active: v })} /><Label>فعال</Label></div>
             </div>
           )}
