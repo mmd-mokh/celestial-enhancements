@@ -3,6 +3,7 @@ import gamioBody from "../gamio-body.html?raw";
 import { BookingDialog } from "@/components/BookingDialog";
 import { PricingCards } from "@/components/PricingCards";
 import { ConsoleCards } from "@/components/ConsoleCards";
+import { AccountChip } from "@/components/AccountChip";
 import { Toaster } from "@/components/ui/sonner";
 
 type Props = {
@@ -80,6 +81,7 @@ export function LandingPage({ scrollTo }: Props) {
         }}
       />
       <ConsoleCards />
+      <AccountChip />
       <BookingDialog
         open={bookingOpen}
         onOpenChange={setBookingOpen}
