@@ -7,6 +7,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { AnalyticsCharts } from "@/components/AnalyticsCharts";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "پنل مدیریت | گیمیو" }, { name: "robots", content: "noindex" }] }),
@@ -60,6 +63,8 @@ function AdminPage() {
   const [rows, setRows] = useState<Booking[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkStatus, setBulkStatus] = useState<string>("");
 
   useEffect(() => {
     (async () => {
@@ -84,6 +89,7 @@ function AdminPage() {
       .order("created_at", { ascending: false });
     if (error) return toast.error(error.message);
     setRows((data ?? []) as Booking[]);
+    setSelected(new Set());
     const { data: msgs, error: mErr } = await supabase
       .from("contact_messages")
       .select("*")
@@ -116,6 +122,36 @@ function AdminPage() {
     const { error } = await supabase.from("bookings").delete().eq("id", id);
     if (error) return toast.error(error.message);
     setRows((r) => r.filter((b) => b.id !== id));
+  };
+
+  const toggleOne = (id: string) => {
+    setSelected((s) => {
+      const n = new Set(s);
+      if (n.has(id)) n.delete(id); else n.add(id);
+      return n;
+    });
+  };
+  const toggleAll = () => {
+    setSelected((s) => (s.size === rows.length ? new Set() : new Set(rows.map((r) => r.id))));
+  };
+  const bulkApplyStatus = async () => {
+    if (!bulkStatus || selected.size === 0) return;
+    const ids = Array.from(selected);
+    const { error } = await supabase.from("bookings").update({ status: bulkStatus }).in("id", ids);
+    if (error) return toast.error(error.message);
+    toast.success(`${ids.length} رزرو به‌روزرسانی شد`);
+    setRows((r) => r.map((b) => (selected.has(b.id) ? { ...b, status: bulkStatus } : b)));
+    setSelected(new Set());
+  };
+  const bulkDelete = async () => {
+    if (selected.size === 0) return;
+    if (!confirm(`حذف ${selected.size} رزرو؟`)) return;
+    const ids = Array.from(selected);
+    const { error } = await supabase.from("bookings").delete().in("id", ids);
+    if (error) return toast.error(error.message);
+    toast.success(`${ids.length} رزرو حذف شد`);
+    setRows((r) => r.filter((b) => !selected.has(b.id)));
+    setSelected(new Set());
   };
 
   const signOut = async () => {
@@ -174,9 +210,11 @@ function AdminPage() {
             <p className="text-sm text-muted-foreground">{email}</p>
           </div>
           <div className="flex gap-2">
+            <ThemeToggle />
             <Button variant="outline" onClick={load}>بروزرسانی</Button>
             <Button variant="outline" onClick={exportCsv} disabled={rows.length === 0}>خروجی CSV</Button>
             <Button asChild variant="outline"><Link to="/catalog">مدیریت کاتالوگ</Link></Button>
+            <Button asChild variant="outline"><Link to="/blog-admin">بلاگ</Link></Button>
             <Button asChild variant="outline"><Link to="/my-bookings">رزروهای من</Link></Button>
             <Button variant="outline" onClick={signOut}>خروج</Button>
           </div>
@@ -193,12 +231,35 @@ function AdminPage() {
           ))}
         </div>
 
+        <AnalyticsCharts rows={rows} />
+
         <Card>
           <CardHeader><CardTitle>رزروها ({rows.length})</CardTitle></CardHeader>
           <CardContent className="overflow-x-auto">
+            {selected.size > 0 && (
+              <div className="flex items-center gap-2 mb-3 p-2 rounded-md bg-muted/50">
+                <span className="text-sm">{selected.size} انتخاب شده</span>
+                <Select value={bulkStatus} onValueChange={setBulkStatus}>
+                  <SelectTrigger className="w-40"><SelectValue placeholder="تغییر وضعیت به…" /></SelectTrigger>
+                  <SelectContent>
+                    {STATUSES.map((s) => (<SelectItem key={s} value={s}>{STATUS_LABEL[s]}</SelectItem>))}
+                  </SelectContent>
+                </Select>
+                <Button size="sm" onClick={bulkApplyStatus} disabled={!bulkStatus}>اعمال</Button>
+                <Button size="sm" variant="destructive" onClick={bulkDelete}>حذف انتخاب‌شده‌ها</Button>
+                <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>لغو انتخاب</Button>
+              </div>
+            )}
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-8">
+                    <Checkbox
+                      aria-label="انتخاب همه"
+                      checked={rows.length > 0 && selected.size === rows.length}
+                      onCheckedChange={toggleAll}
+                    />
+                  </TableHead>
                   <TableHead className="text-right">تاریخ</TableHead>
                   <TableHead className="text-right">نام</TableHead>
                   <TableHead className="text-right">تلفن</TableHead>
@@ -212,7 +273,14 @@ function AdminPage() {
               </TableHeader>
               <TableBody>
                 {rows.map((b) => (
-                  <TableRow key={b.id}>
+                  <TableRow key={b.id} data-state={selected.has(b.id) ? "selected" : undefined}>
+                    <TableCell>
+                      <Checkbox
+                        aria-label={`انتخاب ${b.name}`}
+                        checked={selected.has(b.id)}
+                        onCheckedChange={() => toggleOne(b.id)}
+                      />
+                    </TableCell>
                     <TableCell className="whitespace-nowrap text-xs">{new Date(b.created_at).toLocaleString("fa-IR")}</TableCell>
                     <TableCell>{b.name}</TableCell>
                     <TableCell dir="ltr" className="font-mono text-xs">{b.phone}</TableCell>
@@ -238,7 +306,7 @@ function AdminPage() {
                   </TableRow>
                 ))}
                 {rows.length === 0 && (
-                  <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-8">رزروی ثبت نشده است</TableCell></TableRow>
+                  <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-8">رزروی ثبت نشده است</TableCell></TableRow>
                 )}
               </TableBody>
             </Table>
