@@ -26,9 +26,14 @@ export function NewsletterForm() {
     let tries = 0;
     const find = () => {
       const el = document.getElementById("newsletter-form");
-      if (el) {
-        el.innerHTML = "";
-        setMount(el);
+      if (el && el.parentNode) {
+        // Avoid <form> nested in <form> hydration error: replace the ported
+        // <form id="newsletter-form"> with a plain <div> mount point.
+        const div = document.createElement("div");
+        div.id = "newsletter-form-mount";
+        div.className = el.className;
+        el.parentNode.replaceChild(div, el);
+        setMount(div);
         return;
       }
       if (tries++ < 20) setTimeout(find, 100);
