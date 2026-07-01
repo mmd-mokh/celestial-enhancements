@@ -109,6 +109,7 @@ function CatalogPage() {
       icon: row.icon ?? null,
       accent_from: row.accent_from ?? null,
       accent_to: row.accent_to ?? null,
+      quantity: row.quantity ?? 1,
     };
     if (!payload.slug || !payload.name) return toast.error("اسلاگ و نام لازم است");
     const query = row.id
