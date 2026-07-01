@@ -26,18 +26,27 @@ type Props = {
   defaultConsole?: string;
 };
 
-const CONSOLES = [
+type ConsoleOpt = { value: string; label: string; icon?: string };
+type PackageOpt = { value: string; label: string; desc: string };
+
+const FALLBACK_CONSOLES: ConsoleOpt[] = [
   { value: "ps5", label: "PlayStation 5", icon: "bi-playstation" },
   { value: "xbox", label: "Xbox Series X", icon: "bi-xbox" },
   { value: "switch", label: "Nintendo Switch", icon: "bi-nintendo-switch" },
 ];
 
-const PACKAGES = [
+const FALLBACK_PACKAGES: PackageOpt[] = [
   { value: "daily", label: "روزانه", desc: "۲۴ ساعت" },
   { value: "weekend", label: "آخر هفته", desc: "پنجشنبه تا شنبه" },
   { value: "weekly", label: "هفتگی", desc: "۷ روز کامل" },
   { value: "monthly", label: "ماهانه", desc: "۳۰ روز، بهترین قیمت" },
 ];
+
+const ICON_MAP: Record<string, string> = {
+  ps5: "bi-playstation",
+  xbox: "bi-xbox",
+  switch: "bi-nintendo-switch",
+};
 
 const schema = z.object({
   consoleType: z.string().min(1, "کنسول را انتخاب کنید"),
@@ -68,6 +77,34 @@ export function BookingDialog({
 }: Props) {
   const [step, setStep] = useState(0);
   const [reservationId, setReservationId] = useState<string | null>(null);
+  const [consoles, setConsoles] = useState<ConsoleOpt[]>(FALLBACK_CONSOLES);
+  const [packages, setPackages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const [c, p] = await Promise.all([
+        supabase.from("consoles").select("slug,name").eq("active", true).order("sort_order"),
+        supabase.from("packages").select("slug,name,description,duration_hours,price").eq("active", true).order("sort_order"),
+      ]);
+      if (cancelled) return;
+      if (c.data && c.data.length) {
+        setConsoles(c.data.map((r) => ({ value: r.slug, label: r.name, icon: ICON_MAP[r.slug] })));
+      }
+      if (p.data && p.data.length) {
+        setPackages(
+          p.data.map((r) => ({
+            value: r.slug,
+            label: r.name,
+            desc: r.description ?? (r.duration_hours ? `${r.duration_hours} ساعت` : ""),
+          })),
+        );
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -186,7 +223,7 @@ export function BookingDialog({
             >
               {step === 0 && (
                 <div className="grid grid-cols-1 gap-2">
-                  {CONSOLES.map((c) => (
+                  {consoles.map((c) => (
                     <button
                       key={c.value}
                       type="button"
@@ -198,7 +235,7 @@ export function BookingDialog({
                           : "border-input",
                       )}
                     >
-                      <i className={`bi ${c.icon} text-2xl text-primary`} />
+                      {c.icon && <i className={`bi ${c.icon} text-2xl text-primary`} />}
                       <span className="font-medium">{c.label}</span>
                     </button>
                   ))}
@@ -207,7 +244,7 @@ export function BookingDialog({
 
               {step === 1 && (
                 <div className="grid grid-cols-2 gap-2">
-                  {PACKAGES.map((p) => (
+                  {packages.map((p) => (
                     <button
                       key={p.value}
                       type="button"
@@ -275,13 +312,13 @@ export function BookingDialog({
                     <div className="flex justify-between">
                       <span>کنسول:</span>
                       <span className="font-medium text-foreground">
-                        {CONSOLES.find((c) => c.value === values.consoleType)?.label}
+                        {consoles.find((c) => c.value === values.consoleType)?.label}
                       </span>
                     </div>
                     <div className="flex justify-between mt-1">
                       <span>پکیج:</span>
                       <span className="font-medium text-foreground">
-                        {PACKAGES.find((p) => p.value === values.packageType)?.label}
+                        {packages.find((p) => p.value === values.packageType)?.label}
                       </span>
                     </div>
                   </div>

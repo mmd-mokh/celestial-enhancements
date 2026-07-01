@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -174,6 +174,7 @@ function AdminPage() {
           <div className="flex gap-2">
             <Button variant="outline" onClick={load}>بروزرسانی</Button>
             <Button variant="outline" onClick={exportCsv} disabled={rows.length === 0}>خروجی CSV</Button>
+            <Button asChild variant="outline"><Link to="/catalog">مدیریت کاتالوگ</Link></Button>
             <Button variant="outline" onClick={signOut}>خروج</Button>
           </div>
         </div>
