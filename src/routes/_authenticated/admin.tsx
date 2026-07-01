@@ -394,6 +394,48 @@ SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
         </Card>
 
       </div>
+
+      <Sheet open={!!detail} onOpenChange={(o) => !o && setDetail(null)}>
+        <SheetContent side="left" dir="rtl" className="w-full sm:max-w-md overflow-y-auto">
+          {detail && (
+            <>
+              <SheetHeader>
+                <SheetTitle>جزئیات رزرو</SheetTitle>
+                <SheetDescription dir="ltr" className="font-mono text-xs">{detail.id}</SheetDescription>
+              </SheetHeader>
+              <div className="space-y-4 mt-4 text-sm">
+                <div className="grid grid-cols-2 gap-3">
+                  <div><div className="text-xs text-muted-foreground">نام</div><div>{detail.name}</div></div>
+                  <div><div className="text-xs text-muted-foreground">تلفن</div><div dir="ltr" className="font-mono">{detail.phone}</div></div>
+                  <div><div className="text-xs text-muted-foreground">کنسول</div><div>{detail.console_type ?? "—"}</div></div>
+                  <div><div className="text-xs text-muted-foreground">پکیج</div><div>{detail.package_type ?? "—"}</div></div>
+                  <div><div className="text-xs text-muted-foreground">شروع</div><div dir="ltr">{detail.start_date ?? "—"}</div></div>
+                  <div><div className="text-xs text-muted-foreground">پایان</div><div dir="ltr">{detail.end_date ?? "—"}</div></div>
+                  <div><div className="text-xs text-muted-foreground">وضعیت</div><Badge variant="secondary">{STATUS_LABEL[detail.status] ?? detail.status}</Badge></div>
+                  <div><div className="text-xs text-muted-foreground">ثبت</div><div className="text-xs">{new Date(detail.created_at).toLocaleString("fa-IR")}</div></div>
+                </div>
+                <div className="space-y-2">
+                  <Label>یادداشت</Label>
+                  <Textarea rows={4} value={detailNotes} onChange={(e) => setDetailNotes(e.target.value)} />
+                  <Button size="sm" onClick={saveNotes} disabled={savingNotes}>ذخیره یادداشت</Button>
+                </div>
+                <div className="flex gap-2 pt-2 border-t">
+                  <Button asChild variant="outline" size="sm" className="flex-1">
+                    <a href={`tel:${detail.phone}`}><i className="bi bi-telephone ml-2" />تماس</a>
+                  </Button>
+                  {detail.start_date && (
+                    <Button asChild variant="outline" size="sm" className="flex-1">
+                      <a href={`/api/public/booking-ical/${detail.id}`} download>
+                        <i className="bi bi-calendar-plus ml-2" />iCal
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }
