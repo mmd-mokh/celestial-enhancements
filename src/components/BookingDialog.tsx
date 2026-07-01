@@ -18,6 +18,8 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { addDays, format, differenceInCalendarDays } from "date-fns";
 
 type Props = {
   open: boolean;
@@ -27,7 +29,7 @@ type Props = {
 };
 
 type ConsoleOpt = { value: string; label: string; icon?: string };
-type PackageOpt = { value: string; label: string; desc: string };
+type PackageOpt = { value: string; label: string; desc: string; hours?: number };
 
 const FALLBACK_CONSOLES: ConsoleOpt[] = [
   { value: "ps5", label: "PlayStation 5", icon: "bi-playstation" },
@@ -36,10 +38,10 @@ const FALLBACK_CONSOLES: ConsoleOpt[] = [
 ];
 
 const FALLBACK_PACKAGES: PackageOpt[] = [
-  { value: "daily", label: "روزانه", desc: "۲۴ ساعت" },
-  { value: "weekend", label: "آخر هفته", desc: "پنجشنبه تا شنبه" },
-  { value: "weekly", label: "هفتگی", desc: "۷ روز کامل" },
-  { value: "monthly", label: "ماهانه", desc: "۳۰ روز، بهترین قیمت" },
+  { value: "daily", label: "روزانه", desc: "۲۴ ساعت", hours: 24 },
+  { value: "weekend", label: "آخر هفته", desc: "پنجشنبه تا شنبه", hours: 72 },
+  { value: "weekly", label: "هفتگی", desc: "۷ روز کامل", hours: 168 },
+  { value: "monthly", label: "ماهانه", desc: "۳۰ روز، بهترین قیمت", hours: 720 },
 ];
 
 const ICON_MAP: Record<string, string> = {
@@ -51,6 +53,7 @@ const ICON_MAP: Record<string, string> = {
 const schema = z.object({
   consoleType: z.string().min(1, "کنسول را انتخاب کنید"),
   packageType: z.string().min(1, "پکیج را انتخاب کنید"),
+  startDate: z.date({ required_error: "تاریخ شروع را انتخاب کنید" }),
   name: z
     .string()
     .trim()
@@ -67,7 +70,7 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const STEP_LABELS = ["کنسول", "پکیج", "اطلاعات تماس"];
+const STEP_LABELS = ["کنسول", "پکیج", "تاریخ", "اطلاعات تماس"];
 
 export function BookingDialog({
   open,
@@ -79,6 +82,8 @@ export function BookingDialog({
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [consoles, setConsoles] = useState<ConsoleOpt[]>(FALLBACK_CONSOLES);
   const [packages, setPackages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
+  const [fullyBooked, setFullyBooked] = useState<Set<string>>(new Set());
+  const [loadingAvailability, setLoadingAvailability] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -97,6 +102,7 @@ export function BookingDialog({
             value: r.slug,
             label: r.name,
             desc: r.description ?? (r.duration_hours ? `${r.duration_hours} ساعت` : ""),
+            hours: r.duration_hours ? Number(r.duration_hours) : undefined,
           })),
         );
       }
@@ -112,6 +118,7 @@ export function BookingDialog({
     defaultValues: {
       consoleType: defaultConsole ?? "ps5",
       packageType: defaultPackage ?? "weekend",
+      startDate: undefined as unknown as Date,
       name: "",
       phone: "",
       notes: "",
@@ -126,6 +133,7 @@ export function BookingDialog({
     form.reset({
       consoleType: defaultConsole ?? form.getValues("consoleType") ?? "ps5",
       packageType: defaultPackage ?? form.getValues("packageType") ?? "weekend",
+      startDate: undefined as unknown as Date,
       name: form.getValues("name") ?? "",
       phone: form.getValues("phone") ?? "",
       notes: form.getValues("notes") ?? "",
@@ -135,32 +143,93 @@ export function BookingDialog({
 
   const values = form.watch();
 
+  const packageDays = (() => {
+    const p = packages.find((x) => x.value === values.packageType);
+    const hours = p?.hours ?? 24;
+    return Math.max(1, Math.ceil(hours / 24));
+  })();
+
+  // Fetch availability for the selected console when reaching the date step.
+  useEffect(() => {
+    if (!open || step !== 2 || !values.consoleType) return;
+    let cancelled = false;
+    setLoadingAvailability(true);
+    const today = new Date();
+    const from = format(today, "yyyy-MM-dd");
+    const to = format(addDays(today, 90), "yyyy-MM-dd");
+    supabase
+      .rpc("get_console_availability", {
+        _console_slug: values.consoleType,
+        _from: from,
+        _to: to,
+      })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        setLoadingAvailability(false);
+        if (error || !data) return;
+        const s = new Set<string>();
+        for (const row of data as Array<{ day: string; booked: number; capacity: number }>) {
+          if (row.capacity > 0 && row.booked >= row.capacity) s.add(row.day);
+        }
+        setFullyBooked(s);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open, step, values.consoleType]);
+
+  const isDayDisabled = (date: Date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) return true;
+    // Ensure every day in the range [date, date + packageDays - 1] is available
+    for (let i = 0; i < packageDays; i++) {
+      const d = addDays(date, i);
+      if (fullyBooked.has(format(d, "yyyy-MM-dd"))) return true;
+    }
+    return false;
+  };
+
   const goNext = async () => {
-    const fields: (keyof FormValues)[][] = [["consoleType"], ["packageType"], ["name", "phone", "notes"]];
+    const fields: (keyof FormValues)[][] = [
+      ["consoleType"],
+      ["packageType"],
+      ["startDate"],
+      ["name", "phone", "notes"],
+    ];
     const ok = await form.trigger(fields[step]);
     if (!ok) return;
-    if (step < 2) setStep(step + 1);
+    if (step < 3) setStep(step + 1);
     else form.handleSubmit(onSubmit)();
   };
 
   const onSubmit = async (data: FormValues) => {
-    const { data: inserted, error } = await supabase
-      .from("bookings")
-      .insert({
-        name: data.name.trim(),
-        phone: data.phone.trim(),
-        console_type: data.consoleType,
-        package_type: data.packageType,
-        notes: data.notes?.trim() || null,
-      })
-      .select("id")
-      .single();
+    const start = data.startDate;
+    const end = addDays(start, packageDays - 1);
+    const { data: newId, error } = await supabase.rpc("create_booking", {
+      _name: data.name.trim(),
+      _phone: data.phone.trim(),
+      _console_type: data.consoleType,
+      _package_type: data.packageType,
+      _start_date: format(start, "yyyy-MM-dd"),
+      _end_date: format(end, "yyyy-MM-dd"),
+      _notes: data.notes?.trim() || null,
+    });
     if (error) {
       console.error(error);
-      toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
+      const msg = (error.message || "").toLowerCase();
+      if (msg.includes("no_availability")) {
+        toast.error("این کنسول در تاریخ انتخابی رزرو شده. لطفاً تاریخ دیگری انتخاب کنید.");
+        setStep(2);
+      } else if (msg.includes("past_date")) {
+        toast.error("تاریخ شروع نمی‌تواند در گذشته باشد.");
+        setStep(2);
+      } else {
+        toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
+      }
       return;
     }
-    setReservationId(inserted?.id ?? "");
+    setReservationId((newId as string) ?? "");
     toast.success("درخواست رزرو ثبت شد!");
   };
 
@@ -197,7 +266,7 @@ export function BookingDialog({
             <DialogHeader>
               <DialogTitle className="text-right">رزرو کنسول</DialogTitle>
               <DialogDescription className="text-right">
-                مرحله {step + 1} از ۳ — {STEP_LABELS[step]}
+                مرحله {step + 1} از ۴ — {STEP_LABELS[step]}
               </DialogDescription>
             </DialogHeader>
 
@@ -265,6 +334,43 @@ export function BookingDialog({
 
               {step === 2 && (
                 <div className="space-y-3">
+                  <div className="text-xs text-muted-foreground text-center">
+                    مدت رزرو: {packageDays} روز — تاریخ شروع را انتخاب کنید
+                    {loadingAvailability && " (در حال بررسی موجودی...)"}
+                  </div>
+                  <div className="flex justify-center">
+                    <Calendar
+                      mode="single"
+                      selected={values.startDate}
+                      onSelect={(d) =>
+                        d && form.setValue("startDate", d, { shouldValidate: true })
+                      }
+                      disabled={isDayDisabled}
+                      fromDate={new Date()}
+                      toDate={addDays(new Date(), 90)}
+                      className="pointer-events-auto rounded-md border"
+                    />
+                  </div>
+                  {values.startDate && (
+                    <div className="rounded-md bg-muted/50 p-3 text-xs text-center">
+                      از <span className="font-semibold text-foreground">{format(values.startDate, "yyyy/MM/dd")}</span>
+                      {" "}تا{" "}
+                      <span className="font-semibold text-foreground">
+                        {format(addDays(values.startDate, packageDays - 1), "yyyy/MM/dd")}
+                      </span>
+                      {" "}({differenceInCalendarDays(addDays(values.startDate, packageDays - 1), values.startDate) + 1} روز)
+                    </div>
+                  )}
+                  {form.formState.errors.startDate && (
+                    <p className="text-xs text-destructive text-center">
+                      {form.formState.errors.startDate.message as string}
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {step === 3 && (
+                <div className="space-y-3">
                   <div className="space-y-1.5">
                     <Label htmlFor="booking-name">نام و نام خانوادگی</Label>
                     <Input
@@ -321,13 +427,21 @@ export function BookingDialog({
                         {packages.find((p) => p.value === values.packageType)?.label}
                       </span>
                     </div>
+                    {values.startDate && (
+                      <div className="flex justify-between mt-1">
+                        <span>تاریخ:</span>
+                        <span className="font-medium text-foreground" dir="ltr">
+                          {format(values.startDate, "yyyy/MM/dd")} → {format(addDays(values.startDate, packageDays - 1), "yyyy/MM/dd")}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
 
               <DialogFooter className="flex-row-reverse gap-2 sm:justify-between">
                 <Button type="submit" disabled={form.formState.isSubmitting} className="flex-1">
-                  {step === 2
+                  {step === 3
                     ? form.formState.isSubmitting
                       ? "در حال ارسال..."
                       : "ثبت درخواست"
