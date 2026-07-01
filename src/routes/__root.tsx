@@ -122,6 +122,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/assets/logo/logo1.png", type: "image/png" },
       { rel: "apple-touch-icon", href: "/assets/logo/logo1.png" },
       { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "stylesheet", href: "/css/tailwind-build.css" },
       { rel: "stylesheet", href: "/css/index.css" },
       {
         rel: "stylesheet",
