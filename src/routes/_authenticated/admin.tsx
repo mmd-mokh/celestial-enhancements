@@ -296,8 +296,8 @@ function AdminPage() {
               </TableHeader>
               <TableBody>
                 {rows.map((b) => (
-                  <TableRow key={b.id} data-state={selected.has(b.id) ? "selected" : undefined}>
-                    <TableCell>
+                  <TableRow key={b.id} data-state={selected.has(b.id) ? "selected" : undefined} className="cursor-pointer" onClick={() => openDetail(b)}>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
                       <Checkbox
                         aria-label={`انتخاب ${b.name}`}
                         checked={selected.has(b.id)}
@@ -313,7 +313,7 @@ function AdminPage() {
                       {b.start_date ? `${b.start_date} → ${b.end_date}` : "—"}
                     </TableCell>
                     <TableCell className="max-w-xs truncate">{b.notes ?? "—"}</TableCell>
-                    <TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
                       <Select value={b.status} onValueChange={(v) => updateStatus(b.id, v)}>
                         <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
                         <SelectContent>
@@ -323,7 +323,7 @@ function AdminPage() {
                         </SelectContent>
                       </Select>
                     </TableCell>
-                    <TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
                       <Button variant="destructive" size="sm" onClick={() => remove(b.id)}>حذف</Button>
                     </TableCell>
                   </TableRow>
