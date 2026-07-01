@@ -1875,3 +1875,58 @@ body.nav-drawer-open {
 [data-theme="dark"] .mobile-drawer__backdrop {
     background: rgba(0, 0, 0, 0.7);
 }
+
+/* ============================================================
+   Dark mode overrides for legacy blob styles.
+   Added by audit fix #1 + #3 — single --brand token so
+   any brand-color change propagates through the legacy sheet.
+   ============================================================ */
+:root {
+    --brand: #6C5CE7;
+    --brand-strong: #5548c8;
+}
+
+html.dark {
+    --btn-color: #ffffff;
+    --btn-bg: var(--brand);
+    --primary-text-color: #a29bfe;
+    --link-hover: #a29bfe;
+    --input-hover-bd-color: #a29bfe;
+    --text-primary: #e5e7eb;
+    --text-secondary: #9ca3af;
+    --bg-light: #0f172a;
+    color-scheme: dark;
+}
+
+html.dark body,
+html.dark .tw-bg-white {
+    background-color: #0f172a !important;
+    color: #e5e7eb;
+}
+
+html.dark .tw-text-gray-700,
+html.dark .tw-text-gray-600,
+html.dark .tw-text-gray-500 {
+    color: #cbd5e1 !important;
+}
+
+html.dark .testimonial-enhanced,
+html.dark .pricing-card-enhanced,
+html.dark .console-card-enhanced,
+html.dark .feature-card,
+html.dark .step-card {
+    background-color: #1e293b !important;
+    color: #e5e7eb;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+html.dark .site-header,
+html.dark .site-header.is-scrolled {
+    background-color: rgba(15, 23, 42, 0.85) !important;
+    color: #e5e7eb;
+}
+
+html.dark .site-header a,
+html.dark .site-header .primary-nav__link {
+    color: #e5e7eb;
+}

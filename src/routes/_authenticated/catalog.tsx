@@ -249,7 +249,7 @@ function CatalogPage() {
                   <TableRow key={p.id}>
                     <TableCell>{p.sort_order}</TableCell>
                     <TableCell dir="ltr" className="font-mono text-xs">{p.slug}</TableCell>
-                    <TableCell>{p.name}{p.badge && <span className="mr-2 text-xs text-primary">({p.badge})</span>}</TableCell>
+                    <TableCell>{p.name}{p.badge && <span className="ms-2 text-xs text-primary">({p.badge})</span>}</TableCell>
                     <TableCell>{p.duration_hours ?? "—"}</TableCell>
                     <TableCell>{Number(p.price).toLocaleString("fa-IR")}</TableCell>
                     <TableCell>{p.popular ? "★" : "—"}</TableCell>

@@ -13,6 +13,17 @@ import { AnalyticsCharts } from "@/components/AnalyticsCharts";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Phone, CalendarPlus } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "پنل مدیریت | گیمیو" }, { name: "robots", content: "noindex" }] }),
@@ -71,6 +82,12 @@ function AdminPage() {
   const [detail, setDetail] = useState<Booking | null>(null);
   const [detailNotes, setDetailNotes] = useState("");
   const [savingNotes, setSavingNotes] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState<
+    | { kind: "booking"; id: string }
+    | { kind: "message"; id: string }
+    | { kind: "bulk" }
+    | null
+  >(null);
 
   useEffect(() => {
     (async () => {
@@ -110,8 +127,7 @@ function AdminPage() {
     setMessages((m) => m.map((x) => (x.id === id ? { ...x, status } : x)));
   };
 
-  const removeMsg = async (id: string) => {
-    if (!confirm("حذف این پیام؟")) return;
+  const doRemoveMsg = async (id: string) => {
     const { error } = await supabase.from("contact_messages").delete().eq("id", id);
     if (error) return toast.error(error.message);
     setMessages((m) => m.filter((x) => x.id !== id));
@@ -123,8 +139,7 @@ function AdminPage() {
     setRows((r) => r.map((b) => (b.id === id ? { ...b, status } : b)));
   };
 
-  const remove = async (id: string) => {
-    if (!confirm("حذف این رزرو؟")) return;
+  const doRemoveBooking = async (id: string) => {
     const { error } = await supabase.from("bookings").delete().eq("id", id);
     if (error) return toast.error(error.message);
     setRows((r) => r.filter((b) => b.id !== id));
@@ -166,15 +181,23 @@ function AdminPage() {
     setRows((r) => r.map((b) => (selected.has(b.id) ? { ...b, status: bulkStatus } : b)));
     setSelected(new Set());
   };
-  const bulkDelete = async () => {
+  const doBulkDelete = async () => {
     if (selected.size === 0) return;
-    if (!confirm(`حذف ${selected.size} رزرو؟`)) return;
     const ids = Array.from(selected);
     const { error } = await supabase.from("bookings").delete().in("id", ids);
     if (error) return toast.error(error.message);
     toast.success(`${ids.length} رزرو حذف شد`);
     setRows((r) => r.filter((b) => !selected.has(b.id)));
     setSelected(new Set());
+  };
+
+  const runConfirmedDelete = async () => {
+    const c = confirmDelete;
+    setConfirmDelete(null);
+    if (!c) return;
+    if (c.kind === "booking") await doRemoveBooking(c.id);
+    else if (c.kind === "message") await doRemoveMsg(c.id);
+    else if (c.kind === "bulk") await doBulkDelete();
   };
 
   const signOut = async () => {
@@ -269,7 +292,7 @@ function AdminPage() {
                   </SelectContent>
                 </Select>
                 <Button size="sm" onClick={bulkApplyStatus} disabled={!bulkStatus}>اعمال</Button>
-                <Button size="sm" variant="destructive" onClick={bulkDelete}>حذف انتخاب‌شده‌ها</Button>
+                <Button size="sm" variant="destructive" onClick={() => setConfirmDelete({ kind: "bulk" })}>حذف انتخاب‌شده‌ها</Button>
                 <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>لغو انتخاب</Button>
               </div>
             )}
@@ -324,7 +347,7 @@ function AdminPage() {
                       </Select>
                     </TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
-                      <Button variant="destructive" size="sm" onClick={() => remove(b.id)}>حذف</Button>
+                      <Button variant="destructive" size="sm" onClick={() => setConfirmDelete({ kind: "booking", id: b.id })}>حذف</Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -381,7 +404,7 @@ SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
                       </Select>
                     </TableCell>
                     <TableCell>
-                      <Button variant="destructive" size="sm" onClick={() => removeMsg(m.id)}>حذف</Button>
+                      <Button variant="destructive" size="sm" onClick={() => setConfirmDelete({ kind: "message", id: m.id })}>حذف</Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -421,12 +444,12 @@ SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
                 </div>
                 <div className="flex gap-2 pt-2 border-t">
                   <Button asChild variant="outline" size="sm" className="flex-1">
-                    <a href={`tel:${detail.phone}`}><i className="bi bi-telephone ml-2" />تماس</a>
+                    <a href={`tel:${detail.phone}`}><Phone className="h-4 w-4 me-2" />تماس</a>
                   </Button>
                   {detail.start_date && (
                     <Button asChild variant="outline" size="sm" className="flex-1">
                       <a href={`/api/public/booking-ical/${detail.id}`} download>
-                        <i className="bi bi-calendar-plus ml-2" />iCal
+                        <CalendarPlus className="h-4 w-4 me-2" />iCal
                       </a>
                     </Button>
                   )}
@@ -436,6 +459,25 @@ SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
           )}
         </SheetContent>
       </Sheet>
+
+      <AlertDialog open={!!confirmDelete} onOpenChange={(o) => !o && setConfirmDelete(null)}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>تایید حذف</AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmDelete?.kind === "bulk"
+                ? `آیا از حذف ${selected.size} رزرو مطمئن هستید؟ این عمل قابل بازگشت نیست.`
+                : confirmDelete?.kind === "message"
+                ? "آیا از حذف این پیام مطمئن هستید؟"
+                : "آیا از حذف این رزرو مطمئن هستید؟"}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>انصراف</AlertDialogCancel>
+            <AlertDialogAction onClick={runConfirmedDelete}>حذف</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

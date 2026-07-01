@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle2, ChevronLeft, ChevronRight } from "lucide-react";
+import { CheckCircle2, ChevronLeft, ChevronRight, CalendarPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { addDays, format, differenceInCalendarDays } from "date-fns";
@@ -271,7 +271,7 @@ export function BookingDialog({
             {reservationId && (
               <Button asChild variant="outline" className="w-full">
                 <a href={`/api/public/booking-ical/${reservationId}`} download>
-                  <i className="bi bi-calendar-plus ml-2" /> افزودن به تقویم (.ics)
+                  <CalendarPlus className="h-4 w-4 me-2" /> افزودن به تقویم (.ics)
                 </a>
               </Button>
             )}

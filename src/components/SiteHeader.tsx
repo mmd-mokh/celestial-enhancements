@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X, Sun, Moon, ArrowLeft } from "lucide-react";
+import { Menu, X, ArrowLeft, Gamepad2, Zap, Tag, HelpCircle, type LucideIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
-type NavItem = { href: string; label: string; icon: string };
+type NavItem = { href: string; label: string; Icon: LucideIcon };
 
 const NAV: NavItem[] = [
-  { href: "#consoles", label: "کنسول‌ها", icon: "bi-controller" },
-  { href: "#how-it-works", label: "چطور کار می‌کنه؟", icon: "bi-lightning-charge-fill" },
-  { href: "#pricing", label: "قیمت‌ها", icon: "bi-tag-fill" },
-  { href: "#faq", label: "سوالات متداول", icon: "bi-question-circle-fill" },
+  { href: "#consoles", label: "کنسول‌ها", Icon: Gamepad2 },
+  { href: "#how-it-works", label: "چطور کار می‌کنه؟", Icon: Zap },
+  { href: "#pricing", label: "قیمت‌ها", Icon: Tag },
+  { href: "#faq", label: "سوالات متداول", Icon: HelpCircle },
 ];
 
 /**
@@ -21,9 +22,6 @@ const NAV: NavItem[] = [
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [activeId, setActiveId] = useState<string>("");
-  const [dark, setDark] = useState<boolean>(() =>
-    typeof document !== "undefined" && document.documentElement.classList.contains("dark"),
-  );
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -47,15 +45,6 @@ export function SiteHeader() {
     onScroll();
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  function toggleTheme() {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    try {
-      localStorage.setItem("theme", next ? "dark" : "light");
-    } catch {}
-  }
 
   return (
     <header
@@ -95,15 +84,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="nav-center">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="theme-toggle"
-            aria-label={dark ? "تغییر به تم روشن" : "تغییر به تم تاریک"}
-            title="تغییر تم"
-          >
-            {dark ? <Sun className="tw-h-5 tw-w-5" /> : <Moon className="tw-h-5 tw-w-5" />}
-          </button>
+          <ThemeToggle />
         </div>
 
         <a href="#pricing" aria-label="رزرو کنسول" className="btn btn-enhanced nav-cta">
@@ -144,7 +125,7 @@ export function SiteHeader() {
                           href={item.href}
                           className="tw-flex tw-items-center tw-gap-3 tw-rounded-md tw-px-3 tw-py-3 tw-text-base tw-font-semibold hover:tw-bg-muted"
                         >
-                          <i className={`bi ${item.icon} tw-text-primary tw-text-lg`} aria-hidden="true" />
+                          <item.Icon className="tw-h-5 tw-w-5 tw-text-primary" aria-hidden="true" />
                           <span>{item.label}</span>
                         </a>
                       </SheetClose>
