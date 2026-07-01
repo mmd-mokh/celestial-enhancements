@@ -78,6 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { name: "color-scheme", content: "light dark" },
+      { name: "theme-color", content: "#0f172a" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "گیمیو" },
       {
         title:
           "گیمیو | اجاره کنسول بازی PS، Xbox، Nintendo Switch - اجاره روزانه و ماهانه",
@@ -116,6 +120,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/assets/logo/logo1.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/assets/logo/logo1.png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "stylesheet", href: "/css/tailwind-build.css" },
       { rel: "stylesheet", href: "/css/index.css" },
       {
