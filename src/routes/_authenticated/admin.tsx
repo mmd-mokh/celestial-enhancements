@@ -24,6 +24,24 @@ type Booking = {
   created_at: string;
 };
 
+type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  subject: string | null;
+  message: string;
+  status: string;
+  created_at: string;
+};
+
+const MSG_STATUSES = ["new", "read", "replied"];
+const MSG_STATUS_LABEL: Record<string, string> = {
+  new: "جدید",
+  read: "خوانده شده",
+  replied: "پاسخ داده شده",
+};
+
 const STATUSES = ["new", "contacted", "confirmed", "completed", "cancelled"];
 const STATUS_LABEL: Record<string, string> = {
   new: "جدید",
@@ -38,6 +56,7 @@ function AdminPage() {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [email, setEmail] = useState<string>("");
   const [rows, setRows] = useState<Booking[]>([]);
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,6 +82,25 @@ function AdminPage() {
       .order("created_at", { ascending: false });
     if (error) return toast.error(error.message);
     setRows((data ?? []) as Booking[]);
+    const { data: msgs, error: mErr } = await supabase
+      .from("contact_messages")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (mErr) return toast.error(mErr.message);
+    setMessages((msgs ?? []) as ContactMessage[]);
+  };
+
+  const updateMsgStatus = async (id: string, status: string) => {
+    const { error } = await supabase.from("contact_messages").update({ status }).eq("id", id);
+    if (error) return toast.error(error.message);
+    setMessages((m) => m.map((x) => (x.id === id ? { ...x, status } : x)));
+  };
+
+  const removeMsg = async (id: string) => {
+    if (!confirm("حذف این پیام؟")) return;
+    const { error } = await supabase.from("contact_messages").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    setMessages((m) => m.filter((x) => x.id !== id));
   };
 
   const updateStatus = async (id: string, status: string) => {
@@ -207,6 +245,55 @@ function AdminPage() {
 SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader><CardTitle>پیام‌های تماس ({messages.length})</CardTitle></CardHeader>
+          <CardContent className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-right">تاریخ</TableHead>
+                  <TableHead className="text-right">نام</TableHead>
+                  <TableHead className="text-right">ایمیل</TableHead>
+                  <TableHead className="text-right">تلفن</TableHead>
+                  <TableHead className="text-right">موضوع</TableHead>
+                  <TableHead className="text-right">پیام</TableHead>
+                  <TableHead className="text-right">وضعیت</TableHead>
+                  <TableHead className="text-right">عملیات</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {messages.map((m) => (
+                  <TableRow key={m.id}>
+                    <TableCell className="whitespace-nowrap text-xs">{new Date(m.created_at).toLocaleString("fa-IR")}</TableCell>
+                    <TableCell>{m.name}</TableCell>
+                    <TableCell dir="ltr" className="font-mono text-xs">{m.email}</TableCell>
+                    <TableCell dir="ltr" className="font-mono text-xs">{m.phone ?? "—"}</TableCell>
+                    <TableCell>{m.subject ?? "—"}</TableCell>
+                    <TableCell className="max-w-sm truncate" title={m.message}>{m.message}</TableCell>
+                    <TableCell>
+                      <Select value={m.status} onValueChange={(v) => updateMsgStatus(m.id, v)}>
+                        <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {MSG_STATUSES.map((s) => (
+                            <SelectItem key={s} value={s}>{MSG_STATUS_LABEL[s]}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="destructive" size="sm" onClick={() => removeMsg(m.id)}>حذف</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {messages.length === 0 && (
+                  <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-8">پیامی ثبت نشده است</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
       </div>
     </div>
   );

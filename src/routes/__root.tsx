@@ -133,6 +133,30 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         fetchPriority: "high",
       } as unknown as { rel: string; href: string },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "گیمیو",
+          alternateName: "Gamio",
+          url: "/",
+          logo: "/assets/logo/logo1.png",
+          description:
+            "اجاره کنسول بازی PS5، Xbox Series X و Nintendo Switch در تهران با تحویل درب منزل.",
+          areaServed: "IR",
+          contactPoint: [
+            {
+              "@type": "ContactPoint",
+              contactType: "customer support",
+              availableLanguage: ["Persian", "Farsi"],
+              areaServed: "IR",
+            },
+          ],
+        }),
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
