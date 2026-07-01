@@ -53,6 +53,17 @@ export const Route = createFileRoute("/faq")({
           ],
         }),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
+            { "@type": "ListItem", position: 2, name: "سوالات متداول", item: "/faq" },
+          ],
+        }),
+      },
     ],
   }),
   component: () => <LandingPage scrollTo="faq" />,

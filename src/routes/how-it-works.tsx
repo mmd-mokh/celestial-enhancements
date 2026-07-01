@@ -19,6 +19,19 @@ export const Route = createFileRoute("/how-it-works")({
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/how-it-works" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
+            { "@type": "ListItem", position: 2, name: "چطور کار می‌کند", item: "/how-it-works" },
+          ],
+        }),
+      },
+    ],
   }),
   component: () => <LandingPage scrollTo="how-it-works" />,
 });

@@ -19,6 +19,19 @@ export const Route = createFileRoute("/pricing")({
       { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "/pricing" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          itemListElement: [
+            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
+            { "@type": "ListItem", position: 2, name: "قیمت‌ها", item: "/pricing" },
+          ],
+        }),
+      },
+    ],
   }),
   component: () => <LandingPage scrollTo="pricing" />,
 });
