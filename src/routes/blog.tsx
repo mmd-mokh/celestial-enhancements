@@ -45,7 +45,7 @@ function BlogIndex() {
     })();
   }, []);
   return (
-    <div dir="rtl" className="min-h-screen bg-background p-6" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
+    <div dir="rtl" className="min-h-dvh bg-background p-6" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
       <div className="mx-auto max-w-4xl space-y-6">
         <header className="text-center space-y-2 py-6">
           <h1 className="text-4xl font-bold">بلاگ گیمیو</h1>

@@ -161,11 +161,11 @@ function CatalogPage() {
   };
 
   if (loading) {
-    return <div dir="rtl" className="min-h-screen flex items-center justify-center">در حال بارگذاری…</div>;
+    return <div dir="rtl" className="min-h-dvh flex items-center justify-center">در حال بارگذاری…</div>;
   }
   if (!isAdmin) {
     return (
-      <div dir="rtl" className="min-h-screen flex items-center justify-center p-4">
+      <div dir="rtl" className="min-h-dvh flex items-center justify-center p-4">
         <Card className="max-w-md">
           <CardHeader><CardTitle>دسترسی ندارید</CardTitle></CardHeader>
           <CardContent>
@@ -177,7 +177,7 @@ function CatalogPage() {
   }
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background p-4 md:p-8">
+    <div dir="rtl" className="min-h-dvh bg-background p-4 md:p-8">
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex items-center justify-between">
           <div>

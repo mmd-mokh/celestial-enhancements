@@ -40,7 +40,7 @@ export const Route = createFileRoute("/blog/$slug")({
     };
   },
   errorComponent: ({ error }) => (
-    <div dir="rtl" className="min-h-screen flex items-center justify-center p-6 text-center">
+    <div dir="rtl" className="min-h-dvh flex items-center justify-center p-6 text-center">
       <div>
         <p className="text-muted-foreground mb-4">{(error as Error).message}</p>
         <Link to="/blog" className="text-primary hover:underline">بازگشت به بلاگ</Link>
@@ -48,7 +48,7 @@ export const Route = createFileRoute("/blog/$slug")({
     </div>
   ),
   notFoundComponent: () => (
-    <div dir="rtl" className="min-h-screen flex items-center justify-center p-6 text-center">
+    <div dir="rtl" className="min-h-dvh flex items-center justify-center p-6 text-center">
       <div>
         <h1 className="text-3xl font-bold mb-2">مطلب پیدا نشد</h1>
         <Link to="/blog" className="text-primary hover:underline">بازگشت به بلاگ</Link>
@@ -72,7 +72,7 @@ function PostPage() {
   }, [post.content]);
 
   return (
-    <div dir="rtl" className="min-h-screen bg-background" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
+    <div dir="rtl" className="min-h-dvh bg-background" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
       <article className="mx-auto max-w-3xl px-6 py-10 space-y-6">
         <nav className="text-sm">
           <Link to="/" className="text-muted-foreground hover:text-foreground">خانه</Link>
