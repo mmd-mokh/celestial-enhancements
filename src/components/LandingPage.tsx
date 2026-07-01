@@ -75,8 +75,9 @@ export function LandingPage({ scrollTo }: Props) {
   return (
     <>
       <SiteHeader />
+      <main id="main">
       <div
-        className="tw-flex tw-min-h-[100vh] tw-flex-col tw-bg-white"
+        className="tw-flex tw-min-h-[100dvh] tw-flex-col tw-bg-white"
         dangerouslySetInnerHTML={{ __html: gamioBody }}
       />
       <PricingCards
@@ -88,6 +89,7 @@ export function LandingPage({ scrollTo }: Props) {
       <ConsoleCards />
       <FaqAccordion />
       <NewsletterForm />
+      </main>
       <SiteFooter />
       <AccountChip />
       <BookingDialog
