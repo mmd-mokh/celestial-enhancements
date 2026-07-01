@@ -19,6 +19,8 @@ type Booking = {
   phone: string;
   console_type: string | null;
   package_type: string | null;
+  start_date: string | null;
+  end_date: string | null;
   notes: string | null;
   status: string;
   created_at: string;
@@ -123,7 +125,7 @@ function AdminPage() {
 
   const exportCsv = () => {
     if (rows.length === 0) return;
-    const headers = ["id", "created_at", "name", "phone", "console_type", "package_type", "status", "notes"];
+    const headers = ["id", "created_at", "name", "phone", "console_type", "package_type", "start_date", "end_date", "status", "notes"];
     const escape = (v: unknown) => {
       const s = v == null ? "" : String(v);
       return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
@@ -201,6 +203,7 @@ function AdminPage() {
                   <TableHead className="text-right">تلفن</TableHead>
                   <TableHead className="text-right">کنسول</TableHead>
                   <TableHead className="text-right">پکیج</TableHead>
+                  <TableHead className="text-right">بازه رزرو</TableHead>
                   <TableHead className="text-right">یادداشت</TableHead>
                   <TableHead className="text-right">وضعیت</TableHead>
                   <TableHead className="text-right">عملیات</TableHead>
@@ -214,6 +217,9 @@ function AdminPage() {
                     <TableCell dir="ltr" className="font-mono text-xs">{b.phone}</TableCell>
                     <TableCell>{b.console_type ?? "—"}</TableCell>
                     <TableCell>{b.package_type ?? "—"}</TableCell>
+                    <TableCell dir="ltr" className="text-xs whitespace-nowrap">
+                      {b.start_date ? `${b.start_date} → ${b.end_date}` : "—"}
+                    </TableCell>
                     <TableCell className="max-w-xs truncate">{b.notes ?? "—"}</TableCell>
                     <TableCell>
                       <Select value={b.status} onValueChange={(v) => updateStatus(b.id, v)}>
