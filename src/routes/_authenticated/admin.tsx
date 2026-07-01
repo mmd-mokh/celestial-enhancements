@@ -10,6 +10,9 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { AnalyticsCharts } from "@/components/AnalyticsCharts";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "پنل مدیریت | گیمیو" }, { name: "robots", content: "noindex" }] }),
@@ -65,6 +68,9 @@ function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [bulkStatus, setBulkStatus] = useState<string>("");
+  const [detail, setDetail] = useState<Booking | null>(null);
+  const [detailNotes, setDetailNotes] = useState("");
+  const [savingNotes, setSavingNotes] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -122,6 +128,23 @@ function AdminPage() {
     const { error } = await supabase.from("bookings").delete().eq("id", id);
     if (error) return toast.error(error.message);
     setRows((r) => r.filter((b) => b.id !== id));
+    if (detail?.id === id) setDetail(null);
+  };
+
+  const openDetail = (b: Booking) => {
+    setDetail(b);
+    setDetailNotes(b.notes ?? "");
+  };
+
+  const saveNotes = async () => {
+    if (!detail) return;
+    setSavingNotes(true);
+    const { error } = await supabase.from("bookings").update({ notes: detailNotes || null }).eq("id", detail.id);
+    setSavingNotes(false);
+    if (error) return toast.error(error.message);
+    toast.success("یادداشت ذخیره شد");
+    setRows((r) => r.map((x) => x.id === detail.id ? { ...x, notes: detailNotes || null } : x));
+    setDetail((d) => d ? { ...d, notes: detailNotes || null } : d);
   };
 
   const toggleOne = (id: string) => {
