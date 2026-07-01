@@ -190,7 +190,7 @@ function CatalogPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>کنسول‌ها ({consoles.length})</CardTitle>
-            <Button size="sm" onClick={() => setEditingConsole({ sort_order: consoles.length + 1, active: true })}>افزودن کنسول</Button>
+            <Button size="sm" onClick={() => setEditingConsole({ sort_order: consoles.length + 1, active: true, quantity: 1 })}>افزودن کنسول</Button>
           </CardHeader>
           <CardContent className="overflow-x-auto">
             <Table>
