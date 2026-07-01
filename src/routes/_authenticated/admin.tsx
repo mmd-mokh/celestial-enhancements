@@ -245,6 +245,63 @@ function AdminPage() {
 SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader><CardTitle>پیام‌های تماس ({messages.length})</CardTitle></CardHeader>
+          <CardContent className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-right">تاریخ</TableHead>
+                  <TableHead className="text-right">نام</TableHead>
+                  <TableHead className="text-right">ایمیل</TableHead>
+                  <TableHead className="text-right">تلفن</TableHead>
+                  <TableHead className="text-right">موضوع</TableHead>
+                  <TableHead className="text-right">پیام</TableHead>
+                  <TableHead className="text-right">وضعیت</TableHead>
+                  <TableHead className="text-right">عملیات</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {messages.map((m) => (
+                  <TableRow key={m.id}>
+                    <TableCell className="whitespace-nowrap text-xs">{new Date(m.created_at).toLocaleString("fa-IR")}</TableCell>
+                    <TableCell>{m.name}</TableCell>
+                    <TableCell dir="ltr" className="font-mono text-xs">{m.email}</TableCell>
+                    <TableCell dir="ltr" className="font-mono text-xs">{m.phone ?? "—"}</TableCell>
+                    <TableCell>{m.subject ?? "—"}</TableCell>
+                    <TableCell className="max-w-sm truncate" title={m.message}>{m.message}</TableCell>
+                    <TableCell>
+                      <Select value={m.status} onValueChange={(v) => updateMsgStatus(m.id, v)}>
+                        <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {MSG_STATUSES.map((s) => (
+                            <SelectItem key={s} value={s}>{MSG_STATUS_LABEL[s]}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="destructive" size="sm" onClick={() => removeMsg(m.id)}>حذف</Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {messages.length === 0 && (
+                  <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground py-8">پیامی ثبت نشده است</TableCell></TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
+
+        <Card style={{ display: "none" }}>
+          <CardHeader><CardTitle>راهنمای تعیین مدیر</CardTitle></CardHeader>
+          <CardContent className="text-sm text-muted-foreground space-y-2">
+            <p>برای تبدیل یک کاربر به مدیر، این کوئری را در بک‌اند اجرا کنید:</p>
+            <pre dir="ltr" className="bg-muted p-3 rounded text-xs overflow-x-auto">{`INSERT INTO user_roles (user_id, role)
+SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
