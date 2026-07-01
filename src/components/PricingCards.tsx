@@ -1,46 +1,100 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 type Pkg = {
   slug: string;
   name: string;
-  description: string | null;
-  duration_hours: number | null;
-  price: number | null;
-  features: string[] | null;
-  badge: string | null;
-  popular: boolean | null;
-  sort_order: number | null;
+  description: string;
+  price: string;
+  unit: string;
+  features: string[];
+  badge?: string;
+  popular?: boolean;
+  icon: string;
 };
+
+// Original static package content from the ported landing page.
+const PACKAGES: Pkg[] = [
+  {
+    slug: "daily",
+    name: "اجاره روزانه",
+    description: "برای تست سریع یا مهمونی یک‌شبه",
+    price: "۲۵۰,۰۰۰",
+    unit: "تومان/روز",
+    features: [
+      "کنسول اورجینال و تست‌شده",
+      "دو دسته بازی (کنترلر)",
+      "تمام کابل‌ها و لوازم",
+      "پشتیبانی ۲۴/۷",
+    ],
+    icon: "bi-joystick",
+  },
+  {
+    slug: "weekend",
+    name: "اجاره آخر هفته",
+    description: "بهترین گزینه برای تعطیلات پرهیجان",
+    price: "۶۵۰,۰۰۰",
+    unit: "تومان/آخر هفته",
+    features: [
+      "۳ روز بازی بدون وقفه",
+      "تحویل و بازگشت رایگان",
+      "بیمه کامل دستگاه",
+      "امکان تمدید آسان",
+    ],
+    badge: "۱۳٪ صرفه‌جویی",
+    popular: true,
+    icon: "bi-trophy-fill",
+  },
+  {
+    slug: "weekly",
+    name: "اجاره هفتگی",
+    description: "یک هفته کامل، تجربه کامل",
+    price: "۱,۴۰۰,۰۰۰",
+    unit: "تومان/هفته",
+    features: [
+      "۷ روز فرصت کامل",
+      "بهترین ارزش در مقابل قیمت",
+      "تخفیف ویژه نسبت به روزانه",
+      "پشتیبانی اختصاصی",
+    ],
+    badge: "۲۰٪ صرفه‌جویی",
+    icon: "bi-clock-history",
+  },
+  {
+    slug: "monthly",
+    name: "اجاره ماهانه",
+    description: "برای گیمرهای حرفه‌ای و علاقه‌مندان جدی",
+    price: "۴,۵۰۰,۰۰۰",
+    unit: "تومان/ماه",
+    features: [
+      "یک ماه کامل با کنسول",
+      "بیشترین صرفه‌جویی",
+      "انعطاف کامل در تمدید",
+      "پشتیبانی اختصاصی",
+    ],
+    badge: "۴۰٪ صرفه‌جویی",
+    icon: "bi-calendar-week",
+  },
+];
 
 type Props = {
   onReserve: (slug: string) => void;
 };
 
-const ICONS = ["bi-joystick", "bi-trophy-fill", "bi-clock-history", "bi-calendar-week"];
-
-function toFa(n: number): string {
-  return n.toLocaleString("fa-IR");
-}
-
 /**
- * Hydrates the `.pricing-grid` container in the ported HTML with DB-backed
- * cards. Falls back silently if the container isn't mounted yet.
+ * Hydrates the `.pricing-grid` container in the ported HTML with the
+ * original static pricing cards (styled + animated).
  */
 export function PricingCards({ onReserve }: Props) {
   const [mount, setMount] = useState<HTMLElement | null>(null);
-  const [items, setItems] = useState<Pkg[] | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
     let tries = 0;
     const find = () => {
       const el = document.querySelector<HTMLElement>(".pricing-grid");
       if (el) {
-        // Clear the static HTML cards so the React grid replaces them.
         el.innerHTML = "";
         setMount(el);
         return;
@@ -48,27 +102,13 @@ export function PricingCards({ onReserve }: Props) {
       if (tries++ < 20) setTimeout(find, 100);
     };
     find();
-
-    (async () => {
-      const { data } = await supabase
-        .from("packages")
-        .select("slug,name,description,duration_hours,price,features,badge,popular,sort_order")
-        .eq("active", true)
-        .order("sort_order");
-      if (!cancelled && data) setItems(data as Pkg[]);
-    })();
-
-    return () => {
-      cancelled = true;
-    };
   }, []);
 
-  if (!mount || !items) return null;
+  if (!mount) return null;
 
   return createPortal(
     <>
-      {items.map((p, i) => {
-        const icon = ICONS[i % ICONS.length];
+      {PACKAGES.map((p, i) => {
         const featured = !!p.popular;
         return (
           <motion.div
@@ -92,11 +132,9 @@ export function PricingCards({ onReserve }: Props) {
                 <span className="pricing-card-featured-glow" aria-hidden="true" />
               </>
             )}
-            <i className={`bi ${icon} tw-text-primary tw-text-5xl icon-standard`} />
+            <i className={`bi ${p.icon} tw-text-primary tw-text-5xl icon-standard`} />
             <h4 className="tw-text-2xl tw-font-bold tw-text-gray-800">{p.name}</h4>
-            {p.description && (
-              <p className="tw-text-center tw-text-gray-700 tw-text-sm">{p.description}</p>
-            )}
+            <p className="tw-text-center tw-text-gray-700 tw-text-sm">{p.description}</p>
             <div className="tw-text-center tw-my-2">
               <div
                 className={cn(
@@ -104,11 +142,9 @@ export function PricingCards({ onReserve }: Props) {
                   featured ? "pricing-featured-price tw-text-6xl" : "tw-text-5xl",
                 )}
               >
-                {p.price != null ? toFa(p.price) : "-"}
+                {p.price}
               </div>
-              <div className="tw-text-gray-700 tw-text-base tw-mt-1">
-                تومان{p.duration_hours ? ` / ${toFa(p.duration_hours)} ساعت` : ""}
-              </div>
+              <div className="tw-text-gray-700 tw-text-base tw-mt-1">{p.unit}</div>
               {p.badge && (
                 <div className="tw-inline-block tw-text-xs tw-text-white tw-bg-green-600 tw-px-3 tw-py-1 tw-rounded-full tw-font-semibold tw-mt-3">
                   {p.badge}
@@ -117,7 +153,7 @@ export function PricingCards({ onReserve }: Props) {
             </div>
             <hr className="tw-w-full tw-border-gray-200" />
             <ul className="tw-flex tw-flex-col tw-gap-3 tw-text-right tw-w-full tw-text-sm">
-              {(p.features ?? []).map((f, k) => (
+              {p.features.map((f, k) => (
                 <li key={k} className="tw-flex tw-items-start tw-gap-2">
                   <i className="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base" />
                   <span className="tw-text-gray-700">{f}</span>
