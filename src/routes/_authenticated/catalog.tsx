@@ -36,6 +36,7 @@ type ConsoleRow = {
   icon: string | null;
   accent_from: string | null;
   accent_to: string | null;
+  quantity: number;
 };
 
 type PackageRow = {
@@ -198,6 +199,7 @@ function CatalogPage() {
                   <TableHead className="text-right">اسلاگ</TableHead>
                   <TableHead className="text-right">نام</TableHead>
                   <TableHead className="text-right">نرخ ساعتی</TableHead>
+                  <TableHead className="text-right">موجودی</TableHead>
                   <TableHead className="text-right">فعال</TableHead>
                   <TableHead className="text-right">عملیات</TableHead>
                 </TableRow>
@@ -209,6 +211,7 @@ function CatalogPage() {
                     <TableCell dir="ltr" className="font-mono text-xs">{c.slug}</TableCell>
                     <TableCell>{c.name}</TableCell>
                     <TableCell>{c.hourly_rate?.toLocaleString("fa-IR") ?? "—"}</TableCell>
+                    <TableCell>{c.quantity ?? 1}</TableCell>
                     <TableCell>{c.active ? "✓" : "—"}</TableCell>
                     <TableCell className="flex gap-1">
                       <Button size="sm" variant="outline" onClick={() => setEditingConsole(c)}>ویرایش</Button>
@@ -275,6 +278,7 @@ function CatalogPage() {
                 <div><Label>نرخ ساعتی (تومان)</Label><Input type="number" value={editingConsole.hourly_rate ?? ""} onChange={(e) => setEditingConsole({ ...editingConsole, hourly_rate: e.target.value ? Number(e.target.value) : null })} /></div>
                 <div><Label>ترتیب</Label><Input type="number" value={editingConsole.sort_order ?? 0} onChange={(e) => setEditingConsole({ ...editingConsole, sort_order: Number(e.target.value) })} /></div>
               </div>
+              <div><Label>موجودی (تعداد کنسول)</Label><Input type="number" min={0} value={editingConsole.quantity ?? 1} onChange={(e) => setEditingConsole({ ...editingConsole, quantity: Number(e.target.value) })} /></div>
               <div><Label>لینک تصویر</Label><Input dir="ltr" value={editingConsole.image_url ?? ""} onChange={(e) => setEditingConsole({ ...editingConsole, image_url: e.target.value })} /></div>
               <div><Label>شعار (tagline)</Label><Input value={editingConsole.tagline ?? ""} onChange={(e) => setEditingConsole({ ...editingConsole, tagline: e.target.value })} /></div>
               <div><Label>ویژگی‌ها (هر خط یک مورد)</Label><Textarea rows={3} value={(editingConsole.features ?? []).join("\n")} onChange={(e) => setEditingConsole({ ...editingConsole, features: e.target.value.split("\n").map((s) => s.trim()).filter(Boolean) })} /></div>
