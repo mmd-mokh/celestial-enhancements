@@ -77,21 +77,61 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { name: "color-scheme", content: "light dark" },
+      {
+        title:
+          "گیمیو | اجاره کنسول بازی PS، Xbox، Nintendo Switch - اجاره روزانه و ماهانه",
+      },
+      {
+        name: "description",
+        content:
+          "اجاره کنسول بازی در تهران با گیمیو. اجاره PS5، Xbox Series X، و Nintendo Switch با قیمت مناسب. تحویل سریع، پشتیبانی ۲۴/۷، و پکیج‌های منعطف روزانه تا ماهانه. رزرو آنلاین در کمتر از ۳ دقیقه.",
+      },
+      {
+        name: "keywords",
+        content:
+          "اجاره کنسول بازی، اجاره PS5، اجاره پلی استیشن ۵، کرایه Xbox، اجاره Xbox Series X، اجاره نینتندو سوییچ، کرایه کنسول بازی تهران، اجاره کنسول برای مهمانی، اجاره تجهیزات گیمینگ، گیمیو",
+      },
+      {
+        property: "og:title",
+        content: "گیمیو - اجاره کنسول بازی PS5 و Xbox در تهران",
+      },
+      {
+        property: "og:description",
+        content:
+          "تجربه کنسول‌های نسل جدید بدون پرداخت میلیون‌ها تومان. اجاره روزانه، هفتگی، و ماهانه با تحویل درب منزل.",
+      },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "fa_IR" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "گیمیو - اجاره کنسول بازی" },
+      {
+        name: "twitter:description",
+        content: "PS5، Xbox، Switch - اجاره کن، تجربه کن، لذت ببر!",
+      },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/assets/logo/logo1.png", type: "image/png" },
+      { rel: "stylesheet", href: "/css/tailwind-build.css" },
+      { rel: "stylesheet", href: "/css/index.css" },
+      {
+        rel: "stylesheet",
+        href: "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css",
+        crossOrigin: "anonymous",
+        referrerPolicy: "no-referrer",
+      },
+      { rel: "preconnect", href: "https://cdn.jsdelivr.net", crossOrigin: "anonymous" },
+      { rel: "preconnect", href: "https://cdnjs.cloudflare.com", crossOrigin: "anonymous" },
+      {
+        rel: "preload",
+        href: "/assets/images/home/dashboard.png",
+        as: "image",
+        fetchPriority: "high",
+      } as unknown as { rel: string; href: string },
     ],
   }),
   shellComponent: RootShell,
@@ -102,9 +142,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fa" dir="rtl">
       <head>
         <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var s=localStorage.getItem('gamio-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');}}catch(e){}})();`,
+          }}
+        />
       </head>
       <body>
         {children}
