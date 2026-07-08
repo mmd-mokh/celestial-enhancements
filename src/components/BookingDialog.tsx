@@ -8,13 +8,18 @@ import {
   CalendarCheck2,
   CalendarDays,
   CalendarPlus,
+  Check,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Gamepad2,
   Loader2,
+  MonitorPlay,
   PackageCheck,
+  Sparkles,
+  Tv,
   UserRound,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
