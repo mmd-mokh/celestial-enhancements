@@ -366,34 +366,57 @@ export function BookingDialog({
           </div>
         ) : (
           <>
-            <div className="border-b border-border bg-card px-5 py-5 text-card-foreground sm:px-7">
-              <DialogHeader className="space-y-3 text-right">
-                <DialogTitle className="text-right text-2xl">رزرو کنسول</DialogTitle>
-                <DialogDescription className="text-right">
+            <div className="border-b border-border bg-gradient-to-b from-card to-card/60 px-5 pb-5 pt-6 text-card-foreground sm:px-7">
+              <DialogHeader className="space-y-2 text-right">
+                <div className="flex items-center justify-between gap-3">
+                  <DialogTitle className="text-right text-xl sm:text-2xl">رزرو کنسول</DialogTitle>
+                  <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                    گام {toFaDigits(step + 1)} از {toFaDigits(steps.length)}
+                  </span>
+                </div>
+                <DialogDescription className="text-right text-sm">
                   {steps[step].label} را مشخص کنید؛ ثبت نهایی در مرحله آخر انجام می‌شود.
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="mt-5 grid grid-cols-4 gap-2" aria-label="مراحل رزرو">
+              <ol className="relative mt-5 flex items-center justify-between" aria-label="مراحل رزرو">
+                <div className="absolute inset-x-4 top-4 -z-0 h-0.5 rounded-full bg-border" aria-hidden="true" />
+                <div
+                  className="absolute right-4 top-4 -z-0 h-0.5 rounded-full bg-primary transition-all duration-500"
+                  style={{ width: `calc((100% - 2rem) * ${step / (steps.length - 1)})` }}
+                  aria-hidden="true"
+                />
                 {steps.map(({ label, Icon }, index) => {
                   const active = index === step;
                   const done = index < step;
                   return (
-                    <div
-                      key={label}
-                      className={cn(
-                        "flex min-w-0 flex-col items-center gap-2 rounded-md border px-2 py-2 text-center text-xs transition-colors",
-                        active || done
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border bg-background text-muted-foreground",
-                      )}
-                    >
-                      <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                      <span className="truncate">{label}</span>
-                    </div>
+                    <li key={label} className="relative z-10 flex flex-col items-center gap-1.5">
+                      <span
+                        className={cn(
+                          "grid h-8 w-8 place-items-center rounded-full border-2 text-xs font-semibold transition-all",
+                          done && "border-primary bg-primary text-primary-foreground",
+                          active && "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/40 scale-110",
+                          !active && !done && "border-border bg-background text-muted-foreground",
+                        )}
+                      >
+                        {done ? (
+                          <Check className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <Icon className="h-4 w-4" aria-hidden="true" />
+                        )}
+                      </span>
+                      <span
+                        className={cn(
+                          "text-[11px] font-medium transition-colors",
+                          active || done ? "text-foreground" : "text-muted-foreground",
+                        )}
+                      >
+                        {label}
+                      </span>
+                    </li>
                   );
                 })}
-              </div>
+              </ol>
             </div>
 
             <form
