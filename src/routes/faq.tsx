@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LandingPage } from "@/components/LandingPage";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { FaqList } from "@/components/FaqAccordion";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
@@ -66,5 +68,29 @@ export const Route = createFileRoute("/faq")({
       },
     ],
   }),
-  component: () => <LandingPage scrollTo="faq" />,
+  component: FaqPage,
 });
+
+function FaqPage() {
+  return (
+    <>
+      <SiteHeader />
+      <main className="tw-min-h-screen tw-bg-white">
+        <section id="faq" className="tw-px-4 md:tw-px-8 lg:tw-px-16 tw-py-16">
+          <div className="tw-max-w-4xl tw-mx-auto tw-flex tw-flex-col tw-gap-4 tw-text-center tw-mb-10">
+            <h1 className="tw-text-4xl md:tw-text-5xl tw-font-extrabold tw-text-gray-900">
+              سوالات متداول
+            </h1>
+            <p className="tw-text-lg tw-text-gray-700">
+              هر چیزی که قبل از اجاره کنسول لازم داری بدونی.
+            </p>
+          </div>
+          <div className="tw-max-w-4xl tw-mx-auto tw-w-full">
+            <FaqList />
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
