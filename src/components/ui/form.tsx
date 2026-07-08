@@ -150,6 +150,8 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
+      role={error ? "alert" : undefined}
+      aria-live={error ? "polite" : undefined}
       className={cn("text-[0.8rem] font-medium text-destructive", className)}
       {...props}
     >
