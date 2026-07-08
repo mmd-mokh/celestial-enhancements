@@ -18,6 +18,8 @@ export const Route = createFileRoute("/api/public/booking-ical/$id")({
   server: {
     handlers: {
       GET: async ({ params }) => {
+        const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if (!UUID_RE.test(params.id)) return new Response("Not found", { status: 404 });
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data, error } = await supabaseAdmin
           .from("bookings")
