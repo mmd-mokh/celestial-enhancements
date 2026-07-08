@@ -363,8 +363,8 @@ export function BookingDialog({
                         d && form.setValue("startDate", d, { shouldValidate: true })
                       }
                       disabled={isDayDisabled}
-                      fromDate={new Date()}
-                      toDate={addDays(new Date(), 90)}
+                      startMonth={new Date()}
+                      endMonth={addDays(new Date(), 90)}
                       className="pointer-events-auto rounded-md border"
                     />
                   </div>
@@ -406,7 +406,11 @@ export function BookingDialog({
                     <Label htmlFor="booking-phone">شماره تماس</Label>
                     <Input
                       id="booking-phone"
-                      {...form.register("phone")}
+                      {...form.register("phone", {
+                        onChange: (e) => {
+                          e.target.value = toAsciiDigits(e.target.value);
+                        },
+                      })}
                       placeholder="09121234567"
                       inputMode="tel"
                       autoComplete="tel"
