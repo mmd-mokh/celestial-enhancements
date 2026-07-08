@@ -6,6 +6,7 @@ import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const schema = z.object({
   email: z
@@ -50,9 +51,19 @@ export function NewsletterForm() {
 
   if (!mount) return null;
 
-  async function onSubmit(_v: Values) {
-    // No backend endpoint yet — treat as a success toast, wire to Cloud later.
-    await new Promise((r) => setTimeout(r, 500));
+  async function onSubmit(v: Values) {
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .insert({ email: v.email.trim().toLowerCase(), source: "landing" });
+    if (error) {
+      if (error.code === "23505") {
+        toast.success("قبلاً عضو شده‌ای — ممنونیم!");
+        reset();
+        return;
+      }
+      toast.error("ثبت انجام نشد. لطفاً دوباره امتحان کن.");
+      return;
+    }
     toast.success("ثبت شد! به‌زودی از ما خبر می‌شنوی.");
     reset();
   }

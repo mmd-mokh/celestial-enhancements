@@ -16,7 +16,7 @@ type Pkg = {
 };
 
 // Original static package content from the ported landing page.
-const PACKAGES: Pkg[] = [
+export const PACKAGES: Pkg[] = [
   {
     slug: "daily",
     name: "اجاره روزانه",
@@ -106,7 +106,12 @@ export function PricingCards({ onReserve }: Props) {
 
   if (!mount) return null;
 
-  return createPortal(
+  return createPortal(<PricingList onReserve={onReserve} />, mount);
+}
+
+/** Standalone renderer of the pricing cards (no portal). Used by dedicated /pricing page. */
+export function PricingList({ onReserve }: Props) {
+  return (
     <>
       {PACKAGES.map((p, i) => {
         const featured = !!p.popular;
@@ -170,7 +175,6 @@ export function PricingCards({ onReserve }: Props) {
           </motion.div>
         );
       })}
-    </>,
-    mount,
+    </>
   );
 }

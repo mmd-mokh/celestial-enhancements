@@ -1,5 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { LandingPage } from "@/components/LandingPage";
+import { useEffect, useState } from "react";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
+import { ConsoleList, type ConsoleRow } from "@/components/ConsoleCards";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/consoles")({
   head: () => ({
@@ -46,5 +50,46 @@ export const Route = createFileRoute("/consoles")({
       },
     ],
   }),
-  component: () => <LandingPage scrollTo="consoles" />,
+  component: ConsolesPage,
 });
+
+function ConsolesPage() {
+  const [items, setItems] = useState<ConsoleRow[] | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("consoles")
+        .select("slug,name,tagline,features,icon,accent_from,accent_to,sort_order")
+        .eq("active", true)
+        .order("sort_order");
+      if (!cancelled && data) setItems(data as ConsoleRow[]);
+    })();
+    return () => { cancelled = true; };
+  }, []);
+  return (
+    <>
+      <SiteHeader />
+      <main className="tw-min-h-screen tw-bg-white">
+        <section id="consoles" className="tw-px-4 md:tw-px-8 lg:tw-px-16 tw-py-16">
+          <div className="tw-max-w-7xl tw-mx-auto tw-flex tw-flex-col tw-gap-4 tw-text-center tw-mb-10">
+            <h1 className="tw-text-4xl md:tw-text-5xl tw-font-extrabold tw-text-gray-900">
+              کنسول‌های موجود برای اجاره
+            </h1>
+            <p className="tw-text-lg tw-text-gray-700 tw-max-w-2xl tw-mx-auto">
+              PS5، Xbox Series X، و Nintendo Switch — با دو دسته و همه لوازم اصلی.
+            </p>
+          </div>
+          <div
+            className="tw-max-w-7xl tw-mx-auto tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6"
+            role="list"
+            aria-label="کنسول‌های موجود"
+          >
+            {items ? <ConsoleList items={items} /> : <p className="tw-text-center tw-text-gray-500">در حال بارگذاری…</p>}
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
