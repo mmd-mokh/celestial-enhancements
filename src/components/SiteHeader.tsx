@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Menu, X, ArrowLeft, Gamepad2, Zap, Tag, HelpCircle, type LucideIcon } from "lucide-react";
+import { Menu, X, ChevronLeft, Gamepad2, Zap, Tag, HelpCircle, type LucideIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
@@ -89,7 +89,7 @@ export function SiteHeader() {
 
         <a href="#pricing" aria-label="رزرو کنسول" className="btn btn-enhanced nav-cta">
           <span>همین الان رزرو کن</span>
-          <ArrowLeft className="tw-h-4 tw-w-4" aria-hidden="true" />
+          <ChevronLeft className="tw-h-4 tw-w-4" aria-hidden="true" />
         </a>
 
         <div className="nav-actions">
@@ -141,7 +141,7 @@ export function SiteHeader() {
                     className="btn btn-enhanced tw-flex tw-items-center tw-justify-center tw-gap-2 tw-w-full"
                   >
                     <span>همین الان رزرو کن</span>
-                    <ArrowLeft className="tw-h-4 tw-w-4" />
+                    <ChevronLeft className="tw-h-4 tw-w-4" aria-hidden="true" />
                   </a>
                 </SheetClose>
               </div>
