@@ -605,8 +605,42 @@ export function BookingDialog({
                 </div>
               )}
 
+              <div className="sticky bottom-0 -mx-5 -mb-5 space-y-3 border-t border-border bg-popover/95 px-5 py-4 backdrop-blur sm:-mx-7 sm:-mb-5 sm:px-7">
+                {(selectedConsole || selectedPackage) && step > 0 && (
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                    {selectedConsole && (
+                      <span className="inline-flex items-center gap-1">
+                        <Gamepad2 className="h-3 w-3 text-primary" aria-hidden="true" />
+                        {selectedConsole.label}
+                      </span>
+                    )}
+                    {selectedPackage && step > 1 && (
+                      <>
+                        <span aria-hidden="true">•</span>
+                        <span className="inline-flex items-center gap-1">
+                          <PackageCheck className="h-3 w-3 text-primary" aria-hidden="true" />
+                          {selectedPackage.label}
+                        </span>
+                      </>
+                    )}
+                    {selectedDate && step > 2 && (
+                      <>
+                        <span aria-hidden="true">•</span>
+                        <span className="inline-flex items-center gap-1">
+                          <CalendarDays className="h-3 w-3 text-primary" aria-hidden="true" />
+                          {formatDisplayDate(selectedDate)}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                )}
               <DialogFooter className="flex-col-reverse gap-2 sm:flex-row-reverse sm:justify-between sm:space-x-0">
-                <Button type="submit" disabled={form.formState.isSubmitting} className="w-full sm:w-auto">
+                <Button
+                  type="submit"
+                  disabled={form.formState.isSubmitting}
+                  size="lg"
+                  className="w-full font-semibold sm:w-auto sm:min-w-40"
+                >
                   {step === steps.length - 1 ? (
                     form.formState.isSubmitting ? (
                       <>
@@ -627,7 +661,7 @@ export function BookingDialog({
                 {step > 0 && (
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost"
                     onClick={() => setStep((current) => current - 1)}
                     disabled={form.formState.isSubmitting}
                     className="w-full sm:w-auto"
@@ -637,6 +671,7 @@ export function BookingDialog({
                   </Button>
                 )}
               </DialogFooter>
+              </div>
             </form>
           </>
         )}
