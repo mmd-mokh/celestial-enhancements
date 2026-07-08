@@ -8,7 +8,7 @@ for (const path of ROUTES) {
   test(`a11y: ${path} has no critical/serious axe violations`, async ({ page }) => {
     await page.goto(path, { waitUntil: "networkidle" });
     const results = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
       .analyze();
     const blocking = results.violations.filter(
       (v) => v.impact === "critical" || v.impact === "serious",

@@ -3,6 +3,40 @@ import "./lib/error-capture";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 
+const SECURITY_HEADERS: Record<string, string> = {
+  "X-Frame-Options": "DENY",
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+  "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+  "Content-Security-Policy": [
+    "default-src 'self'",
+    "img-src 'self' data: https: blob:",
+    "font-src 'self' https://cdn.jsdelivr.net data:",
+    "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+    "connect-src 'self' https://*.supabase.co https://*.lovable.app https://*.lovable.dev wss://*.supabase.co",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+  ].join("; "),
+};
+
+function applySecurityHeaders(response: Response): Response {
+  const contentType = response.headers.get("content-type") ?? "";
+  // Only inject on document/asset responses; leave API/JSON alone to avoid overriding CORS.
+  if (!contentType.includes("text/html")) return response;
+  const headers = new Headers(response.headers);
+  for (const [k, v] of Object.entries(SECURITY_HEADERS)) {
+    if (!headers.has(k)) headers.set(k, v);
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
 type ServerEntry = {
   fetch: (request: Request, env: unknown, ctx: unknown) => Promise<Response> | Response;
 };
@@ -49,13 +83,14 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalized = await normalizeCatastrophicSsrResponse(response);
+      return applySecurityHeaders(normalized);
     } catch (error) {
       console.error(error);
-      return new Response(renderErrorPage(), {
+      return applySecurityHeaders(new Response(renderErrorPage(), {
         status: 500,
         headers: { "content-type": "text/html; charset=utf-8" },
-      });
+      }));
     }
   },
 };
