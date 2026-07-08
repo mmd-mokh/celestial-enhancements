@@ -124,14 +124,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "stylesheet", href: "/css/tailwind-build.css" },
       { rel: "stylesheet", href: "/css/index.css" },
-      {
-        rel: "stylesheet",
-        href: "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css",
-        crossOrigin: "anonymous",
-        referrerPolicy: "no-referrer",
-      },
       { rel: "preconnect", href: "https://cdn.jsdelivr.net", crossOrigin: "anonymous" },
-      { rel: "preconnect", href: "https://cdnjs.cloudflare.com", crossOrigin: "anonymous" },
       {
         rel: "preload",
         href: "/assets/images/home/dashboard.png",
