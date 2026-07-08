@@ -99,7 +99,7 @@ function PostPage() {
         )}
         <div
           className="prose prose-neutral dark:prose-invert max-w-none leading-8"
-          dangerouslySetInnerHTML={{ __html: html }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
         />
       </article>
     </div>
