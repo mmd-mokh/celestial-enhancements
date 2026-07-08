@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const FAQS: Array<{ q: string; a: string }> = [
+export const FAQS: Array<{ q: string; a: string }> = [
   {
     q: "چطور می‌تونم کنسول رزرو کنم؟",
     a: "خیلی سادست! از صفحه اصلی سایت، کنسول موردنظرت رو انتخاب کن، بازه زمانی رو مشخص کن، و فرم رزرو رو پر کن. بعد از پرداخت آنلاین، تأییدیه فوری دریافت می‌کنی. کل فرآیند کمتر از ۳ دقیقه طول می‌کشه.",
@@ -79,7 +79,12 @@ export function FaqAccordion() {
 
   if (!mount) return null;
 
-  return createPortal(
+  return createPortal(<FaqList />, mount);
+}
+
+/** Standalone FAQ accordion (no portal). Used by dedicated /faq page. */
+export function FaqList() {
+  return (
     <Accordion type="single" collapsible className="tw-flex tw-flex-col tw-gap-4">
       {FAQS.map((item, i) => (
         <AccordionItem
@@ -95,7 +100,6 @@ export function FaqAccordion() {
           </AccordionContent>
         </AccordionItem>
       ))}
-    </Accordion>,
-    mount,
+    </Accordion>
   );
 }

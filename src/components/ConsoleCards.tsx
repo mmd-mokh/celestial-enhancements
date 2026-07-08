@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 
-type Console = {
+export type ConsoleRow = {
   slug: string;
   name: string;
   tagline: string | null;
@@ -20,7 +20,7 @@ type Console = {
  */
 export function ConsoleCards() {
   const [mount, setMount] = useState<HTMLElement | null>(null);
-  const [items, setItems] = useState<Console[] | null>(null);
+  const [items, setItems] = useState<ConsoleRow[] | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -44,7 +44,7 @@ export function ConsoleCards() {
         .select("slug,name,tagline,features,icon,accent_from,accent_to,sort_order")
         .eq("active", true)
         .order("sort_order");
-      if (!cancelled && data) setItems(data as Console[]);
+      if (!cancelled && data) setItems(data as ConsoleRow[]);
     })();
 
     return () => {
@@ -54,7 +54,12 @@ export function ConsoleCards() {
 
   if (!mount || !items) return null;
 
-  return createPortal(
+  return createPortal(<ConsoleList items={items} />, mount);
+}
+
+/** Standalone renderer for console cards. Used by dedicated /consoles page. */
+export function ConsoleList({ items }: { items: ConsoleRow[] }) {
+  return (
     <>
       {items.map((c, i) => (
         <motion.article
@@ -79,10 +84,7 @@ export function ConsoleCards() {
           </div>
           <h3 className="console-card-title">{c.name}</h3>
           {c.tagline && <p className="console-card-tagline">{c.tagline}</p>}
-          <ul
-            className="console-card-features"
-            aria-label={`ویژگی‌های ${c.name}`}
-          >
+          <ul className="console-card-features" aria-label={`ویژگی‌های ${c.name}`}>
             {(c.features ?? []).map((f, i) => (
               <li key={i} className="console-card-feature">
                 <i className="bi bi-check-circle-fill" aria-hidden="true" />
@@ -92,7 +94,6 @@ export function ConsoleCards() {
           </ul>
         </motion.article>
       ))}
-    </>,
-    mount,
+    </>
   );
 }
