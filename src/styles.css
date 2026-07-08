@@ -144,3 +144,78 @@
     color: var(--color-foreground);
   }
 }
+
+/*
+ * Dark mode overrides for the ported landing-page HTML blob and lean pages
+ * that hardcode Tailwind utilities (tw-bg-white, tw-text-gray-*, tw-text-black,
+ * tw-bg-gray-50/100). These utilities have no dark: variant, so we invert
+ * them under the `.dark` root here rather than editing every source file.
+ */
+html.dark body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+}
+
+html.dark .tw-bg-white,
+html.dark section.tw-bg-white,
+html.dark main.tw-bg-white,
+html.dark .tw-bg-gray-50,
+html.dark .tw-bg-gray-100 {
+  background-color: var(--color-background) !important;
+  color: var(--color-foreground);
+}
+
+html.dark .tw-text-black,
+html.dark .tw-text-gray-900,
+html.dark .tw-text-gray-800 {
+  color: var(--color-foreground) !important;
+}
+
+html.dark .tw-text-gray-700,
+html.dark .tw-text-gray-600,
+html.dark .tw-text-gray-500,
+html.dark .tw-text-gray-400 {
+  color: var(--color-muted-foreground) !important;
+}
+
+/* Ported cards/surfaces default to white — lift to dark surface tone. */
+html.dark .pricing-card-enhanced,
+html.dark .console-card,
+html.dark .faq-card,
+html.dark [data-slot="accordion-item"].tw-bg-white,
+html.dark .tw-bg-white.tw-shadow-lg,
+html.dark .tw-bg-white.tw-shadow-md,
+html.dark .tw-bg-white.tw-shadow-2xl,
+html.dark .tw-shadow-md.tw-bg-white,
+html.dark .tw-shadow-lg.tw-bg-white {
+  background-color: var(--color-card) !important;
+  color: var(--color-card-foreground) !important;
+  border-color: var(--color-border);
+}
+
+/* Featured pricing card uses a light gradient — swap to solid dark card. */
+html.dark .pricing-card-featured {
+  background-image: none !important;
+  background-color: var(--color-card) !important;
+}
+
+/* Site footer uses tw-text-black + tw-bg-gray-50. */
+html.dark footer.tw-bg-gray-50,
+html.dark footer.tw-text-black {
+  background-color: var(--color-card) !important;
+  color: var(--color-card-foreground) !important;
+}
+
+/* Header frosted-glass surface. */
+html.dark .site-header {
+  background-color: color-mix(in oklab, var(--color-background) 85%, transparent);
+  color: var(--color-foreground);
+}
+
+/* Newsletter mount inherits gray text on light surface; realign. */
+html.dark #newsletter-form-mount label,
+html.dark #newsletter-form-mount .tw-text-gray-700 {
+  color: var(--color-foreground) !important;
+}
+
+/* Bottom copyright bar stays dark in both modes — leave alone. */

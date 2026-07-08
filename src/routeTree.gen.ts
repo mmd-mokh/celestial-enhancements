@@ -16,14 +16,8 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsolesRouteImport } from './routes/consoles'
 import { Route as BlogRouteImport } from './routes/blog'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
-import { Route as AuthenticatedMyBookingsRouteImport } from './routes/_authenticated/my-bookings'
-import { Route as AuthenticatedCatalogRouteImport } from './routes/_authenticated/catalog'
-import { Route as AuthenticatedBlogAdminRouteImport } from './routes/_authenticated/blog-admin'
-import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as ApiPublicBookingIcalIdRouteImport } from './routes/api/public/booking-ical.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -61,15 +55,6 @@ const BlogRoute = BlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -80,26 +65,6 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
-const AuthenticatedMyBookingsRoute = AuthenticatedMyBookingsRouteImport.update({
-  id: '/my-bookings',
-  path: '/my-bookings',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedCatalogRoute = AuthenticatedCatalogRouteImport.update({
-  id: '/catalog',
-  path: '/catalog',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedBlogAdminRoute = AuthenticatedBlogAdminRouteImport.update({
-  id: '/blog-admin',
-  path: '/blog-admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const ApiPublicBookingIcalIdRoute = ApiPublicBookingIcalIdRouteImport.update({
   id: '/api/public/booking-ical/$id',
   path: '/api/public/booking-ical/$id',
@@ -108,7 +73,6 @@ const ApiPublicBookingIcalIdRoute = ApiPublicBookingIcalIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/consoles': typeof ConsolesRoute
   '/contact': typeof ContactRoute
@@ -116,16 +80,11 @@ export interface FileRoutesByFullPath {
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRoute
-  '/blog-admin': typeof AuthenticatedBlogAdminRoute
-  '/catalog': typeof AuthenticatedCatalogRoute
-  '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/consoles': typeof ConsolesRoute
   '/contact': typeof ContactRoute
@@ -133,18 +92,12 @@ export interface FileRoutesByTo {
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin': typeof AuthenticatedAdminRoute
-  '/blog-admin': typeof AuthenticatedBlogAdminRoute
-  '/catalog': typeof AuthenticatedCatalogRoute
-  '/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/auth': typeof AuthRoute
   '/blog': typeof BlogRouteWithChildren
   '/consoles': typeof ConsolesRoute
   '/contact': typeof ContactRoute
@@ -152,10 +105,6 @@ export interface FileRoutesById {
   '/how-it-works': typeof HowItWorksRoute
   '/pricing': typeof PricingRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
-  '/_authenticated/blog-admin': typeof AuthenticatedBlogAdminRoute
-  '/_authenticated/catalog': typeof AuthenticatedCatalogRoute
-  '/_authenticated/my-bookings': typeof AuthenticatedMyBookingsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
 }
@@ -163,7 +112,6 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/auth'
     | '/blog'
     | '/consoles'
     | '/contact'
@@ -171,16 +119,11 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/pricing'
     | '/sitemap.xml'
-    | '/admin'
-    | '/blog-admin'
-    | '/catalog'
-    | '/my-bookings'
     | '/blog/$slug'
     | '/api/public/booking-ical/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/auth'
     | '/blog'
     | '/consoles'
     | '/contact'
@@ -188,17 +131,11 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/pricing'
     | '/sitemap.xml'
-    | '/admin'
-    | '/blog-admin'
-    | '/catalog'
-    | '/my-bookings'
     | '/blog/$slug'
     | '/api/public/booking-ical/$id'
   id:
     | '__root__'
     | '/'
-    | '/_authenticated'
-    | '/auth'
     | '/blog'
     | '/consoles'
     | '/contact'
@@ -206,18 +143,12 @@ export interface FileRouteTypes {
     | '/how-it-works'
     | '/pricing'
     | '/sitemap.xml'
-    | '/_authenticated/admin'
-    | '/_authenticated/blog-admin'
-    | '/_authenticated/catalog'
-    | '/_authenticated/my-bookings'
     | '/blog/$slug'
     | '/api/public/booking-ical/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  AuthRoute: typeof AuthRoute
   BlogRoute: typeof BlogRouteWithChildren
   ConsolesRoute: typeof ConsolesRoute
   ContactRoute: typeof ContactRoute
@@ -279,20 +210,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -307,34 +224,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
-    '/_authenticated/my-bookings': {
-      id: '/_authenticated/my-bookings'
-      path: '/my-bookings'
-      fullPath: '/my-bookings'
-      preLoaderRoute: typeof AuthenticatedMyBookingsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/catalog': {
-      id: '/_authenticated/catalog'
-      path: '/catalog'
-      fullPath: '/catalog'
-      preLoaderRoute: typeof AuthenticatedCatalogRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/blog-admin': {
-      id: '/_authenticated/blog-admin'
-      path: '/blog-admin'
-      fullPath: '/blog-admin'
-      preLoaderRoute: typeof AuthenticatedBlogAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/admin': {
-      id: '/_authenticated/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AuthenticatedAdminRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/api/public/booking-ical/$id': {
       id: '/api/public/booking-ical/$id'
       path: '/api/public/booking-ical/$id'
@@ -344,23 +233,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
-  AuthenticatedBlogAdminRoute: typeof AuthenticatedBlogAdminRoute
-  AuthenticatedCatalogRoute: typeof AuthenticatedCatalogRoute
-  AuthenticatedMyBookingsRoute: typeof AuthenticatedMyBookingsRoute
-}
-
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
-  AuthenticatedBlogAdminRoute: AuthenticatedBlogAdminRoute,
-  AuthenticatedCatalogRoute: AuthenticatedCatalogRoute,
-  AuthenticatedMyBookingsRoute: AuthenticatedMyBookingsRoute,
-}
-
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
@@ -374,8 +246,6 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  AuthRoute: AuthRoute,
   BlogRoute: BlogRouteWithChildren,
   ConsolesRoute: ConsolesRoute,
   ContactRoute: ContactRoute,
