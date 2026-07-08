@@ -658,13 +658,22 @@ function OptionButton({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={selected}
       className={cn(
-        "flex min-h-28 flex-col items-center justify-center gap-2 rounded-md border p-4 text-center transition-colors",
+        "group relative flex min-h-28 flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border p-4 text-center transition-all duration-200",
         selected
-          ? "border-primary bg-primary/10 text-foreground ring-2 ring-primary/25"
-          : "border-border bg-card text-card-foreground hover:border-primary hover:bg-accent",
+          ? "border-primary bg-primary/10 text-foreground shadow-md shadow-primary/20 ring-2 ring-primary/40"
+          : "border-border bg-card text-card-foreground hover:-translate-y-0.5 hover:border-primary/60 hover:bg-accent hover:shadow-sm",
       )}
     >
+      {selected && (
+        <span
+          className="absolute top-2 right-2 grid h-5 w-5 place-items-center rounded-full bg-primary text-primary-foreground"
+          aria-hidden="true"
+        >
+          <Check className="h-3 w-3" />
+        </span>
+      )}
       {children}
     </button>
   );
