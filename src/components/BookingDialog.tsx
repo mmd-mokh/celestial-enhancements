@@ -405,35 +405,62 @@ export function BookingDialog({
             >
               {step === 0 && (
                 <div className="grid gap-3 sm:grid-cols-3">
-                  {consoles.map((consoleItem) => (
-                    <OptionButton
-                      key={consoleItem.value}
-                      selected={values.consoleType === consoleItem.value}
-                      onClick={() =>
-                        form.setValue("consoleType", consoleItem.value, { shouldValidate: true })
-                      }
-                    >
-                      <i className={`bi ${consoleItem.icon} text-3xl text-primary`} aria-hidden="true" />
-                      <span className="font-semibold">{consoleItem.label}</span>
-                    </OptionButton>
-                  ))}
+                  {consoles.map((consoleItem) => {
+                    const Icon = CONSOLE_ICON[consoleItem.value] ?? Gamepad2;
+                    const selected = values.consoleType === consoleItem.value;
+                    return (
+                      <OptionButton
+                        key={consoleItem.value}
+                        selected={selected}
+                        onClick={() =>
+                          form.setValue("consoleType", consoleItem.value, { shouldValidate: true })
+                        }
+                      >
+                        <span
+                          className={cn(
+                            "grid h-12 w-12 place-items-center rounded-full transition-colors",
+                            selected
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-primary/10 text-primary",
+                          )}
+                        >
+                          <Icon className="h-6 w-6" aria-hidden="true" />
+                        </span>
+                        <span className="font-semibold">{consoleItem.label}</span>
+                        <span className="text-xs text-muted-foreground">{consoleItem.tagline}</span>
+                      </OptionButton>
+                    );
+                  })}
                 </div>
               )}
 
               {step === 1 && (
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {packages.map((packageItem) => (
-                    <OptionButton
-                      key={packageItem.value}
-                      selected={values.packageType === packageItem.value}
-                      onClick={() =>
-                        form.setValue("packageType", packageItem.value, { shouldValidate: true })
-                      }
-                    >
-                      <span className="text-base font-semibold">{packageItem.label}</span>
-                      <span className="text-sm text-muted-foreground">{packageItem.desc}</span>
-                    </OptionButton>
-                  ))}
+                  {packages.map((packageItem) => {
+                    const badge = PACKAGE_BADGE[packageItem.value];
+                    const days = Math.max(1, Math.ceil(packageItem.hours / 24));
+                    return (
+                      <OptionButton
+                        key={packageItem.value}
+                        selected={values.packageType === packageItem.value}
+                        onClick={() =>
+                          form.setValue("packageType", packageItem.value, { shouldValidate: true })
+                        }
+                      >
+                        {badge && (
+                          <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary">
+                            <Sparkles className="h-3 w-3" aria-hidden="true" />
+                            {badge}
+                          </span>
+                        )}
+                        <span className="text-base font-semibold">{packageItem.label}</span>
+                        <span className="text-sm text-muted-foreground">{packageItem.desc}</span>
+                        <span className="text-[11px] text-muted-foreground/80">
+                          {toFaDigits(days)} روز
+                        </span>
+                      </OptionButton>
+                    );
+                  })}
                 </div>
               )}
 
