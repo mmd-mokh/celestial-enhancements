@@ -80,7 +80,7 @@ export function NewsletterForm() {
           dir="ltr"
         />
         {errors.email && (
-          <span className="tw-text-xs tw-text-red-600 tw-text-right">
+          <span role="alert" aria-live="polite" className="tw-text-xs tw-text-red-600 tw-text-right">
             {errors.email.message}
           </span>
         )}
