@@ -523,6 +523,7 @@ function setStoredTheme(theme) {
 
 function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
     if (themeToggleBtn) {
         const icon = themeToggleBtn.querySelector('i');
         if (icon) {
