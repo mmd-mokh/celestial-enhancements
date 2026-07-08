@@ -433,8 +433,8 @@ SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
                   <div><div className="text-xs text-muted-foreground">تلفن</div><div dir="ltr" className="font-mono">{detail.phone}</div></div>
                   <div><div className="text-xs text-muted-foreground">کنسول</div><div>{detail.console_type ?? "—"}</div></div>
                   <div><div className="text-xs text-muted-foreground">پکیج</div><div>{detail.package_type ?? "—"}</div></div>
-                  <div><div className="text-xs text-muted-foreground">شروع</div><div dir="ltr">{detail.start_date ?? "—"}</div></div>
-                  <div><div className="text-xs text-muted-foreground">پایان</div><div dir="ltr">{detail.end_date ?? "—"}</div></div>
+                  <div><div className="text-xs text-muted-foreground">شروع</div><div>{formatDateFa(detail.start_date)}</div></div>
+                  <div><div className="text-xs text-muted-foreground">پایان</div><div>{formatDateFa(detail.end_date)}</div></div>
                   <div><div className="text-xs text-muted-foreground">وضعیت</div><Badge variant="secondary">{STATUS_LABEL[detail.status] ?? detail.status}</Badge></div>
                   <div><div className="text-xs text-muted-foreground">ثبت</div><div className="text-xs">{new Date(detail.created_at).toLocaleString("fa-IR")}</div></div>
                 </div>
