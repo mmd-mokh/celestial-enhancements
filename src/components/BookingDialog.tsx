@@ -49,13 +49,13 @@ type Props = {
   defaultConsole?: string;
 };
 
-type ConsoleOpt = { value: string; label: string; icon: string };
+type ConsoleOpt = { value: string; label: string; tagline: string };
 type PackageOpt = { value: string; label: string; desc: string; hours: number };
 
 const FALLBACK_CONSOLES: ConsoleOpt[] = [
-  { value: "ps5", label: "PlayStation 5", icon: "bi-playstation" },
-  { value: "xbox", label: "Xbox Series X", icon: "bi-xbox" },
-  { value: "switch", label: "Nintendo Switch", icon: "bi-nintendo-switch" },
+  { value: "ps5", label: "PlayStation 5", tagline: "نسل جدید سونی" },
+  { value: "xbox", label: "Xbox Series X", tagline: "قدرت مایکروسافت" },
+  { value: "switch", label: "Nintendo Switch", tagline: "بازی همه‌جا" },
 ];
 
 const FALLBACK_PACKAGES: PackageOpt[] = [
@@ -65,10 +65,15 @@ const FALLBACK_PACKAGES: PackageOpt[] = [
   { value: "monthly", label: "ماهانه", desc: "۳۰ روز، بهترین قیمت", hours: 720 },
 ];
 
-const ICON_MAP: Record<string, string> = {
-  ps5: "bi-playstation",
-  xbox: "bi-xbox",
-  switch: "bi-nintendo-switch",
+const CONSOLE_ICON: Record<string, typeof Gamepad2> = {
+  ps5: Gamepad2,
+  xbox: MonitorPlay,
+  switch: Tv,
+};
+
+const PACKAGE_BADGE: Record<string, string> = {
+  monthly: "بهترین قیمت",
+  weekend: "پرطرفدار",
 };
 
 const steps = [
