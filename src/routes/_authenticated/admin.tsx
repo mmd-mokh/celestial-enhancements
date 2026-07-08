@@ -328,9 +328,9 @@ function AdminPage() {
                         onCheckedChange={() => toggleOne(b.id)}
                       />
                     </TableCell>
-                    <TableCell className="whitespace-nowrap text-xs">{new Date(b.created_at).toLocaleString("fa-IR")}</TableCell>
+                    <TableCell className="whitespace-nowrap text-xs">{toFaDigits(new Date(b.created_at).toLocaleString("fa-IR"))}</TableCell>
                     <TableCell>{b.name}</TableCell>
-                    <TableCell dir="ltr" className="font-mono text-xs">{b.phone}</TableCell>
+                    <TableCell dir="ltr" className="font-mono text-xs">{toFaDigits(b.phone)}</TableCell>
                     <TableCell>{b.console_type ?? "—"}</TableCell>
                     <TableCell>{b.package_type ?? "—"}</TableCell>
                     <TableCell className="text-xs whitespace-nowrap">
@@ -388,10 +388,10 @@ SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
               <TableBody>
                 {messages.map((m) => (
                   <TableRow key={m.id}>
-                    <TableCell className="whitespace-nowrap text-xs">{new Date(m.created_at).toLocaleString("fa-IR")}</TableCell>
+                    <TableCell className="whitespace-nowrap text-xs">{toFaDigits(new Date(m.created_at).toLocaleString("fa-IR"))}</TableCell>
                     <TableCell>{m.name}</TableCell>
                     <TableCell dir="ltr" className="font-mono text-xs">{m.email}</TableCell>
-                    <TableCell dir="ltr" className="font-mono text-xs">{m.phone ?? "—"}</TableCell>
+                    <TableCell dir="ltr" className="font-mono text-xs">{m.phone ? toFaDigits(m.phone) : "—"}</TableCell>
                     <TableCell>{m.subject ?? "—"}</TableCell>
                     <TableCell className="max-w-sm truncate" title={m.message}>{m.message}</TableCell>
                     <TableCell>
@@ -430,13 +430,13 @@ SELECT id, 'admin' FROM auth.users WHERE email = 'you@example.com';`}</pre>
               <div className="space-y-4 mt-4 text-sm">
                 <div className="grid grid-cols-2 gap-3">
                   <div><div className="text-xs text-muted-foreground">نام</div><div>{detail.name}</div></div>
-                  <div><div className="text-xs text-muted-foreground">تلفن</div><div dir="ltr" className="font-mono">{detail.phone}</div></div>
+                  <div><div className="text-xs text-muted-foreground">تلفن</div><div dir="ltr" className="font-mono">{toFaDigits(detail.phone)}</div></div>
                   <div><div className="text-xs text-muted-foreground">کنسول</div><div>{detail.console_type ?? "—"}</div></div>
                   <div><div className="text-xs text-muted-foreground">پکیج</div><div>{detail.package_type ?? "—"}</div></div>
                   <div><div className="text-xs text-muted-foreground">شروع</div><div>{formatDateFa(detail.start_date)}</div></div>
                   <div><div className="text-xs text-muted-foreground">پایان</div><div>{formatDateFa(detail.end_date)}</div></div>
                   <div><div className="text-xs text-muted-foreground">وضعیت</div><Badge variant="secondary">{STATUS_LABEL[detail.status] ?? detail.status}</Badge></div>
-                  <div><div className="text-xs text-muted-foreground">ثبت</div><div className="text-xs">{new Date(detail.created_at).toLocaleString("fa-IR")}</div></div>
+                  <div><div className="text-xs text-muted-foreground">ثبت</div><div className="text-xs">{toFaDigits(new Date(detail.created_at).toLocaleString("fa-IR"))}</div></div>
                 </div>
                 <div className="space-y-2">
                   <Label>یادداشت</Label>
