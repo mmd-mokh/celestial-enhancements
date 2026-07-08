@@ -169,7 +169,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem('gamio-theme');if(s==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`,
+            __html: `(function(){try{var s=localStorage.getItem('gamio-theme');if(s==='dark'){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`,
           }}
         />
       </head>

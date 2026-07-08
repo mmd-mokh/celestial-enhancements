@@ -1,8 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { addDays, differenceInCalendarDays, format } from "date-fns";
+import { faIR as dayPickerFaIR, getDateLib as getPersianDateLib } from "react-day-picker/persian";
+import {
+  CalendarCheck2,
+  CalendarDays,
+  CalendarPlus,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Gamepad2,
+  Loader2,
+  PackageCheck,
+  UserRound,
+} from "lucide-react";
 import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -14,13 +31,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { CheckCircle2, ChevronLeft, ChevronRight, CalendarPlus } from "lucide-react";
+import { toFaDigits } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
-import { Calendar } from "@/components/ui/calendar";
-import { addDays, format, differenceInCalendarDays } from "date-fns";
-import { motion } from "framer-motion";
 
 type Props = {
   open: boolean;
@@ -29,8 +42,8 @@ type Props = {
   defaultConsole?: string;
 };
 
-type ConsoleOpt = { value: string; label: string; icon?: string };
-type PackageOpt = { value: string; label: string; desc: string; hours?: number };
+type ConsoleOpt = { value: string; label: string; icon: string };
+type PackageOpt = { value: string; label: string; desc: string; hours: number };
 
 const FALLBACK_CONSOLES: ConsoleOpt[] = [
   { value: "ps5", label: "PlayStation 5", icon: "bi-playstation" },
@@ -51,6 +64,13 @@ const ICON_MAP: Record<string, string> = {
   switch: "bi-nintendo-switch",
 };
 
+const steps = [
+  { label: "کنسول", Icon: Gamepad2 },
+  { label: "پکیج", Icon: PackageCheck },
+  { label: "تاریخ", Icon: CalendarDays },
+  { label: "تماس", Icon: UserRound },
+] as const;
+
 const schema = z.object({
   consoleType: z.string().min(1, "کنسول را انتخاب کنید"),
   packageType: z.string().min(1, "پکیج را انتخاب کنید"),
@@ -63,22 +83,30 @@ const schema = z.object({
   phone: z
     .string()
     .trim()
-    .min(6, "شماره تماس معتبر نیست")
-    .max(30, "شماره تماس بیش از حد طولانی است")
-    .regex(/^[0-9+\-\s()]+$/, "فقط عدد و علامت‌های + - مجاز است"),
+    .transform(toAsciiDigits)
+    .pipe(
+      z
+        .string()
+        .min(6, "شماره تماس معتبر نیست")
+        .max(30, "شماره تماس بیش از حد طولانی است")
+        .regex(/^[0-9+\-\s()]+$/, "فقط عدد و علامت‌های + - مجاز است"),
+    ),
   notes: z.string().max(1000, "توضیحات بیش از حد طولانی است").optional(),
 });
 
-// Convert Persian/Arabic-Indic digits to ASCII for phone normalization.
-function toAsciiDigits(s: string) {
-  return s
-    .replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))
-    .replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)));
-}
-
 type FormValues = z.infer<typeof schema>;
 
-const STEP_LABELS = ["کنسول", "پکیج", "تاریخ", "اطلاعات تماس"];
+function toAsciiDigits(value: string) {
+  return value
+    .replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)))
+    .replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)));
+}
+
+function startOfToday() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+}
 
 export function BookingDialog({
   open,
@@ -93,33 +121,6 @@ export function BookingDialog({
   const [fullyBooked, setFullyBooked] = useState<Set<string>>(new Set());
   const [loadingAvailability, setLoadingAvailability] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const [c, p] = await Promise.all([
-        supabase.from("consoles").select("slug,name").eq("active", true).order("sort_order"),
-        supabase.from("packages").select("slug,name,description,duration_hours,price").eq("active", true).order("sort_order"),
-      ]);
-      if (cancelled) return;
-      if (c.data && c.data.length) {
-        setConsoles(c.data.map((r) => ({ value: r.slug, label: r.name, icon: ICON_MAP[r.slug] })));
-      }
-      if (p.data && p.data.length) {
-        setPackages(
-          p.data.map((r) => ({
-            value: r.slug,
-            label: r.name,
-            desc: r.description ?? (r.duration_hours ? `${r.duration_hours} ساعت` : ""),
-            hours: r.duration_hours ? Number(r.duration_hours) : undefined,
-          })),
-        );
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     mode: "onTouched",
@@ -133,87 +134,144 @@ export function BookingDialog({
     },
   });
 
-  // Sync incoming defaults when reopened from a different pricing card.
+  const values = form.watch();
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadOptions() {
+      const [consoleResult, packageResult] = await Promise.all([
+        supabase.from("consoles").select("slug,name").eq("active", true).order("sort_order"),
+        supabase
+          .from("packages")
+          .select("slug,name,description,duration_hours")
+          .eq("active", true)
+          .order("sort_order"),
+      ]);
+
+      if (cancelled) return;
+
+      if (consoleResult.data?.length) {
+        setConsoles(
+          consoleResult.data.map((row) => ({
+            value: row.slug,
+            label: row.name,
+            icon: ICON_MAP[row.slug] ?? "bi-joystick",
+          })),
+        );
+      }
+
+      if (packageResult.data?.length) {
+        setPackages(
+          packageResult.data.map((row) => ({
+            value: row.slug,
+            label: row.name,
+            desc: row.description ?? `${toFaDigits(row.duration_hours ?? 24)} ساعت`,
+            hours: Number(row.duration_hours ?? 24),
+          })),
+        );
+      }
+    }
+
+    loadOptions();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   useEffect(() => {
     if (!open) return;
     setStep(0);
     setReservationId(null);
+    setFullyBooked(new Set());
     form.reset({
-      consoleType: defaultConsole ?? form.getValues("consoleType") ?? "ps5",
-      packageType: defaultPackage ?? form.getValues("packageType") ?? "weekend",
+      consoleType: defaultConsole ?? "ps5",
+      packageType: defaultPackage ?? "weekend",
       startDate: undefined as unknown as Date,
-      name: form.getValues("name") ?? "",
-      phone: form.getValues("phone") ?? "",
-      notes: form.getValues("notes") ?? "",
+      name: "",
+      phone: "",
+      notes: "",
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, defaultConsole, defaultPackage]);
+  }, [defaultConsole, defaultPackage, form, open]);
 
-  const values = form.watch();
+  const selectedPackage = useMemo(
+    () => packages.find((item) => item.value === values.packageType) ?? packages[0],
+    [packages, values.packageType],
+  );
 
-  const packageDays = (() => {
-    const p = packages.find((x) => x.value === values.packageType);
-    const hours = p?.hours ?? 24;
-    return Math.max(1, Math.ceil(hours / 24));
-  })();
+  const packageDays = Math.max(1, Math.ceil((selectedPackage?.hours ?? 24) / 24));
 
-  // Fetch availability for the selected console when reaching the date step.
   useEffect(() => {
     if (!open || step !== 2 || !values.consoleType) return;
     let cancelled = false;
+    const today = startOfToday();
+
+    setFullyBooked(new Set());
     setLoadingAvailability(true);
-    const today = new Date();
-    const from = format(today, "yyyy-MM-dd");
-    const to = format(addDays(today, 90), "yyyy-MM-dd");
+
     supabase
       .rpc("get_console_availability", {
         _console_slug: values.consoleType,
-        _from: from,
-        _to: to,
+        _from: format(today, "yyyy-MM-dd"),
+        _to: format(addDays(today, 90), "yyyy-MM-dd"),
       })
       .then(({ data, error }) => {
         if (cancelled) return;
         setLoadingAvailability(false);
-        if (error || !data) return;
-        const s = new Set<string>();
-        for (const row of data as Array<{ day: string; booked: number; capacity: number }>) {
-          if (row.capacity > 0 && row.booked >= row.capacity) s.add(row.day);
+
+        if (error || !data) {
+          toast.error("موجودی تقویم دریافت نشد؛ لطفاً دوباره تلاش کنید.");
+          return;
         }
-        setFullyBooked(s);
+
+        const unavailable = new Set<string>();
+        for (const row of data) {
+          if (row.capacity > 0 && row.booked >= row.capacity) unavailable.add(row.day);
+        }
+        setFullyBooked(unavailable);
       });
+
     return () => {
       cancelled = true;
     };
   }, [open, step, values.consoleType]);
 
   const isDayDisabled = (date: Date) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    if (date < today) return true;
-    // Ensure every day in the range [date, date + packageDays - 1] is available
-    for (let i = 0; i < packageDays; i++) {
-      const d = addDays(date, i);
-      if (fullyBooked.has(format(d, "yyyy-MM-dd"))) return true;
+    const today = startOfToday();
+    const latestStart = addDays(today, 91 - packageDays);
+
+    if (date < today || date > latestStart) return true;
+
+    for (let index = 0; index < packageDays; index++) {
+      if (fullyBooked.has(format(addDays(date, index), "yyyy-MM-dd"))) return true;
     }
+
     return false;
   };
 
   const goNext = async () => {
-    const fields: (keyof FormValues)[][] = [
+    const fields: Array<Array<keyof FormValues>> = [
       ["consoleType"],
       ["packageType"],
       ["startDate"],
       ["name", "phone", "notes"],
     ];
-    const ok = await form.trigger(fields[step]);
-    if (!ok) return;
-    if (step < 3) setStep(step + 1);
-    else form.handleSubmit(onSubmit)();
+
+    const valid = await form.trigger(fields[step]);
+    if (!valid) return;
+
+    if (step < steps.length - 1) {
+      setStep((current) => current + 1);
+      return;
+    }
+
+    form.handleSubmit(onSubmit)();
   };
 
   const onSubmit = async (data: FormValues) => {
     const start = data.startDate;
     const end = addDays(start, packageDays - 1);
+
     const { data: newId, error } = await supabase.rpc("create_booking", {
       _name: data.name.trim(),
       _phone: toAsciiDigits(data.phone).trim(),
@@ -223,264 +281,291 @@ export function BookingDialog({
       _end_date: format(end, "yyyy-MM-dd"),
       _notes: data.notes?.trim() || undefined,
     });
+
     if (error) {
-      console.error(error);
-      const msg = (error.message || "").toLowerCase();
-      if (msg.includes("no_availability")) {
+      const message = (error.message || "").toLowerCase();
+      if (message.includes("no_availability")) {
         toast.error("این کنسول در تاریخ انتخابی رزرو شده. لطفاً تاریخ دیگری انتخاب کنید.");
         setStep(2);
-      } else if (msg.includes("past_date")) {
+      } else if (message.includes("past_date")) {
         toast.error("تاریخ شروع نمی‌تواند در گذشته باشد.");
         setStep(2);
-      } else if (msg.includes("rate_limited")) {
+      } else if (message.includes("rate_limited")) {
         toast.error("تعداد رزروهای اخیر شما زیاد است. لطفاً یک ساعت دیگر تلاش کنید.");
       } else {
         toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
       }
       return;
     }
-    setReservationId((newId as string) ?? "");
+
+    setReservationId(newId ?? "");
     toast.success("درخواست رزرو ثبت شد!");
   };
 
   const close = () => {
     onOpenChange(false);
-    // reset after close animation
-    setTimeout(() => {
+    window.setTimeout(() => {
       setStep(0);
       setReservationId(null);
       form.reset();
-    }, 200);
+    }, 180);
   };
 
+  const selectedConsole = consoles.find((item) => item.value === values.consoleType);
+  const selectedDate = values.startDate;
+  const endDate = selectedDate ? addDays(selectedDate, packageDays - 1) : null;
+
   return (
-    <Dialog open={open} onOpenChange={(o) => (o ? onOpenChange(o) : close())}>
-      <DialogContent dir="rtl" className="sm:max-w-lg">
+    <Dialog open={open} onOpenChange={(nextOpen) => (nextOpen ? onOpenChange(true) : close())}>
+      <DialogContent
+        dir="rtl"
+        className="max-h-[92dvh] overflow-y-auto border-border bg-popover p-0 text-popover-foreground shadow-2xl sm:max-w-2xl"
+      >
         {reservationId !== null ? (
-          <div className="py-6 text-center space-y-4">
-            <CheckCircle2 className="mx-auto h-14 w-14 text-green-500" />
-            <DialogTitle className="text-center text-xl">درخواست شما ثبت شد</DialogTitle>
-            <DialogDescription className="text-center">
-              تیم گیمیو در کمتر از ۳۰ دقیقه باهات تماس می‌گیره.
-            </DialogDescription>
+          <div className="space-y-5 px-5 py-8 text-center sm:px-8">
+            <CheckCircle2 className="mx-auto h-14 w-14 text-primary" aria-hidden="true" />
+            <div className="space-y-2">
+              <DialogTitle className="text-center text-2xl">درخواست شما ثبت شد</DialogTitle>
+              <DialogDescription className="text-center">
+                تیم گیمیو در کمتر از ۳۰ دقیقه برای هماهنگی نهایی تماس می‌گیرد.
+              </DialogDescription>
+            </div>
+
             {reservationId && (
-              <div className="rounded-md bg-muted p-3 text-sm">
-                <div className="text-muted-foreground text-xs mb-1">کد پیگیری</div>
-                <div dir="ltr" className="font-mono text-xs break-all">{reservationId}</div>
+              <div className="rounded-md border border-border bg-muted p-3 text-sm">
+                <div className="mb-1 text-xs text-muted-foreground">کد پیگیری</div>
+                <div dir="ltr" className="break-all font-mono text-xs text-foreground">
+                  {reservationId}
+                </div>
               </div>
             )}
+
             {reservationId && (
               <Button asChild variant="outline" className="w-full">
                 <a href={`/api/public/booking-ical/${reservationId}`} download>
-                  <CalendarPlus className="h-4 w-4 me-2" /> افزودن به تقویم (.ics)
+                  <CalendarPlus className="h-4 w-4" aria-hidden="true" />
+                  افزودن به تقویم
                 </a>
               </Button>
             )}
-            <Button className="w-full" onClick={close}>بستن</Button>
+            <Button className="w-full" onClick={close}>
+              بستن
+            </Button>
           </div>
         ) : (
           <>
-            <DialogHeader>
-              <DialogTitle className="text-right">رزرو کنسول</DialogTitle>
-              <DialogDescription className="text-right">
-                مرحله {step + 1} از ۴ — {STEP_LABELS[step]}
-              </DialogDescription>
-            </DialogHeader>
+            <div className="border-b border-border bg-card px-5 py-5 text-card-foreground sm:px-7">
+              <DialogHeader className="space-y-3 text-right">
+                <DialogTitle className="text-right text-2xl">رزرو کنسول</DialogTitle>
+                <DialogDescription className="text-right">
+                  {steps[step].label} را مشخص کنید؛ ثبت نهایی در مرحله آخر انجام می‌شود.
+                </DialogDescription>
+              </DialogHeader>
 
-            {/* Stepper */}
-            <div className="flex gap-2 mb-2">
-              {STEP_LABELS.map((_, i) => (
-                <div
-                  key={i}
-                  className={cn(
-                    "h-1.5 flex-1 rounded-full transition-colors",
-                    i <= step ? "bg-primary" : "bg-muted",
-                  )}
-                />
-              ))}
+              <div className="mt-5 grid grid-cols-4 gap-2" aria-label="مراحل رزرو">
+                {steps.map(({ label, Icon }, index) => {
+                  const active = index === step;
+                  const done = index < step;
+                  return (
+                    <div
+                      key={label}
+                      className={cn(
+                        "flex min-w-0 flex-col items-center gap-2 rounded-md border px-2 py-2 text-center text-xs transition-colors",
+                        active || done
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border bg-background text-muted-foreground",
+                      )}
+                    >
+                      <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                      <span className="truncate">{label}</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
 
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
+              onSubmit={(event) => {
+                event.preventDefault();
                 goNext();
               }}
-              className="space-y-4"
+              className="space-y-5 px-5 py-5 sm:px-7"
             >
               {step === 0 && (
-                <motion.div key="s0" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }} className="grid grid-cols-1 gap-2">
-                  {consoles.map((c) => (
-                    <button
-                      key={c.value}
-                      type="button"
-                      onClick={() => form.setValue("consoleType", c.value, { shouldValidate: true })}
-                      className={cn(
-                        "flex items-center gap-3 rounded-lg border p-4 text-right transition-all hover:border-primary",
-                        values.consoleType === c.value
-                          ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                          : "border-input",
-                      )}
+                <div className="grid gap-3 sm:grid-cols-3">
+                  {consoles.map((consoleItem) => (
+                    <OptionButton
+                      key={consoleItem.value}
+                      selected={values.consoleType === consoleItem.value}
+                      onClick={() =>
+                        form.setValue("consoleType", consoleItem.value, { shouldValidate: true })
+                      }
                     >
-                      {c.icon && <i className={`bi ${c.icon} text-2xl text-primary`} />}
-                      <span className="font-medium">{c.label}</span>
-                    </button>
+                      <i className={`bi ${consoleItem.icon} text-3xl text-primary`} aria-hidden="true" />
+                      <span className="font-semibold">{consoleItem.label}</span>
+                    </OptionButton>
                   ))}
-                </motion.div>
+                </div>
               )}
 
               {step === 1 && (
-                <motion.div key="s1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }} className="grid grid-cols-2 gap-2">
-                  {packages.map((p) => (
-                    <button
-                      key={p.value}
-                      type="button"
-                      onClick={() => form.setValue("packageType", p.value, { shouldValidate: true })}
-                      className={cn(
-                        "rounded-lg border p-4 text-right transition-all hover:border-primary",
-                        values.packageType === p.value
-                          ? "border-primary bg-primary/5 ring-2 ring-primary/20"
-                          : "border-input",
-                      )}
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {packages.map((packageItem) => (
+                    <OptionButton
+                      key={packageItem.value}
+                      selected={values.packageType === packageItem.value}
+                      onClick={() =>
+                        form.setValue("packageType", packageItem.value, { shouldValidate: true })
+                      }
                     >
-                      <div className="font-semibold">{p.label}</div>
-                      <div className="text-xs text-muted-foreground mt-1">{p.desc}</div>
-                    </button>
+                      <span className="text-base font-semibold">{packageItem.label}</span>
+                      <span className="text-sm text-muted-foreground">{packageItem.desc}</span>
+                    </OptionButton>
                   ))}
-                </motion.div>
+                </div>
               )}
 
               {step === 2 && (
-                <motion.div key="s2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }} className="space-y-3">
-                  <div className="text-xs text-muted-foreground text-center">
-                    مدت رزرو: {packageDays} روز — تاریخ شروع را انتخاب کنید
-                    {loadingAvailability && " (در حال بررسی موجودی...)"}
+                <div className="space-y-4">
+                  <div className="flex flex-wrap items-center justify-center gap-2 rounded-md border border-border bg-muted px-3 py-2 text-sm text-muted-foreground">
+                    <CalendarCheck2 className="h-4 w-4 text-primary" aria-hidden="true" />
+                    <span>مدت رزرو: {toFaDigits(packageDays)} روز</span>
+                    {loadingAvailability && (
+                      <span className="inline-flex items-center gap-1">
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                        بررسی موجودی
+                      </span>
+                    )}
                   </div>
-                  <div className="flex justify-center">
+
+                  <div className="flex justify-center overflow-x-auto pb-1">
                     <Calendar
                       mode="single"
-                      selected={values.startDate}
-                      onSelect={(d) =>
-                        d && form.setValue("startDate", d, { shouldValidate: true })
-                      }
+                      selected={selectedDate}
+                      onSelect={(date) => {
+                        if (date) form.setValue("startDate", date, { shouldValidate: true });
+                      }}
                       disabled={isDayDisabled}
-                      startMonth={new Date()}
-                      endMonth={addDays(new Date(), 90)}
-                      className="pointer-events-auto rounded-md border"
+                      startMonth={startOfToday()}
+                      endMonth={addDays(startOfToday(), 90)}
+                      locale={dayPickerFaIR}
+                      dateLib={getPersianDateLib({ locale: dayPickerFaIR })}
+                      numerals="arabext"
+                      className="rounded-md border border-border bg-card text-card-foreground"
                     />
                   </div>
-                  {values.startDate && (
-                    <div className="rounded-md bg-muted/50 p-3 text-xs text-center">
-                      از <span className="font-semibold text-foreground">{format(values.startDate, "yyyy/MM/dd")}</span>
-                      {" "}تا{" "}
-                      <span className="font-semibold text-foreground">
-                        {format(addDays(values.startDate, packageDays - 1), "yyyy/MM/dd")}
-                      </span>
-                      {" "}({differenceInCalendarDays(addDays(values.startDate, packageDays - 1), values.startDate) + 1} روز)
+
+                  {selectedDate && endDate && (
+                    <div className="rounded-md border border-border bg-card p-3 text-center text-sm text-card-foreground">
+                      از <span className="font-semibold">{toFaDigits(format(selectedDate, "yyyy/MM/dd"))}</span>
+                      {" تا "}
+                      <span className="font-semibold">{toFaDigits(format(endDate, "yyyy/MM/dd"))}</span>
+                      {" — "}
+                      {toFaDigits(differenceInCalendarDays(endDate, selectedDate) + 1)} روز
                     </div>
                   )}
+
                   {form.formState.errors.startDate && (
-                    <p className="text-xs text-destructive text-center">
+                    <p className="text-center text-sm text-destructive">
                       {form.formState.errors.startDate.message as string}
                     </p>
                   )}
-                </motion.div>
+                </div>
               )}
 
               {step === 3 && (
-                <motion.div key="s3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.25 }} className="space-y-3">
-                  <div className="space-y-1.5">
+                <div className="grid gap-4">
+                  <div className="grid gap-2">
                     <Label htmlFor="booking-name">نام و نام خانوادگی</Label>
                     <Input
                       id="booking-name"
                       {...form.register("name")}
-                      placeholder="مثلاً علی رضایی"
                       autoComplete="name"
+                      placeholder="مثلاً علی رضایی"
                       aria-invalid={!!form.formState.errors.name}
+                      className="bg-background"
                     />
                     {form.formState.errors.name && (
-                      <p className="text-xs text-destructive">{form.formState.errors.name.message}</p>
+                      <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
                     )}
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="grid gap-2">
                     <Label htmlFor="booking-phone">شماره تماس</Label>
                     <Input
                       id="booking-phone"
                       {...form.register("phone", {
-                        onChange: (e) => {
-                          e.target.value = toAsciiDigits(e.target.value);
+                        onChange: (event) => {
+                          event.target.value = toAsciiDigits(event.target.value);
                         },
                       })}
-                      placeholder="09121234567"
-                      inputMode="tel"
                       autoComplete="tel"
                       dir="ltr"
+                      inputMode="tel"
+                      placeholder="09121234567"
                       aria-invalid={!!form.formState.errors.phone}
+                      className="bg-background text-left"
                     />
                     {form.formState.errors.phone && (
-                      <p className="text-xs text-destructive">{form.formState.errors.phone.message}</p>
+                      <p className="text-sm text-destructive">{form.formState.errors.phone.message}</p>
                     )}
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="grid gap-2">
                     <Label htmlFor="booking-notes">توضیحات (اختیاری)</Label>
                     <Textarea
                       id="booking-notes"
                       {...form.register("notes")}
-                      placeholder="آدرس تحویل، تاریخ شروع، بازی‌های مورد علاقه..."
+                      placeholder="آدرس تحویل، زمان مناسب تماس یا بازی‌های مورد علاقه..."
                       rows={3}
+                      className="bg-background"
                     />
                     {form.formState.errors.notes && (
-                      <p className="text-xs text-destructive">{form.formState.errors.notes.message}</p>
+                      <p className="text-sm text-destructive">{form.formState.errors.notes.message}</p>
                     )}
                   </div>
 
-                  <div className="rounded-md bg-muted/50 p-3 text-xs text-muted-foreground">
-                    <div className="flex justify-between">
-                      <span>کنسول:</span>
-                      <span className="font-medium text-foreground">
-                        {consoles.find((c) => c.value === values.consoleType)?.label}
-                      </span>
-                    </div>
-                    <div className="flex justify-between mt-1">
-                      <span>پکیج:</span>
-                      <span className="font-medium text-foreground">
-                        {packages.find((p) => p.value === values.packageType)?.label}
-                      </span>
-                    </div>
-                    {values.startDate && (
-                      <div className="flex justify-between mt-1">
-                        <span>تاریخ:</span>
-                        <span className="font-medium text-foreground" dir="ltr">
-                          {format(values.startDate, "yyyy/MM/dd")} → {format(addDays(values.startDate, packageDays - 1), "yyyy/MM/dd")}
-                        </span>
-                      </div>
+                  <dl className="grid gap-2 rounded-md border border-border bg-muted p-3 text-sm">
+                    <SummaryRow label="کنسول" value={selectedConsole?.label ?? "—"} />
+                    <SummaryRow label="پکیج" value={selectedPackage?.label ?? "—"} />
+                    {selectedDate && endDate && (
+                      <SummaryRow
+                        label="تاریخ"
+                        value={`${toFaDigits(format(selectedDate, "yyyy/MM/dd"))} تا ${toFaDigits(format(endDate, "yyyy/MM/dd"))}`}
+                      />
                     )}
-                  </div>
-                </motion.div>
+                  </dl>
+                </div>
               )}
 
-              <DialogFooter className="flex-row-reverse gap-2 sm:justify-between">
-                <Button type="submit" disabled={form.formState.isSubmitting} className="flex-1">
-                  {step === 3
-                    ? form.formState.isSubmitting
-                      ? "در حال ارسال..."
-                      : "ثبت درخواست"
-                    : (
+              <DialogFooter className="flex-col-reverse gap-2 sm:flex-row-reverse sm:justify-between sm:space-x-0">
+                <Button type="submit" disabled={form.formState.isSubmitting} className="w-full sm:w-auto">
+                  {step === steps.length - 1 ? (
+                    form.formState.isSubmitting ? (
                       <>
-                        بعدی
-                        <ChevronLeft className="h-4 w-4" />
+                        <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                        در حال ارسال
                       </>
-                    )}
+                    ) : (
+                      "ثبت درخواست"
+                    )
+                  ) : (
+                    <>
+                      بعدی
+                      <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                    </>
+                  )}
                 </Button>
+
                 {step > 0 && (
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setStep(step - 1)}
+                    onClick={() => setStep((current) => current - 1)}
                     disabled={form.formState.isSubmitting}
+                    className="w-full sm:w-auto"
                   >
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4" aria-hidden="true" />
                     قبلی
                   </Button>
                 )}
@@ -490,5 +575,39 @@ export function BookingDialog({
         )}
       </DialogContent>
     </Dialog>
+  );
+}
+
+function OptionButton({
+  children,
+  onClick,
+  selected,
+}: {
+  children: ReactNode;
+  onClick: () => void;
+  selected: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "flex min-h-28 flex-col items-center justify-center gap-2 rounded-md border p-4 text-center transition-colors",
+        selected
+          ? "border-primary bg-primary/10 text-foreground ring-2 ring-primary/25"
+          : "border-border bg-card text-card-foreground hover:border-primary hover:bg-accent",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <dt className="text-muted-foreground">{label}</dt>
+      <dd className="text-left font-medium text-foreground">{value}</dd>
+    </div>
   );
 }
