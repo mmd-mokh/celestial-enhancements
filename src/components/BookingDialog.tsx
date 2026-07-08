@@ -167,7 +167,8 @@ export function BookingDialog({
           consoleResult.data.map((row) => ({
             value: row.slug,
             label: row.name,
-            icon: ICON_MAP[row.slug] ?? "bi-joystick",
+            tagline:
+              FALLBACK_CONSOLES.find((item) => item.value === row.slug)?.tagline ?? "کنسول اختصاصی",
           })),
         );
       }
