@@ -12,6 +12,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { motion, AnimatePresence } from "framer-motion";
 import type { DateRange } from "react-day-picker";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { formatDateFa } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/my-bookings")({
   head: () => ({ meta: [{ title: "رزروهای من | گیمیو" }, { name: "robots", content: "noindex" }] }),
@@ -168,7 +169,7 @@ function MyBookingsPage() {
                         <TableCell>{CONSOLE_LABEL[b.console_type ?? ""] ?? b.console_type ?? "—"}</TableCell>
                         <TableCell>{b.package_type ?? "—"}</TableCell>
                         <TableCell className="text-sm">
-                          {b.start_date && b.end_date ? `${b.start_date} تا ${b.end_date}` : "—"}
+                          {b.start_date && b.end_date ? `${formatDateFa(b.start_date)} تا ${formatDateFa(b.end_date)}` : "—"}
                         </TableCell>
                         <TableCell>
                           <Badge variant={STATUS_VARIANT[b.status] ?? "secondary"}>
