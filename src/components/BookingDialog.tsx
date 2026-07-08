@@ -54,7 +54,7 @@ const ICON_MAP: Record<string, string> = {
 const schema = z.object({
   consoleType: z.string().min(1, "کنسول را انتخاب کنید"),
   packageType: z.string().min(1, "پکیج را انتخاب کنید"),
-  startDate: z.date({ required_error: "تاریخ شروع را انتخاب کنید" }),
+  startDate: z.date({ message: "تاریخ شروع را انتخاب کنید" }),
   name: z
     .string()
     .trim()
@@ -65,9 +65,16 @@ const schema = z.object({
     .trim()
     .min(6, "شماره تماس معتبر نیست")
     .max(30, "شماره تماس بیش از حد طولانی است")
-    .regex(/^[0-9+\-\s()]+$/, "فقط عدد و + - مجاز است"),
+    .regex(/^[0-9+\-\s()]+$/, "فقط عدد و علامت‌های + - مجاز است"),
   notes: z.string().max(1000, "توضیحات بیش از حد طولانی است").optional(),
 });
+
+// Convert Persian/Arabic-Indic digits to ASCII for phone normalization.
+function toAsciiDigits(s: string) {
+  return s
+    .replace(/[۰-۹]/g, (d) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)))
+    .replace(/[٠-٩]/g, (d) => String("٠١٢٣٤٥٦٧٨٩".indexOf(d)));
+}
 
 type FormValues = z.infer<typeof schema>;
 
@@ -131,20 +138,14 @@ export function BookingDialog({
     if (!open) return;
     setStep(0);
     setReservationId(null);
-    (async () => {
-      const { data: u } = await supabase.auth.getUser();
-      const meta = (u.user?.user_metadata ?? {}) as { full_name?: string; name?: string; phone?: string };
-      const prefillName = form.getValues("name") || meta.full_name || meta.name || "";
-      const prefillPhone = form.getValues("phone") || meta.phone || u.user?.phone || "";
-      form.reset({
-        consoleType: defaultConsole ?? form.getValues("consoleType") ?? "ps5",
-        packageType: defaultPackage ?? form.getValues("packageType") ?? "weekend",
-        startDate: undefined as unknown as Date,
-        name: prefillName,
-        phone: prefillPhone,
-        notes: form.getValues("notes") ?? "",
-      });
-    })();
+    form.reset({
+      consoleType: defaultConsole ?? form.getValues("consoleType") ?? "ps5",
+      packageType: defaultPackage ?? form.getValues("packageType") ?? "weekend",
+      startDate: undefined as unknown as Date,
+      name: form.getValues("name") ?? "",
+      phone: form.getValues("phone") ?? "",
+      notes: form.getValues("notes") ?? "",
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, defaultConsole, defaultPackage]);
 
@@ -215,7 +216,7 @@ export function BookingDialog({
     const end = addDays(start, packageDays - 1);
     const { data: newId, error } = await supabase.rpc("create_booking", {
       _name: data.name.trim(),
-      _phone: data.phone.trim(),
+      _phone: toAsciiDigits(data.phone).trim(),
       _console_type: data.consoleType,
       _package_type: data.packageType,
       _start_date: format(start, "yyyy-MM-dd"),
