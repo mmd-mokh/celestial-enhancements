@@ -333,8 +333,8 @@ function AdminPage() {
                     <TableCell dir="ltr" className="font-mono text-xs">{b.phone}</TableCell>
                     <TableCell>{b.console_type ?? "—"}</TableCell>
                     <TableCell>{b.package_type ?? "—"}</TableCell>
-                    <TableCell dir="ltr" className="text-xs whitespace-nowrap">
-                      {b.start_date ? `${b.start_date} → ${b.end_date}` : "—"}
+                    <TableCell className="text-xs whitespace-nowrap">
+                      {b.start_date ? `${formatDateFa(b.start_date)} → ${formatDateFa(b.end_date)}` : "—"}
                     </TableCell>
                     <TableCell className="max-w-xs truncate">{b.notes ?? "—"}</TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
