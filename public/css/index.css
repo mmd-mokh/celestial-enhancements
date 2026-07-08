@@ -1,5 +1,4 @@
-/* Persian Font - Vazirmatn with font-display: swap for performance */
-@import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css');
+/* Vazirmatn is bundled via @fontsource-variable/vazirmatn imported from src/styles.css */
 
 /* Add font-display: swap to all font-face declarations */
 @font-face {
