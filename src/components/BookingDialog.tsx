@@ -3,8 +3,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { addDays, differenceInCalendarDays, format } from "date-fns";
-import { format as formatJalali } from "date-fns-jalali";
-import { faIR as jalaliFaIR } from "date-fns-jalali/locale/fa-IR";
 import { faIR as dayPickerFaIR, getDateLib as getPersianDateLib } from "react-day-picker/persian";
 import {
   CalendarCheck2,
@@ -455,9 +453,9 @@ export function BookingDialog({
                       dateLib={PERSIAN_DATE_LIB}
                       numerals="arabext"
                       formatters={{
-                        formatCaption: (month) => toFaDigits(formatJalali(month, "LLLL yyyy", { locale: jalaliFaIR })),
-                        formatDay: (day) => toFaDigits(formatJalali(day, "d", { locale: jalaliFaIR })),
-                        formatWeekdayName: (day) => formatJalali(day, "EEEEEE", { locale: jalaliFaIR }),
+                        formatCaption: (month) => PERSIAN_DATE_LIB.format(month, "LLLL yyyy"),
+                        formatDay: (day) => PERSIAN_DATE_LIB.format(day, "d"),
+                        formatWeekdayName: (day) => PERSIAN_DATE_LIB.format(day, "EEEEEE"),
                       }}
                       className="rounded-md border border-border bg-card text-card-foreground"
                     />
