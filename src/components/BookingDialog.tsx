@@ -8,13 +8,18 @@ import {
   CalendarCheck2,
   CalendarDays,
   CalendarPlus,
+  Check,
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
   Gamepad2,
   Loader2,
+  MonitorPlay,
   PackageCheck,
+  Sparkles,
+  Tv,
   UserRound,
+  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -44,13 +49,13 @@ type Props = {
   defaultConsole?: string;
 };
 
-type ConsoleOpt = { value: string; label: string; icon: string };
+type ConsoleOpt = { value: string; label: string; tagline: string };
 type PackageOpt = { value: string; label: string; desc: string; hours: number };
 
 const FALLBACK_CONSOLES: ConsoleOpt[] = [
-  { value: "ps5", label: "PlayStation 5", icon: "bi-playstation" },
-  { value: "xbox", label: "Xbox Series X", icon: "bi-xbox" },
-  { value: "switch", label: "Nintendo Switch", icon: "bi-nintendo-switch" },
+  { value: "ps5", label: "PlayStation 5", tagline: "نسل جدید سونی" },
+  { value: "xbox", label: "Xbox Series X", tagline: "قدرت مایکروسافت" },
+  { value: "switch", label: "Nintendo Switch", tagline: "بازی همه‌جا" },
 ];
 
 const FALLBACK_PACKAGES: PackageOpt[] = [
@@ -60,10 +65,15 @@ const FALLBACK_PACKAGES: PackageOpt[] = [
   { value: "monthly", label: "ماهانه", desc: "۳۰ روز، بهترین قیمت", hours: 720 },
 ];
 
-const ICON_MAP: Record<string, string> = {
-  ps5: "bi-playstation",
-  xbox: "bi-xbox",
-  switch: "bi-nintendo-switch",
+const CONSOLE_ICON: Record<string, typeof Gamepad2> = {
+  ps5: Gamepad2,
+  xbox: MonitorPlay,
+  switch: Tv,
+};
+
+const PACKAGE_BADGE: Record<string, string> = {
+  monthly: "بهترین قیمت",
+  weekend: "پرطرفدار",
 };
 
 const steps = [
@@ -157,7 +167,8 @@ export function BookingDialog({
           consoleResult.data.map((row) => ({
             value: row.slug,
             label: row.name,
-            icon: ICON_MAP[row.slug] ?? "bi-joystick",
+            tagline:
+              FALLBACK_CONSOLES.find((item) => item.value === row.slug)?.tagline ?? "کنسول اختصاصی",
           })),
         );
       }
@@ -355,34 +366,57 @@ export function BookingDialog({
           </div>
         ) : (
           <>
-            <div className="border-b border-border bg-card px-5 py-5 text-card-foreground sm:px-7">
-              <DialogHeader className="space-y-3 text-right">
-                <DialogTitle className="text-right text-2xl">رزرو کنسول</DialogTitle>
-                <DialogDescription className="text-right">
+            <div className="border-b border-border bg-gradient-to-b from-card to-card/60 px-5 pb-5 pt-6 text-card-foreground sm:px-7">
+              <DialogHeader className="space-y-2 text-right">
+                <div className="flex items-center justify-between gap-3">
+                  <DialogTitle className="text-right text-xl sm:text-2xl">رزرو کنسول</DialogTitle>
+                  <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+                    گام {toFaDigits(step + 1)} از {toFaDigits(steps.length)}
+                  </span>
+                </div>
+                <DialogDescription className="text-right text-sm">
                   {steps[step].label} را مشخص کنید؛ ثبت نهایی در مرحله آخر انجام می‌شود.
                 </DialogDescription>
               </DialogHeader>
 
-              <div className="mt-5 grid grid-cols-4 gap-2" aria-label="مراحل رزرو">
+              <ol className="relative mt-5 flex items-center justify-between" aria-label="مراحل رزرو">
+                <div className="absolute inset-x-4 top-4 -z-0 h-0.5 rounded-full bg-border" aria-hidden="true" />
+                <div
+                  className="absolute right-4 top-4 -z-0 h-0.5 rounded-full bg-primary transition-all duration-500"
+                  style={{ width: `calc((100% - 2rem) * ${step / (steps.length - 1)})` }}
+                  aria-hidden="true"
+                />
                 {steps.map(({ label, Icon }, index) => {
                   const active = index === step;
                   const done = index < step;
                   return (
-                    <div
-                      key={label}
-                      className={cn(
-                        "flex min-w-0 flex-col items-center gap-2 rounded-md border px-2 py-2 text-center text-xs transition-colors",
-                        active || done
-                          ? "border-primary bg-primary text-primary-foreground"
-                          : "border-border bg-background text-muted-foreground",
-                      )}
-                    >
-                      <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
-                      <span className="truncate">{label}</span>
-                    </div>
+                    <li key={label} className="relative z-10 flex flex-col items-center gap-1.5">
+                      <span
+                        className={cn(
+                          "grid h-8 w-8 place-items-center rounded-full border-2 text-xs font-semibold transition-all",
+                          done && "border-primary bg-primary text-primary-foreground",
+                          active && "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/40 scale-110",
+                          !active && !done && "border-border bg-background text-muted-foreground",
+                        )}
+                      >
+                        {done ? (
+                          <Check className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <Icon className="h-4 w-4" aria-hidden="true" />
+                        )}
+                      </span>
+                      <span
+                        className={cn(
+                          "text-[11px] font-medium transition-colors",
+                          active || done ? "text-foreground" : "text-muted-foreground",
+                        )}
+                      >
+                        {label}
+                      </span>
+                    </li>
                   );
                 })}
-              </div>
+              </ol>
             </div>
 
             <form
@@ -394,35 +428,62 @@ export function BookingDialog({
             >
               {step === 0 && (
                 <div className="grid gap-3 sm:grid-cols-3">
-                  {consoles.map((consoleItem) => (
-                    <OptionButton
-                      key={consoleItem.value}
-                      selected={values.consoleType === consoleItem.value}
-                      onClick={() =>
-                        form.setValue("consoleType", consoleItem.value, { shouldValidate: true })
-                      }
-                    >
-                      <i className={`bi ${consoleItem.icon} text-3xl text-primary`} aria-hidden="true" />
-                      <span className="font-semibold">{consoleItem.label}</span>
-                    </OptionButton>
-                  ))}
+                  {consoles.map((consoleItem) => {
+                    const Icon = CONSOLE_ICON[consoleItem.value] ?? Gamepad2;
+                    const selected = values.consoleType === consoleItem.value;
+                    return (
+                      <OptionButton
+                        key={consoleItem.value}
+                        selected={selected}
+                        onClick={() =>
+                          form.setValue("consoleType", consoleItem.value, { shouldValidate: true })
+                        }
+                      >
+                        <span
+                          className={cn(
+                            "grid h-12 w-12 place-items-center rounded-full transition-colors",
+                            selected
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-primary/10 text-primary",
+                          )}
+                        >
+                          <Icon className="h-6 w-6" aria-hidden="true" />
+                        </span>
+                        <span className="font-semibold">{consoleItem.label}</span>
+                        <span className="text-xs text-muted-foreground">{consoleItem.tagline}</span>
+                      </OptionButton>
+                    );
+                  })}
                 </div>
               )}
 
               {step === 1 && (
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {packages.map((packageItem) => (
-                    <OptionButton
-                      key={packageItem.value}
-                      selected={values.packageType === packageItem.value}
-                      onClick={() =>
-                        form.setValue("packageType", packageItem.value, { shouldValidate: true })
-                      }
-                    >
-                      <span className="text-base font-semibold">{packageItem.label}</span>
-                      <span className="text-sm text-muted-foreground">{packageItem.desc}</span>
-                    </OptionButton>
-                  ))}
+                  {packages.map((packageItem) => {
+                    const badge = PACKAGE_BADGE[packageItem.value];
+                    const days = Math.max(1, Math.ceil(packageItem.hours / 24));
+                    return (
+                      <OptionButton
+                        key={packageItem.value}
+                        selected={values.packageType === packageItem.value}
+                        onClick={() =>
+                          form.setValue("packageType", packageItem.value, { shouldValidate: true })
+                        }
+                      >
+                        {badge && (
+                          <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary">
+                            <Sparkles className="h-3 w-3" aria-hidden="true" />
+                            {badge}
+                          </span>
+                        )}
+                        <span className="text-base font-semibold">{packageItem.label}</span>
+                        <span className="text-sm text-muted-foreground">{packageItem.desc}</span>
+                        <span className="text-[11px] text-muted-foreground/80">
+                          {toFaDigits(days)} روز
+                        </span>
+                      </OptionButton>
+                    );
+                  })}
                 </div>
               )}
 
@@ -544,8 +605,42 @@ export function BookingDialog({
                 </div>
               )}
 
+              <div className="sticky bottom-0 -mx-5 -mb-5 space-y-3 border-t border-border bg-popover/95 px-5 py-4 backdrop-blur sm:-mx-7 sm:-mb-5 sm:px-7">
+                {(selectedConsole || selectedPackage) && step > 0 && (
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                    {selectedConsole && (
+                      <span className="inline-flex items-center gap-1">
+                        <Gamepad2 className="h-3 w-3 text-primary" aria-hidden="true" />
+                        {selectedConsole.label}
+                      </span>
+                    )}
+                    {selectedPackage && step > 1 && (
+                      <>
+                        <span aria-hidden="true">•</span>
+                        <span className="inline-flex items-center gap-1">
+                          <PackageCheck className="h-3 w-3 text-primary" aria-hidden="true" />
+                          {selectedPackage.label}
+                        </span>
+                      </>
+                    )}
+                    {selectedDate && step > 2 && (
+                      <>
+                        <span aria-hidden="true">•</span>
+                        <span className="inline-flex items-center gap-1">
+                          <CalendarDays className="h-3 w-3 text-primary" aria-hidden="true" />
+                          {formatDisplayDate(selectedDate)}
+                        </span>
+                      </>
+                    )}
+                  </div>
+                )}
               <DialogFooter className="flex-col-reverse gap-2 sm:flex-row-reverse sm:justify-between sm:space-x-0">
-                <Button type="submit" disabled={form.formState.isSubmitting} className="w-full sm:w-auto">
+                <Button
+                  type="submit"
+                  disabled={form.formState.isSubmitting}
+                  size="lg"
+                  className="w-full font-semibold sm:w-auto sm:min-w-40"
+                >
                   {step === steps.length - 1 ? (
                     form.formState.isSubmitting ? (
                       <>
@@ -566,7 +661,7 @@ export function BookingDialog({
                 {step > 0 && (
                   <Button
                     type="button"
-                    variant="outline"
+                    variant="ghost"
                     onClick={() => setStep((current) => current - 1)}
                     disabled={form.formState.isSubmitting}
                     className="w-full sm:w-auto"
@@ -576,6 +671,7 @@ export function BookingDialog({
                   </Button>
                 )}
               </DialogFooter>
+              </div>
             </form>
           </>
         )}
@@ -597,13 +693,22 @@ function OptionButton({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={selected}
       className={cn(
-        "flex min-h-28 flex-col items-center justify-center gap-2 rounded-md border p-4 text-center transition-colors",
+        "group relative flex min-h-28 flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border p-4 text-center transition-all duration-200",
         selected
-          ? "border-primary bg-primary/10 text-foreground ring-2 ring-primary/25"
-          : "border-border bg-card text-card-foreground hover:border-primary hover:bg-accent",
+          ? "border-primary bg-primary/10 text-foreground shadow-md shadow-primary/20 ring-2 ring-primary/40"
+          : "border-border bg-card text-card-foreground hover:-translate-y-0.5 hover:border-primary/60 hover:bg-accent hover:shadow-sm",
       )}
     >
+      {selected && (
+        <span
+          className="absolute top-2 right-2 grid h-5 w-5 place-items-center rounded-full bg-primary text-primary-foreground"
+          aria-hidden="true"
+        >
+          <Check className="h-3 w-3" />
+        </span>
+      )}
       {children}
     </button>
   );
