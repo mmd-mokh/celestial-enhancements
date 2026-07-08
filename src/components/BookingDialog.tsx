@@ -37,6 +37,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toFaDigits } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
+const PERSIAN_DATE_LIB = getPersianDateLib({ locale: dayPickerFaIR });
+
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -85,14 +87,9 @@ const schema = z.object({
   phone: z
     .string()
     .trim()
-    .transform(toAsciiDigits)
-    .pipe(
-      z
-        .string()
-        .min(6, "شماره تماس معتبر نیست")
-        .max(30, "شماره تماس بیش از حد طولانی است")
-        .regex(/^[0-9+\-\s()]+$/, "فقط عدد و علامت‌های + - مجاز است"),
-    ),
+    .min(6, "شماره تماس معتبر نیست")
+    .max(30, "شماره تماس بیش از حد طولانی است")
+    .regex(/^[0-9+\-\s()]+$/, "فقط عدد و علامت‌های + - مجاز است"),
   notes: z.string().max(1000, "توضیحات بیش از حد طولانی است").optional(),
 });
 
@@ -108,6 +105,10 @@ function startOfToday() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return today;
+}
+
+function formatDisplayDate(date: Date) {
+  return toFaDigits(formatJalali(date, "yyyy/MM/dd", { locale: jalaliFaIR }));
 }
 
 export function BookingDialog({
@@ -451,7 +452,7 @@ export function BookingDialog({
                       startMonth={startOfToday()}
                       endMonth={addDays(startOfToday(), 90)}
                       locale={dayPickerFaIR}
-                      dateLib={getPersianDateLib({ locale: dayPickerFaIR })}
+                      dateLib={PERSIAN_DATE_LIB}
                       numerals="arabext"
                       formatters={{
                         formatCaption: (month) => toFaDigits(formatJalali(month, "LLLL yyyy", { locale: jalaliFaIR })),
@@ -464,9 +465,9 @@ export function BookingDialog({
 
                   {selectedDate && endDate && (
                     <div className="rounded-md border border-border bg-card p-3 text-center text-sm text-card-foreground">
-                      از <span className="font-semibold">{toFaDigits(format(selectedDate, "yyyy/MM/dd"))}</span>
+                      از <span className="font-semibold">{formatDisplayDate(selectedDate)}</span>
                       {" تا "}
-                      <span className="font-semibold">{toFaDigits(format(endDate, "yyyy/MM/dd"))}</span>
+                      <span className="font-semibold">{formatDisplayDate(endDate)}</span>
                       {" — "}
                       {toFaDigits(differenceInCalendarDays(endDate, selectedDate) + 1)} روز
                     </div>
@@ -538,7 +539,7 @@ export function BookingDialog({
                     {selectedDate && endDate && (
                       <SummaryRow
                         label="تاریخ"
-                        value={`${toFaDigits(format(selectedDate, "yyyy/MM/dd"))} تا ${toFaDigits(format(endDate, "yyyy/MM/dd"))}`}
+                        value={`${formatDisplayDate(selectedDate)} تا ${formatDisplayDate(endDate)}`}
                       />
                     )}
                   </dl>
