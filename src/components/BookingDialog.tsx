@@ -108,7 +108,7 @@ function startOfToday() {
 }
 
 function formatDisplayDate(date: Date) {
-  return toFaDigits(formatJalali(date, "yyyy/MM/dd", { locale: jalaliFaIR }));
+  return PERSIAN_DATE_LIB.format(date, "yyyy/MM/dd");
 }
 
 export function BookingDialog({
