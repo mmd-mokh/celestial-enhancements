@@ -106,7 +106,6 @@ export function PricingCards({ onReserve }: Props) {
 
   if (!mount) return null;
 
-  return createPortal(
   return createPortal(<PricingList onReserve={onReserve} />, mount);
 }
 
