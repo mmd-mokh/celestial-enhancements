@@ -558,19 +558,16 @@ export function BookingDialog({
                       modifiers={
                         selectedDate && endDate
                           ? {
-                              range_start: selectedDate,
-                              range_end: endDate,
-                              range_middle: { after: selectedDate, before: endDate },
+                              pkgStart: selectedDate,
+                              pkgEnd: endDate,
+                              pkgMiddle: { after: selectedDate, before: endDate },
                             }
                           : undefined
                       }
                       modifiersClassNames={{
-                        range_start:
-                          "bg-primary text-primary-foreground rounded-r-md rounded-l-none",
-                        range_end:
-                          "bg-primary text-primary-foreground rounded-l-md rounded-r-none",
-                        range_middle:
-                          "bg-primary/25 text-foreground rounded-none",
+                        pkgStart: "bg-primary text-primary-foreground rounded-md",
+                        pkgEnd: "bg-primary text-primary-foreground rounded-md",
+                        pkgMiddle: "bg-primary/30 text-foreground rounded-md",
                       }}
                       className="rounded-md border border-border bg-card text-card-foreground"
                     />
