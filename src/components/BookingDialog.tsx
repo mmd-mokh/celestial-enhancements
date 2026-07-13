@@ -756,7 +756,7 @@ function OptionButton({
       className={cn(
         "group relative flex min-h-28 flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border p-4 text-center transition-all duration-200",
         selected
-          ? "border-primary bg-primary-foreground text-primary shadow-lg shadow-primary/30 ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02] [&_.text-muted-foreground]:text-primary/80 [&_.text-muted-foreground\\/80]:text-primary/70"
+          ? "border-primary bg-primary-foreground text-primary shadow-lg shadow-primary/30 ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02] [&_.text-muted-foreground]:text-primary/80"
           : "border-border bg-card text-card-foreground hover:-translate-y-0.5 hover:border-primary/60 hover:bg-accent hover:shadow-sm",
       )}
     >
