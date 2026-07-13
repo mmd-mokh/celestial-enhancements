@@ -480,7 +480,7 @@ export function BookingDialog({
                           className={cn(
                             "grid h-12 w-12 place-items-center rounded-full transition-colors",
                             selected
-                              ? "bg-primary text-primary-foreground"
+                              ? "bg-primary-foreground text-primary ring-2 ring-primary-foreground/60"
                               : "bg-primary/10 text-primary",
                           )}
                         >
@@ -508,7 +508,12 @@ export function BookingDialog({
                         }
                       >
                         {badge && (
-                          <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary">
+                          <span className={cn(
+                            "absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium",
+                            values.packageType === packageItem.value
+                              ? "bg-primary-foreground text-primary"
+                              : "bg-primary/15 text-primary",
+                          )}>
                             <Sparkles className="h-3 w-3" aria-hidden="true" />
                             {badge}
                           </span>
@@ -751,13 +756,13 @@ function OptionButton({
       className={cn(
         "group relative flex min-h-28 flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border p-4 text-center transition-all duration-200",
         selected
-          ? "border-primary bg-primary/10 text-foreground shadow-md shadow-primary/20 ring-2 ring-primary/40"
+          ? "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/40 ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02] [&_.text-muted-foreground]:text-primary-foreground/80 [&_.text-muted-foreground\\/80]:text-primary-foreground/70 [&_.text-primary]:text-primary-foreground"
           : "border-border bg-card text-card-foreground hover:-translate-y-0.5 hover:border-primary/60 hover:bg-accent hover:shadow-sm",
       )}
     >
       {selected && (
         <span
-          className="absolute top-2 right-2 grid h-5 w-5 place-items-center rounded-full bg-primary text-primary-foreground"
+          className="absolute top-2 right-2 grid h-5 w-5 place-items-center rounded-full bg-primary-foreground text-primary shadow"
           aria-hidden="true"
         >
           <Check className="h-3 w-3" />
