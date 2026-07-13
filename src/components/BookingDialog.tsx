@@ -39,6 +39,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toFaDigits } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { PACKAGES } from "@/components/PricingCards";
 
 const PERSIAN_DATE_LIB = getPersianDateLib({ locale: dayPickerFaIR });
 
@@ -58,12 +59,21 @@ const FALLBACK_CONSOLES: ConsoleOpt[] = [
   { value: "switch", label: "Nintendo Switch", tagline: "بازی همه‌جا" },
 ];
 
-const FALLBACK_PACKAGES: PackageOpt[] = [
-  { value: "daily", label: "روزانه", desc: "۲۴ ساعت", hours: 24 },
-  { value: "weekend", label: "آخر هفته", desc: "پنجشنبه تا شنبه", hours: 72 },
-  { value: "weekly", label: "هفتگی", desc: "۷ روز کامل", hours: 168 },
-  { value: "monthly", label: "ماهانه", desc: "۳۰ روز، بهترین قیمت", hours: 720 },
-];
+const PACKAGE_HOURS: Record<string, number> = {
+  daily: 24,
+  weekend: 72,
+  weekly: 168,
+  monthly: 720,
+};
+
+// Sync with the landing page PricingCards.PACKAGES so the dialog always
+// shows the same list, names, and durations as the main website.
+const FALLBACK_PACKAGES: PackageOpt[] = PACKAGES.map((p) => ({
+  value: p.slug,
+  label: p.name,
+  desc: p.description,
+  hours: PACKAGE_HOURS[p.slug] ?? 24,
+}));
 
 const CONSOLE_ICON: Record<string, typeof Gamepad2> = {
   ps5: Gamepad2,
