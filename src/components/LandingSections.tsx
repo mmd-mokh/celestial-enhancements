@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
 import { PACKAGES } from "@/components/PricingCards";
 import { FaqList } from "@/components/FaqAccordion";
-import { ConsoleList, type ConsoleRow } from "@/components/ConsoleCards";
+import { ConsoleList } from "@/components/ConsoleCards";
 import { NewsletterFormStandalone } from "@/components/NewsletterForm";
+import { consolesQueryOptions } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 
 const HIDDEN_CONSOLES = new Set(["ps4", "xbox-series-s", "xbox-one"]);
@@ -12,24 +12,8 @@ const HIDDEN_CONSOLES = new Set(["ps4", "xbox-series-s", "xbox-one"]);
 /* -------------------------------- Consoles -------------------------------- */
 
 export function ConsolesSection() {
-  const [items, setItems] = useState<ConsoleRow[] | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase
-        .from("consoles")
-        .select("slug,name,tagline,features,icon,accent_from,accent_to,sort_order")
-        .eq("active", true)
-        .order("sort_order");
-      if (!cancelled && data) {
-        setItems((data as ConsoleRow[]).filter((r) => !HIDDEN_CONSOLES.has(r.slug)));
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const { data } = useQuery(consolesQueryOptions());
+  const items = data?.filter((r) => !HIDDEN_CONSOLES.has(r.slug));
 
   return (
     <section
