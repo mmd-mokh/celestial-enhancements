@@ -178,15 +178,35 @@ html.dark .tw-bg-gray-100 {
 
 html.dark .tw-text-black,
 html.dark .tw-text-gray-900,
-html.dark .tw-text-gray-800 {
+html.dark .tw-text-gray-800,
+html.dark .text-black,
+html.dark .text-gray-900,
+html.dark .text-gray-800 {
   color: var(--color-foreground) !important;
 }
 
 html.dark .tw-text-gray-700,
 html.dark .tw-text-gray-600,
 html.dark .tw-text-gray-500,
-html.dark .tw-text-gray-400 {
+html.dark .tw-text-gray-400,
+html.dark .text-gray-700,
+html.dark .text-gray-600,
+html.dark .text-gray-500,
+html.dark .text-gray-400 {
   color: var(--color-muted-foreground) !important;
+}
+
+html.dark .bg-white,
+html.dark .bg-gray-50,
+html.dark .bg-gray-100 {
+  background-color: var(--color-card) !important;
+  color: var(--color-card-foreground);
+}
+
+html.dark footer.bg-gray-50,
+html.dark footer.text-black {
+  background-color: var(--color-card) !important;
+  color: var(--color-card-foreground) !important;
 }
 
 /* Ported cards/surfaces default to white — lift to dark surface tone. */
