@@ -19,9 +19,25 @@ export const Route = createFileRoute("/how-it-works")({
       },
       { property: "og:url", content: "/how-it-works" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/assets/images/home/dashboard.png" },
+      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
     ],
     links: [{ rel: "canonical", href: "/how-it-works" }],
     scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          name: "چطور کنسول اجاره کنیم؟",
+          step: [
+            { "@type": "HowToStep", position: 1, name: "انتخاب کنسول و پکیج", text: "کنسول موردعلاقه‌ات را انتخاب کن و پکیج مناسب را برگزین." },
+            { "@type": "HowToStep", position: 2, name: "ثبت درخواست", text: "فرم رزرو را در کمتر از ۳ دقیقه پر کن." },
+            { "@type": "HowToStep", position: 3, name: "تحویل درب منزل", text: "کنسول تست‌شده رایگان درب منزل شما در تهران تحویل داده می‌شود." },
+            { "@type": "HowToStep", position: 4, name: "بازی کن و لذت ببر", text: "روشن کن و بازی کن. پشتیبانی ۲۴/۷ گیمیو کنارت است." },
+          ],
+        }),
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
