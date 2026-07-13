@@ -35,7 +35,7 @@ export function HeroSection() {
             </h1>
 
             <div className="mt-6 flex justify-center">
-              <span className="inline-flex items-center gap-2 rounded-full bg-primary-100 dark:bg-transparent px-4 py-2 text-sm font-semibold text-primary-700 dark:text-primary-300 border border-primary-200 dark:border-primary-700">
+              <span className="inline-flex items-center gap-2 rounded-full bg-primary-100 dark:bg-primary-500/15 px-4 py-2 text-sm font-semibold text-primary-700 dark:text-primary-200 border border-primary-200 dark:border-primary-400/40">
                 <i className="bi bi-star-fill text-primary-600" />
                 گیمیو = دنیای گیمینگ بدون محدودیت مالی
               </span>
