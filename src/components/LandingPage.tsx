@@ -1,11 +1,17 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import gamioBody from "../gamio-body.html?raw";
-import { PricingCards } from "@/components/PricingCards";
-import { ConsoleCards } from "@/components/ConsoleCards";
+import heroBody from "../hero-body.html?raw";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { FaqAccordion } from "@/components/FaqAccordion";
-import { NewsletterForm } from "@/components/NewsletterForm";
+import {
+  ConsolesSection,
+  WhySection,
+  HowItWorksSection,
+  TestimonialsSection,
+  PricingSection,
+  FaqSection,
+  FinalCtaSection,
+  NewsletterSection,
+} from "@/components/LandingSections";
 import { Toaster } from "@/components/ui/sonner";
 
 const BookingDialog = lazy(() =>
@@ -31,40 +37,8 @@ export function LandingPage({ scrollTo }: Props) {
       document.body.appendChild(s);
       appended = true;
     }
-
-    const pkgMap: Record<string, string> = {
-      "روزانه": "daily",
-      "آخر هفته": "weekend",
-      "هفتگی": "weekly",
-      "ماهانه": "monthly",
-    };
-
-    function onClick(ev: MouseEvent) {
-      const target = ev.target as HTMLElement | null;
-      if (!target) return;
-      const btn = target.closest<HTMLElement>("a, button");
-      if (!btn) return;
-      const text = (btn.textContent || "").trim();
-      if (text !== "رزرو کن") return;
-      ev.preventDefault();
-      const card = btn.closest<HTMLElement>(".pricing-card-enhanced, [data-package]");
-      let pkg: string | undefined;
-      if (card) {
-        const slug = card.getAttribute("data-package");
-        if (slug) pkg = slug;
-        else {
-          const heading = card.querySelector("h3, h4, .pricing-card-title");
-          const label = heading?.textContent?.trim();
-          if (label && pkgMap[label]) pkg = pkgMap[label];
-        }
-      }
-      setDefaultPackage(pkg);
-      setBookingOpen(true);
-    }
-    document.addEventListener("click", onClick);
     return () => {
       if (appended) s.remove();
-      document.removeEventListener("click", onClick);
     };
   }, []);
 
@@ -78,22 +52,26 @@ export function LandingPage({ scrollTo }: Props) {
     return () => clearTimeout(id);
   }, [scrollTo]);
 
+  const openReserve = (slug?: string) => {
+    setDefaultPackage(slug);
+    setBookingOpen(true);
+  };
+
   return (
     <>
       <SiteHeader />
       <div
-        className="tw-flex tw-min-h-[100dvh] tw-flex-col tw-bg-white"
-        dangerouslySetInnerHTML={{ __html: gamioBody }}
+        className="tw-flex tw-flex-col tw-bg-white"
+        dangerouslySetInnerHTML={{ __html: heroBody }}
       />
-      <PricingCards
-        onReserve={(slug) => {
-          setDefaultPackage(slug);
-          setBookingOpen(true);
-        }}
-      />
-      <ConsoleCards />
-      <FaqAccordion />
-      <NewsletterForm />
+      <ConsolesSection />
+      <WhySection />
+      <HowItWorksSection />
+      <TestimonialsSection />
+      <PricingSection onReserve={openReserve} />
+      <FaqSection />
+      <FinalCtaSection />
+      <NewsletterSection />
       <SiteFooter />
       {bookingOpen && (
         <Suspense fallback={null}>
