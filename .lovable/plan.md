@@ -10,7 +10,7 @@ Today `src/gamio-body.html` is injected via `dangerouslySetInnerHTML` and driven
 
 Steps:
 1. Split `LandingPage` into real components — ✅ DONE (`HeroSection`, `LandingSections` cover all 8 sections; portals removed).
-2. Move all styles into `src/styles.css` using Tailwind v4 tokens (no more `tw-` prefix, retire `public/css/index.css`). **In progress** — empty `tailwind-build.css` + link removed; `public/css/index.css` (1.9 KLoC, Tailwind v3 build with `tw-` prefix) still shipped. Migration = rewrite every `tw-*` in components to v4 utilities + move component-scoped rules into `styles.css`.
+2. Move all styles into `src/styles.css` using Tailwind v4 tokens (no more `tw-` prefix, retire `public/css/index.css`). **⏸️ SKIPPED — REMIND USER LATER.** Progress so far: empty `tailwind-build.css` + link removed; dead `tw-*` dark-mode selectors purged from `styles.css`. Remaining: `public/css/index.css` (1.9 KLoC) still shipped and defines ~60 custom classes used by components (`btn-enhanced`, `console-card`, `pricing-card-enhanced`, `site-header`, `primary-nav__link`, …). Full migration = rewrite each rule as Tailwind v4 utilities in JSX or `@utility`/scoped rules in `styles.css`, then drop the `<link>` in `__root.tsx`. Best done section-by-section (header → pricing → consoles → footer).
 3. Delete `public/gamio.js` and `src/gamio-body.html` — ✅ DONE.
 4. Replace hand-rolled mobile drawer with shadcn `Sheet`, desktop nav with `NavigationMenu` — pending (Header still uses custom drawer).
 
