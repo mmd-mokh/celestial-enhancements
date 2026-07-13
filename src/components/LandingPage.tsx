@@ -11,7 +11,7 @@ import {
   FaqSection,
   FinalCtaSection,
   NewsletterSection,
-} from "@/components/LandingSections";
+} from "@/components/sections";
 import { Toaster } from "@/components/ui/sonner";
 
 const BookingDialog = lazy(() =>
