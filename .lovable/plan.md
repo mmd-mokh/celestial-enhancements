@@ -44,7 +44,7 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 2. Split heavy client-only pieces — ✅ DONE: `BookingDialog` is now lazy-loaded in `LandingPage` and `pricing.tsx`, rendered only when opened. `AnalyticsCharts` has no consumer yet.
 3. Set explicit `staleTime` on query options — ✅ DONE (5 min on consoles, blog list, blog detail).
 4. Cache-Control on public GET routes — ✅ DONE: `sitemap.xml` (`public, max-age=3600`) and `booking-ical.$id` (`private, max-age=300`).
-5. Lighthouse budget in CI (fail on CLS > 0.1, LCP > 2.5s on mobile).
+5. Lighthouse budget in CI — ✅ WIRED. `lighthouserc.json` asserts CLS ≤ 0.1 (error), LCP ≤ 2.5 s (error), a11y ≥ 0.9 (error), SEO ≥ 0.9 (error), perf ≥ 0.8 / best-practices ≥ 0.85 (warn), on mobile emulation for `/`, `/consoles`, `/pricing`. New `lighthouse` job in `.github/workflows/ci.yml` runs `@lhci/cli autorun` on every push/PR.
 
 ## Phase 6 — Quality & DX
 
