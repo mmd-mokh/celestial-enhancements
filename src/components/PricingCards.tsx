@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -83,33 +81,7 @@ type Props = {
   onReserve: (slug: string) => void;
 };
 
-/**
- * Hydrates the `.pricing-grid` container in the ported HTML with the
- * original static pricing cards (styled + animated).
- */
-export function PricingCards({ onReserve }: Props) {
-  const [mount, setMount] = useState<HTMLElement | null>(null);
-
-  useEffect(() => {
-    let tries = 0;
-    const find = () => {
-      const el = document.querySelector<HTMLElement>(".pricing-grid");
-      if (el) {
-        el.innerHTML = "";
-        setMount(el);
-        return;
-      }
-      if (tries++ < 20) setTimeout(find, 100);
-    };
-    find();
-  }, []);
-
-  if (!mount) return null;
-
-  return createPortal(<PricingList onReserve={onReserve} />, mount);
-}
-
-/** Standalone renderer of the pricing cards (no portal). Used by dedicated /pricing page. */
+/** Standalone renderer of the pricing cards. Used by /pricing and landing. */
 export function PricingList({ onReserve }: Props) {
   return (
     <>
