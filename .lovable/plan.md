@@ -36,7 +36,7 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 2. Add indexes: ✅ DONE (bookings composite, bookings user_id, posts published).
 3. Review RPCs — ✅ DONE (extracted overlap CTE into `public.booking_peak_overlap`; `create_booking` + `reschedule_booking` now share it).
 4. Rate limits: ✅ DONE (contact_messages 5/hr, newsletter 3/hr via BEFORE INSERT triggers).
-5. Run `supabase--linter` and fix findings.
+5. Run `supabase--linter` — ✅ DONE. All 14 findings are `SECURITY DEFINER` warnings on RPCs that need elevated context (auth.uid checks, capacity/rate-limit enforcement, `has_role`). Left as-is by design.
 
 ## Phase 5 — Performance
 
