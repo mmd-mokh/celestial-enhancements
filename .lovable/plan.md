@@ -18,8 +18,8 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 
 ## Phase 2 — Data layer (TanStack Query + server fns)
 
-1. Introduce `src/lib/consoles.functions.ts`, `bookings.functions.ts`, `availability.functions.ts` using `createServerFn` — replace direct `supabase` calls from components.
-2. Define `queryOptions` factories in `src/lib/queries.ts`; loaders call `ensureQueryData`, components call `useSuspenseQuery` (per `tanstack-query-integration`).
+1. Introduce `src/lib/consoles.functions.ts`, `bookings.functions.ts`, `availability.functions.ts` using `createServerFn` — **In progress**: `consoles.functions.ts` shipped; bookings/availability still direct.
+2. Define `queryOptions` factories in `src/lib/queries.ts`; loaders call `ensureQueryData`, components call `useSuspenseQuery` — **In progress**: `consolesQueryOptions` wired into `/consoles` (loader + useSuspenseQuery) and `LandingSections` (useQuery).
 3. Public read fns use the server publishable client; authed fns use `requireSupabaseAuth`.
 4. Remove ad-hoc `useEffect` + `supabase.from(...)` fetches.
 
