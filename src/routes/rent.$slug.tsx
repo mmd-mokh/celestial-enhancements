@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { RENT_CONTENT } from "@/lib/rent-content";
 import { PACKAGES } from "@/components/PricingCards";
 import { absUrl } from "@/lib/seo";
+import { RouteErrorFallback } from "@/components/RouteBoundaries";
 
 export const Route = createFileRoute("/rent/$slug")({
   loader: ({ params }) => {
@@ -50,6 +51,9 @@ export const Route = createFileRoute("/rent/$slug")({
     };
   },
   component: RentPage,
+  errorComponent: ({ error, reset }) => (
+    <RouteErrorFallback error={error} reset={reset} boundary="rent_slug" />
+  ),
   notFoundComponent: () => (
     <>
       <SiteHeader />
