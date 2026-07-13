@@ -3,6 +3,10 @@ import { LandingPage } from "@/components/LandingPage";
 
 export const Route = createFileRoute("/")({
   head: () => ({
+    meta: [
+      { property: "og:image", content: "/assets/images/home/dashboard.png" },
+      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
+    ],
     links: [{ rel: "canonical", href: "/" }],
     scripts: [
       {

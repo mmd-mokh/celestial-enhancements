@@ -25,9 +25,27 @@ export const Route = createFileRoute("/pricing")({
       },
       { property: "og:url", content: "/pricing" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/assets/images/home/dashboard.png" },
+      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
     ],
     links: [{ rel: "canonical", href: "/pricing" }],
     scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Service",
+          serviceType: "اجاره کنسول بازی",
+          provider: { "@type": "Organization", name: "گیمیو" },
+          areaServed: { "@type": "City", name: "Tehran" },
+          offers: [
+            { "@type": "Offer", name: "اجاره روزانه", price: "250000", priceCurrency: "IRR" },
+            { "@type": "Offer", name: "اجاره آخر هفته", price: "650000", priceCurrency: "IRR" },
+            { "@type": "Offer", name: "اجاره هفتگی", price: "1400000", priceCurrency: "IRR" },
+            { "@type": "Offer", name: "اجاره ماهانه", price: "4500000", priceCurrency: "IRR" },
+          ],
+        }),
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
