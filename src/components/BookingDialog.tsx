@@ -161,13 +161,8 @@ export function BookingDialog({
     let cancelled = false;
 
     async function loadOptions() {
-      const [consoleResult, packageResult] = await Promise.all([
+      const [consoleResult] = await Promise.all([
         supabase.from("consoles").select("slug,name").eq("active", true).order("sort_order"),
-        supabase
-          .from("packages")
-          .select("slug,name,description,duration_hours")
-          .eq("active", true)
-          .order("sort_order"),
       ]);
 
       if (cancelled) return;
@@ -179,17 +174,6 @@ export function BookingDialog({
             label: row.name,
             tagline:
               FALLBACK_CONSOLES.find((item) => item.value === row.slug)?.tagline ?? "کنسول اختصاصی",
-          })),
-        );
-      }
-
-      if (packageResult.data?.length) {
-        setPackages(
-          packageResult.data.map((row) => ({
-            value: row.slug,
-            label: row.name,
-            desc: row.description ?? `${toFaDigits(row.duration_hours ?? 24)} ساعت`,
-            hours: Number(row.duration_hours ?? 24),
           })),
         );
       }
