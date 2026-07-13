@@ -57,6 +57,7 @@ export const Route = createFileRoute("/api/public/booking-ical/$id")({
           headers: {
             "Content-Type": "text/calendar; charset=utf-8",
             "Content-Disposition": `attachment; filename="gamio-booking-${data.id.slice(0, 8)}.ics"`,
+            "Cache-Control": "private, max-age=300",
           },
         });
       },
