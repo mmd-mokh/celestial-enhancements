@@ -489,10 +489,13 @@ export function BookingDialog({
                   {consoles.map((consoleItem) => {
                     const Icon = CONSOLE_ICON[consoleItem.value] ?? Gamepad2;
                     const selected = values.consoleType === consoleItem.value;
+                    const avail = remainingBySlug[consoleItem.value];
+                    const soldOut = avail ? avail.remaining <= 0 : false;
                     return (
                       <OptionButton
                         key={consoleItem.value}
                         selected={selected}
+                        disabled={soldOut}
                         onClick={() =>
                           form.setValue("consoleType", consoleItem.value, { shouldValidate: true })
                         }
@@ -509,6 +512,22 @@ export function BookingDialog({
                         </span>
                         <span className="font-semibold">{consoleItem.label}</span>
                         <span className="text-xs text-muted-foreground">{consoleItem.tagline}</span>
+                        {avail && (
+                          <span
+                            className={cn(
+                              "mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium",
+                              soldOut
+                                ? "bg-destructive/15 text-destructive"
+                                : selected
+                                  ? "bg-primary-foreground text-primary"
+                                  : "bg-primary/10 text-primary",
+                            )}
+                          >
+                            {soldOut
+                              ? "امروز موجود نیست"
+                              : `${toFaDigits(avail.remaining)} از ${toFaDigits(avail.capacity)} موجود`}
+                          </span>
+                        )}
                       </OptionButton>
                     );
                   })}
