@@ -561,6 +561,23 @@ export function BookingDialog({
                         formatDay: (day) => PERSIAN_DATE_LIB.format(day, "d"),
                         formatWeekdayName: (day) => PERSIAN_DATE_LIB.format(day, "EEEEEE"),
                       }}
+                      modifiers={
+                        selectedDate && endDate
+                          ? {
+                              range_start: selectedDate,
+                              range_end: endDate,
+                              range_middle: { after: selectedDate, before: endDate },
+                            }
+                          : undefined
+                      }
+                      modifiersClassNames={{
+                        range_start:
+                          "bg-primary text-primary-foreground rounded-r-md rounded-l-none",
+                        range_end:
+                          "bg-primary text-primary-foreground rounded-l-md rounded-r-none",
+                        range_middle:
+                          "bg-primary/25 text-foreground rounded-none",
+                      }}
                       className="rounded-md border border-border bg-card text-card-foreground"
                     />
                   </div>
