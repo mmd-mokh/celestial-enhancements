@@ -97,10 +97,10 @@ export function PricingList({ onReserve }: Props) {
             transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
             whileHover={{ y: -8, transition: { duration: 0.2 } }}
             className={cn(
-              "pricing-card-enhanced tw-flex tw-flex-col tw-place-items-center tw-gap-4 tw-rounded-xl tw-p-4 md:tw-p-6 lg:tw-p-8 tw-bg-white",
+              "pricing-card-enhanced flex flex-col place-items-center gap-4 rounded-xl p-4 md:p-6 lg:p-8 bg-white",
               featured
-                ? "pricing-card-featured tw-shadow-2xl tw-bg-gradient-to-br tw-from-primary-50 tw-to-white tw-border-[3px] tw-border-primary tw-relative lg:tw-scale-105"
-                : "tw-shadow-lg",
+                ? "pricing-card-featured shadow-2xl bg-gradient-to-br from-primary-50 to-white border-[3px] border-primary relative lg:scale-105"
+                : "shadow-lg",
             )}
           >
             {featured && (
@@ -109,38 +109,38 @@ export function PricingList({ onReserve }: Props) {
                 <span className="pricing-card-featured-glow" aria-hidden="true" />
               </>
             )}
-            <i className={`bi ${p.icon} tw-text-primary tw-text-5xl icon-standard`} />
-            <h4 className="tw-text-2xl tw-font-bold tw-text-gray-800">{p.name}</h4>
-            <p className="tw-text-center tw-text-gray-700 tw-text-sm">{p.description}</p>
-            <div className="tw-text-center tw-my-2">
+            <i className={`bi ${p.icon} text-primary text-5xl icon-standard`} />
+            <h4 className="text-2xl font-bold text-gray-800">{p.name}</h4>
+            <p className="text-center text-gray-700 text-sm">{p.description}</p>
+            <div className="text-center my-2">
               <div
                 className={cn(
-                  "tw-font-bold tw-text-primary",
-                  featured ? "pricing-featured-price tw-text-6xl" : "tw-text-5xl",
+                  "font-bold text-primary",
+                  featured ? "pricing-featured-price text-6xl" : "text-5xl",
                 )}
               >
                 {p.price}
               </div>
-              <div className="tw-text-gray-700 tw-text-base tw-mt-1">{p.unit}</div>
+              <div className="text-gray-700 text-base mt-1">{p.unit}</div>
               {p.badge && (
-                <div className="tw-inline-block tw-text-xs tw-text-white tw-bg-green-600 tw-px-3 tw-py-1 tw-rounded-full tw-font-semibold tw-mt-3">
+                <div className="inline-block text-xs text-white bg-green-600 px-3 py-1 rounded-full font-semibold mt-3">
                   {p.badge}
                 </div>
               )}
             </div>
-            <hr className="tw-w-full tw-border-gray-200" />
-            <ul className="tw-flex tw-flex-col tw-gap-3 tw-text-right tw-w-full tw-text-sm">
+            <hr className="w-full border-gray-200" />
+            <ul className="flex flex-col gap-3 text-right w-full text-sm">
               {p.features.map((f, k) => (
-                <li key={k} className="tw-flex tw-items-start tw-gap-2">
-                  <i className="bi bi-check-circle-fill tw-text-primary tw-mt-1 tw-text-base" />
-                  <span className="tw-text-gray-700">{f}</span>
+                <li key={k} className="flex items-start gap-2">
+                  <i className="bi bi-check-circle-fill text-primary mt-1 text-base" />
+                  <span className="text-gray-700">{f}</span>
                 </li>
               ))}
             </ul>
             <button
               type="button"
               onClick={() => onReserve(p.slug)}
-              className="btn btn-enhanced tw-mt-4 !tw-w-full"
+              className="btn btn-enhanced mt-4 !tw-w-full"
             >
               رزرو کن
             </button>
