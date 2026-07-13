@@ -49,7 +49,7 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 ## Phase 6 — Quality & DX
 
 1. Vitest wired (`bun test` → `vitest run`). Initial suite covers `BookingSchema` + `validateBookingDateRange` (9 tests). Pricing calc / `has_role` still deferred (no pure-JS pricing calc exists yet; `has_role` needs pgTAP infra).
-2. Playwright smoke: booking happy path, sign-in, admin status change, dark mode toggle (Playwright already wired via `tests/a11y/smoke.spec.ts`).
+2. Playwright smoke — ✅ WIRED. `tests/a11y/smoke.spec.ts` (axe on 7 public routes) + new `tests/smoke/smoke.spec.ts` (route loads with no console errors, dark-mode toggle, `sitemap.xml`, `robots.txt`). Scripts: `bun run test:smoke`, `bun run test:e2e`. Deeper flows (booking happy path, sign-in, admin role change) still to add.
 3. ESLint restricted imports — ✅ DONE (`react-router-dom` and static `@/integrations/supabase/client.server` now error at lint time).
 4. Prettier + import-sort in pre-commit.
 5. Remove dead files — audit reports ✅ DONE (`AUDIT_REPORT.md`, `AUDIT_REPORT_V2.md`); `public/gamio.js`, `public/css/tailwind-build.css`, `src/gamio-body.html` deferred until Phase 1 replaces them.
