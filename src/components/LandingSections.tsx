@@ -393,7 +393,7 @@ export function PricingSection({ onReserve }: { onReserve: (slug: string) => voi
                 <button
                   type="button"
                   onClick={() => onReserve(p.slug)}
-                  className="btn btn-enhanced mt-4 !tw-w-full"
+                  className="btn btn-enhanced mt-4 !w-full"
                 >
                   رزرو کن
                 </button>
