@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import heroBody from "../hero-body.html?raw";
 import { SiteHeader } from "@/components/SiteHeader";
+import { HeroSection } from "@/components/HeroSection";
 import { SiteFooter } from "@/components/SiteFooter";
 import {
   ConsolesSection,
@@ -27,21 +27,6 @@ export function LandingPage({ scrollTo }: Props) {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [defaultPackage, setDefaultPackage] = useState<string | undefined>();
 
-  useEffect(() => {
-    const s = document.createElement("script");
-    let appended = false;
-    if (!document.querySelector('script[data-gamio="1"]')) {
-      s.src = "/gamio.js";
-      s.defer = true;
-      s.dataset.gamio = "1";
-      document.body.appendChild(s);
-      appended = true;
-    }
-    return () => {
-      if (appended) s.remove();
-    };
-  }, []);
-
   // Deep-link scroll for per-section SEO routes.
   useEffect(() => {
     if (!scrollTo) return;
@@ -60,10 +45,7 @@ export function LandingPage({ scrollTo }: Props) {
   return (
     <>
       <SiteHeader />
-      <div
-        className="tw-flex tw-flex-col tw-bg-white"
-        dangerouslySetInnerHTML={{ __html: heroBody }}
-      />
+      <HeroSection />
       <ConsolesSection />
       <WhySection />
       <HowItWorksSection />
