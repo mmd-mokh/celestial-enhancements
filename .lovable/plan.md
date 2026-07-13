@@ -9,10 +9,10 @@ Goal: turn the current mix of legacy static HTML + React shell into a clean, fas
 Today `src/gamio-body.html` is injected via `dangerouslySetInnerHTML` and driven by `public/gamio.js` + `public/css/tailwind-build.css`. This bypasses React, Tailwind v4, SSR, i18n, dark mode, and code-splitting.
 
 Steps:
-1. Split `LandingPage` into real components: `Hero`, `Consoles`, `WhyUs`, `HowItWorks`, `Pricing`, `Testimonials`, `FAQ`, `CTA` (Header/Footer already exist).
-2. Move all styles into `src/styles.css` using Tailwind v4 tokens (no more `public/css/tailwind-build.css`, no `tw-` prefix).
-3. Delete `public/gamio.js` and `src/gamio-body.html` after each section is ported; replace scroll/nav behavior with Framer Motion + `IntersectionObserver` hooks.
-4. Replace hand-rolled mobile drawer with shadcn `Sheet`, desktop nav with `NavigationMenu`.
+1. Split `LandingPage` into real components — ✅ DONE (`HeroSection`, `LandingSections` cover all 8 sections; portals removed).
+2. Move all styles into `src/styles.css` using Tailwind v4 tokens (no more `tw-` prefix, retire `public/css/index.css`). **In progress** — empty `tailwind-build.css` + link removed; `public/css/index.css` (1.9 KLoC, Tailwind v3 build with `tw-` prefix) still shipped. Migration = rewrite every `tw-*` in components to v4 utilities + move component-scoped rules into `styles.css`.
+3. Delete `public/gamio.js` and `src/gamio-body.html` — ✅ DONE.
+4. Replace hand-rolled mobile drawer with shadcn `Sheet`, desktop nav with `NavigationMenu` — pending (Header still uses custom drawer).
 
 Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInnerHTML`, ~200 KB less shipped JS/CSS.
 
