@@ -12,7 +12,9 @@
     "format": "prettier --write .",
     "test:a11y": "playwright test",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:smoke": "playwright test smoke",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@fontsource-variable/vazirmatn": "^5.2.8",
