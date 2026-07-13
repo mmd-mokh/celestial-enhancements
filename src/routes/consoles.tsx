@@ -60,6 +60,8 @@ export const Route = createFileRoute("/consoles")({
     ],
   }),
   component: ConsolesPage,
+  errorComponent: ConsolesError,
+  notFoundComponent: ConsolesNotFound,
 });
 
 function ConsolesPage() {
@@ -84,6 +86,36 @@ function ConsolesPage() {
           >
             <ConsoleList items={items} />
           </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
+
+function ConsolesError({ error }: { error: Error }) {
+  return (
+    <>
+      <SiteHeader />
+      <main className="min-h-screen bg-white">
+        <section className="max-w-3xl mx-auto px-4 py-24 text-center" dir="rtl">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">خطا در بارگذاری کنسول‌ها</h1>
+          <p className="text-gray-700 mb-6">{error.message || "لطفاً دوباره تلاش کنید."}</p>
+        </section>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
+
+function ConsolesNotFound() {
+  return (
+    <>
+      <SiteHeader />
+      <main className="min-h-screen bg-white">
+        <section className="max-w-3xl mx-auto px-4 py-24 text-center" dir="rtl">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">کنسولی پیدا نشد</h1>
+          <p className="text-gray-700">در حال حاضر کنسولی برای نمایش موجود نیست.</p>
         </section>
       </main>
       <SiteFooter />
