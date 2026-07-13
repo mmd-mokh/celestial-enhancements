@@ -1,77 +1,130 @@
-# Gamio — Refactoring & System Optimization Plan
+# SEO Plan — گیمیو (console rental, Tehran)
 
-Goal: turn the current mix of legacy static HTML + React shell into a clean, fast, type-safe TanStack Start app, and tighten the backend (RLS, RPCs, indexes) for correctness and performance. Each phase is independently shippable.
-
----
-
-## Phase 1 — Kill the HTML blob (biggest win)
-
-Today `src/gamio-body.html` is injected via `dangerouslySetInnerHTML` and driven by `public/gamio.js` + `public/css/tailwind-build.css`. This bypasses React, Tailwind v4, SSR, i18n, dark mode, and code-splitting.
-
-Steps:
-1. Split `LandingPage` into real components — ✅ DONE (`HeroSection`, `LandingSections` cover all 8 sections; portals removed).
-2. Move all styles into `src/styles.css` using Tailwind v4 tokens (no more `tw-` prefix, retire `public/css/index.css`). **⏸️ SKIPPED — REMIND USER LATER.** Progress so far: empty `tailwind-build.css` + link removed; dead `tw-*` dark-mode selectors purged from `styles.css`. Remaining: `public/css/index.css` (1.9 KLoC) still shipped and defines ~60 custom classes used by components (`btn-enhanced`, `console-card`, `pricing-card-enhanced`, `site-header`, `primary-nav__link`, …). Full migration = rewrite each rule as Tailwind v4 utilities in JSX or `@utility`/scoped rules in `styles.css`, then drop the `<link>` in `__root.tsx`. Best done section-by-section (header → pricing → consoles → footer).
-3. Delete `public/gamio.js` and `src/gamio-body.html` — ✅ DONE.
-4. Replace hand-rolled mobile drawer with shadcn `Sheet` — ✅ DONE. Desktop nav stays a flat anchor `<ul>` (no submenus, so `NavigationMenu` would be over-engineered).
-
-Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInnerHTML`, ~200 KB less shipped JS/CSS.
-
-## Phase 2 — Data layer (TanStack Query + server fns)
-
-1. Introduce `src/lib/consoles.functions.ts`, `bookings.functions.ts`, `availability.functions.ts`, `posts.functions.ts` using `createServerFn` — ✅ DONE (`BookingDialog` migrated; blog reads migrated).
-2. Define `queryOptions` factories in `src/lib/queries.ts`; loaders call `ensureQueryData`, components call `useSuspenseQuery` — ✅ DONE for consoles + blog index + blog detail; booking flow uses imperative server-fn calls (appropriate for a form wizard).
-3. Public read fns currently use `supabaseAdmin` inside handlers (safe: read-only, projected columns). Swap to a server publishable client if/when we tighten RLS/tenant scoping.
-4. Remove ad-hoc `useEffect` + `supabase.from(...)` fetches — ✅ DONE for consoles, blog, bookings. Remaining direct-client callers are `contact.tsx` (form insert), `NewsletterForm.tsx` (form insert), and `auth.tsx` (browser-only auth flow, correct as-is).
-
-## Phase 3 — Routing & SEO
-
-1. Confirm each public section route has unique `head()`, canonical, og:image, twitter:image — ✅ DONE (`/`, `/consoles`, `/pricing`, `/how-it-works`, `/faq`, `/blog`, `/contact`).
-2. JSON-LD coverage — ✅ DONE: `Organization` + `LocalBusiness` (root), `Product` per console derived from loader data (`/consoles`), `FAQPage` (`/faq`), `HowTo` (`/how-it-works`), `Service` + `Offer[]` (`/pricing`), `BlogPosting` per post, `BreadcrumbList` on section routes.
-3. `sitemap.xml` includes `/`, `/consoles`, `/pricing`, `/how-it-works`, `/faq`, `/contact`, `/blog` + every published `/blog/$slug` (fetched at request time from `posts`, `lastmod` derived from `updated_at`/`published_at`) — ✅ DONE.
-4. Ensure `errorComponent` + `notFoundComponent` on every route with a loader — ✅ DONE (`/consoles`, `/blog`, `/blog/$slug`).
-
-## Phase 4 — Backend hardening
-
-1. Audit RLS on `bookings`, `consoles`, `packages`, `posts`, `contact_messages`, `newsletter_subscribers`, `user_roles`; confirm `GRANT`s per policy — ✅ DONE. Revoked broad default grants (TRUNCATE/TRIGGER/REFERENCES/MAINTAIN from anon+authenticated on every public table — TRUNCATE bypasses RLS, so this closed a real hole). Anon now has only the minimum grants matching its policies (INSERT on bookings/contact_messages/newsletter, SELECT on consoles/packages/posts, none on user_roles). Added missing admin policies: `newsletter_subscribers` (SELECT+DELETE), `user_roles` (SELECT+INSERT+UPDATE+DELETE).
-2. Add indexes: ✅ DONE (bookings composite, bookings user_id, posts published).
-3. Review RPCs — ✅ DONE (extracted overlap CTE into `public.booking_peak_overlap`; `create_booking` + `reschedule_booking` now share it).
-4. Rate limits: ✅ DONE (contact_messages 5/hr, newsletter 3/hr via BEFORE INSERT triggers).
-5. Run `supabase--linter` — ✅ DONE. All 14 findings are `SECURITY DEFINER` warnings on RPCs that need elevated context (auth.uid checks, capacity/rate-limit enforcement, `has_role`). Left as-is by design.
-
-## Phase 5 — Performance
-
-1. Convert bundled hero/console images through `vite-imagetools` (AVIF + WebP), preload the LCP image in the home route `head().links` — deferred until Phase 1 ports images into React components.
-2. Split heavy client-only pieces — ✅ DONE: `BookingDialog` is now lazy-loaded in `LandingPage` and `pricing.tsx`, rendered only when opened. `AnalyticsCharts` has no consumer yet.
-3. Set explicit `staleTime` on query options — ✅ DONE (5 min on consoles, blog list, blog detail).
-4. Cache-Control on public GET routes — ✅ DONE: `sitemap.xml` (`public, max-age=3600`) and `booking-ical.$id` (`private, max-age=300`).
-5. Lighthouse budget in CI — ✅ WIRED. `lighthouserc.json` asserts CLS ≤ 0.1 (error), LCP ≤ 2.5 s (error), a11y ≥ 0.9 (error), SEO ≥ 0.9 (error), perf ≥ 0.8 / best-practices ≥ 0.85 (warn), on mobile emulation for `/`, `/consoles`, `/pricing`. New `lighthouse` job in `.github/workflows/ci.yml` runs `@lhci/cli autorun` on every push/PR.
-
-## Phase 6 — Quality & DX
-
-1. Vitest wired (`bun run test`). Initial suite covers `BookingSchema` + `validateBookingDateRange` (9 tests). `has_role` covered by pgTAP suite (see below). Pricing calc still deferred (no pure-JS pricing calc exists yet — prices are static strings in `PricingCards.tsx`).
-   - **pgTAP** — ✅ WIRED. `pgtap` extension installed into a dedicated `tests` schema (kept out of `public` per Supabase best practice); 5 assertions cover `has_role` (admin recognized, admin not moderator, plain user not admin, unknown uid not admin, `has_role(null,...)` returns false). Runner: `bun run test:pgtap` executes `tests.run_has_role_tests()` via `pg` against `SUPABASE_DB_URL` and fails on any `not ok` line. New `pgtap` CI job runs it when the `SUPABASE_DB_URL` GitHub secret is set.
-2. Playwright smoke — ✅ WIRED. `tests/a11y/smoke.spec.ts` (axe on 7 public routes) + new `tests/smoke/smoke.spec.ts` (route loads with no console errors, dark-mode toggle, `sitemap.xml`, `robots.txt`). Scripts: `bun run test:smoke`, `bun run test:e2e`. Deeper flows (booking happy path, sign-in, admin role change) still to add.
-3. ESLint restricted imports — ✅ DONE (`react-router-dom` and static `@/integrations/supabase/client.server` now error at lint time).
-4. Prettier + `eslint --fix` on staged files via `simple-git-hooks` + `lint-staged` — ✅ WIRED. Runs on `pre-commit` after `bun install` triggers the `prepare` script (`simple-git-hooks`). Import-sort deferred (would require adding `@trivago/prettier-plugin-sort-imports` or an ESLint sort rule).
-5. Remove dead files — audit reports ✅ DONE (`AUDIT_REPORT.md`, `AUDIT_REPORT_V2.md`); `public/gamio.js`, `public/css/tailwind-build.css`, `src/gamio-body.html` deferred until Phase 1 replaces them.
-
-## Phase 7 — Security pass
-
-1. Security scan — ✅ DONE. Only the 14 pre-accepted `SECURITY DEFINER` warnings; `@security-memory` refreshed with access model + accepted risks.
-2. CSP `script-src` tightening — deferred until Phase 1 removes `public/gamio.js`.
-3. Service-role audit — ✅ DONE. `supabaseAdmin` is only dynamic-imported inside `src/routes/api/public/booking-ical.$id.ts`; no static import from any client-reachable module.
+Foundations already in place: per-route `head()` metadata, JSON-LD (Organization, LocalBusiness, FAQPage, ItemList, Service, BreadcrumbList), a dynamic sitemap that includes blog posts, Persian/RTL setup, and semantic sections. This plan closes the current scanner findings, polishes metadata, adds keyword-targeted content, tightens performance, then wires measurement.
 
 ---
 
-## Technical notes
+## Phase 1 — Fix current scanner findings
 
-- Order matters: **Phase 1 unlocks everything else** — dark mode, i18n, real SEO, Tailwind v4 tokens, CSP tightening.
-- Phase 2 must land before Phase 5's query tuning is meaningful.
-- Migrations use plain `CREATE INDEX` (not CONCURRENTLY) per project rule.
-- No new external services; Lovable Cloud + Lovable AI Gateway only.
+**1.1 Shorten root title & description** (`src/routes/__root.tsx`)
+- Title → ≤60 chars, e.g. `گیمیو | اجاره کنسول PS5، Xbox و Nintendo Switch` (~48).
+- Description → ≤160 chars, one sentence covering value + city + delivery.
 
-## Suggested first PR
+**1.2 Fix heading hierarchy** (h1 → h2 → h3)
+- `ConsoleList`, `PricingList`, `FaqList` render `<h3>` under each page's `<h1>`. Change those to `<h2>` so `/consoles`, `/pricing`, `/faq`, `/contact` never skip a level.
 
-Phase 1 steps 1–2 for `Hero` + `Consoles` sections + Phase 4 step 2 (indexes). High visible impact, no behavior change for users, sets up everything after.
+**1.3 Contact form a11y** (`src/routes/contact.tsx`)
+- Add unique `id` on every `Input`/`Textarea` and matching `htmlFor` on each `<label>`; add `aria-describedby` pointing at the field's error text.
 
-Reply with the phases you want me to execute (e.g. "Phase 1", "Phase 1 + 4", or "all").
+**1.4 Sitemap absolute URLs** (`src/routes/sitemap[.]xml.ts`)
+- Set `BASE_URL = "https://star-crafting-suite.lovable.app"` (or the custom domain once live). `/api/public/booking-ical/$id` is a machine endpoint — leaving it out is correct.
+
+**1.5 Add `/llms.txt`** at `public/llms.txt` listing `/`, `/consoles`, `/pricing`, `/how-it-works`, `/faq`, `/contact`, `/blog`. Exclude `/auth`, `/admin`, `/api/*`, `/.mcp`, `/.well-known/*`.
+
+**1.6 `public/robots.txt`**
+- Append `Sitemap: https://star-crafting-suite.lovable.app/sitemap.xml`.
+- Add `Disallow: /api/` to keep machine endpoints out of the index.
+
+---
+
+## Phase 2 — Metadata polish
+
+**2.1 Absolute URLs**
+- Replace relative `canonical`, `og:url`, `og:image` values with absolute URLs. Use a `getRequestOrigin` server fn so preview and custom domain both resolve — no hardcoded host.
+
+**2.2 Per-route social image**
+- Every route currently reuses `/assets/images/home/dashboard.png`. Generate 3 dedicated 1200×630 OG images (home, pricing, consoles) and wire them per leaf route only (never `__root.tsx` — the root concatenates into every match). I'll ask before generating.
+
+**2.3 Metadata coverage audit**
+- `/how-it-works`, `/blog`, `/blog/$slug`, `/contact`: confirm each has a unique `title`, `description`, `og:title`, `og:description`, `canonical`. `/blog/$slug` derives all from loader data with `og:type: article` + `Article` JSON-LD.
+
+**2.4 Structured-data upgrades**
+- `/pricing`: expose each package as a `Product` + `Offer` with real `price` / `priceCurrency: "IRR"` (already partial — align prices with the visible cards).
+- `/blog/$slug`: add `Article` schema (`datePublished`, `dateModified`, `author`, `image`).
+- Move the `WebSite` + `SearchAction` JSON-LD from `/` up to `__root.tsx` so it's site-wide.
+
+---
+
+## Phase 3 — Content expansion (Persian search demand)
+
+**3.1 Per-console landing pages**
+- `/consoles/ps5`, `/consoles/xbox-series-x`, `/consoles/nintendo-switch` — hero, specs, popular games, price for that console, filtered testimonials, dedicated `Product` + `Offer` JSON-LD. Targets high-intent queries like `اجاره PS5 تهران`.
+
+**3.2 Use-case landing pages**
+- `/rent/party` (مهمانی), `/rent/nowruz` (نوروز), `/rent/birthday`. Same shell, different copy + testimonials.
+
+**3.3 Seed blog (4–6 posts)**
+- "مقایسه PS5 و Xbox Series X — کدام برای اجاره بهتر است؟"
+- "بهترین بازی‌های انحصاری PS5 در ۱۴۰۴"
+- "چطور برای مهمانی کنسول اجاره کنیم؟"
+- "راهنمای انتخاب پکیج اجاره: روزانه، هفتگی یا ماهانه؟"
+- 800–1500 words each; internal links to `/pricing` + the relevant console page.
+
+**3.4 On-page hygiene**
+- Ensure exactly one `<h1>` per page (some pages currently rely on hero copy).
+- Descriptive `alt` on every image ("کنسول PlayStation 5 گیمیو" beats "PS5").
+- One internal link from every page to `/pricing` and one to `/consoles`.
+
+---
+
+## Phase 4 — Performance (Core Web Vitals)
+
+**4.1 Images**
+- Convert `public/assets/images/**` `.jpg`/`.png` to WebP + fallback. Set explicit `width`/`height` on every `<img>` (fixes CLS).
+- Only the LCP hero should be `fetchPriority="high"` + preloaded (already correct). Everything else `loading="lazy"`.
+
+**4.2 CSS / JS**
+- Audit `public/css/index.css` loaded from `__root.tsx` alongside Tailwind — if legacy, remove to drop render-blocking bytes.
+- Keep `BookingDialog` lazy-loaded (already is).
+
+**4.3 Fonts**
+- Any web font: preconnect to its host and set `font-display: swap`.
+
+---
+
+## Phase 5 — Measurement & submission
+
+**5.1 Search Console**
+- Once a custom domain is live, verify the domain via the `google_search_console` connector (`META` flow), then submit `/sitemap.xml` and inspect `/`, `/pricing`, `/consoles`.
+
+**5.2 Analytics**
+- Add Plausible or GA4 via a route script (cookieless preferred for the Persian audience) if none is present.
+
+**5.3 Cadence**
+- Re-run the built-in SEO scan monthly (SEO tab → Rescan).
+- After 4–6 weeks of indexation, review Semrush `domain_analysis` + `top_pages` and iterate copy.
+
+---
+
+## Technical section (for reference)
+
+**Phase 1 files:**
+- `src/routes/__root.tsx` (title / description length)
+- `src/routes/contact.tsx` (form a11y)
+- `src/components/ConsoleCards.tsx`, `PricingCards.tsx`, `FaqAccordion.tsx` (h3 → h2)
+- `src/routes/sitemap[.]xml.ts` (`BASE_URL`)
+- `public/robots.txt` (Sitemap directive, `/api/` disallow)
+- `public/llms.txt` (new)
+
+**Phase 3 new files:**
+- `src/routes/consoles.$slug.tsx` (per-console pages, driven by existing `consoles` table)
+- `src/routes/rent.$slug.tsx` (use-case pages)
+- New `posts` rows via the existing blog pipeline
+
+**Rules honored throughout:**
+- `og:image` on leaf routes only, never `__root.tsx`.
+- `canonical` on leaf only.
+- Absolute URLs once the domain is confirmed.
+- No hash-fragment navigation for section pages.
+
+---
+
+## Suggested execution order
+
+1. **Phase 1** — clears every current scanner finding (~30 min of edits).
+2. **Phase 2.1 + 2.4** — metadata polish, no new pages.
+3. **Phase 4.1** — image conversion, biggest CWV win.
+4. **Phase 3** — content, the growth lever (console pages → use-case → blog).
+5. **Phase 5** — submit + measure.
+
+Reply "go" to execute Phase 1, or name a specific phase to start there.

@@ -83,13 +83,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
       { name: "apple-mobile-web-app-title", content: "گیمیو" },
       {
-        title:
-          "گیمیو | اجاره کنسول بازی PS، Xbox، Nintendo Switch - اجاره روزانه و ماهانه",
+        title: "گیمیو | اجاره کنسول PS5، Xbox و Nintendo Switch در تهران",
       },
       {
         name: "description",
         content:
-          "اجاره کنسول بازی در تهران با گیمیو. اجاره PS5، Xbox Series X، و Nintendo Switch با قیمت مناسب. تحویل سریع، پشتیبانی ۲۴/۷، و پکیج‌های منعطف روزانه تا ماهانه. رزرو آنلاین در کمتر از ۳ دقیقه.",
+          "اجاره کنسول PS5، Xbox Series X و Nintendo Switch در تهران با تحویل درب منزل، پکیج روزانه تا ماهانه و رزرو آنلاین در ۳ دقیقه.",
       },
       {
         name: "keywords",

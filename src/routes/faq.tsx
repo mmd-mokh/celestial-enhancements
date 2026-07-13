@@ -87,6 +87,9 @@ function FaqPage() {
               هر چیزی که قبل از اجاره کنسول لازم داری بدونی.
             </p>
           </div>
+          <h2 className="max-w-4xl mx-auto text-2xl md:text-3xl font-bold text-gray-900 text-center mb-6">
+            پرسش‌های پرتکرار
+          </h2>
           <div className="max-w-4xl mx-auto w-full">
             <FaqList />
           </div>

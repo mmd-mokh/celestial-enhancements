@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -59,6 +59,14 @@ export const Route = createFileRoute("/contact")({
 
 function ContactPage() {
   const [sent, setSent] = useState(false);
+  const nameId = useId();
+  const emailId = useId();
+  const phoneId = useId();
+  const subjectId = useId();
+  const messageId = useId();
+  const nameErrId = `${nameId}-err`;
+  const emailErrId = `${emailId}-err`;
+  const messageErrId = `${messageId}-err`;
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { name: "", email: "", phone: "", subject: "", message: "" },
@@ -98,7 +106,7 @@ function ContactPage() {
             {sent ? (
               <div className="space-y-4 text-center py-6">
                 <div className="text-5xl">✅</div>
-                <h3 className="text-xl font-semibold">پیام شما ارسال شد</h3>
+                <h2 className="text-xl font-semibold">پیام شما ارسال شد</h2>
                 <p className="text-muted-foreground text-sm">
                   در اسرع وقت با شما در تماس خواهیم بود.
                 </p>
@@ -110,33 +118,54 @@ function ContactPage() {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-1">
-                    <label className="text-sm font-medium">نام و نام خانوادگی *</label>
-                    <Input {...form.register("name")} placeholder="مثلا رضا احمدی" />
+                    <label htmlFor={nameId} className="text-sm font-medium">نام و نام خانوادگی *</label>
+                    <Input
+                      id={nameId}
+                      {...form.register("name")}
+                      placeholder="مثلا رضا احمدی"
+                      aria-invalid={!!form.formState.errors.name}
+                      aria-describedby={form.formState.errors.name ? nameErrId : undefined}
+                    />
                     {form.formState.errors.name && (
-                      <p className="text-xs text-destructive">{form.formState.errors.name.message}</p>
+                      <p id={nameErrId} className="text-xs text-destructive">{form.formState.errors.name.message}</p>
                     )}
                   </div>
                   <div className="space-y-1">
-                    <label className="text-sm font-medium">ایمیل *</label>
-                    <Input dir="ltr" type="email" {...form.register("email")} placeholder="you@example.com" />
+                    <label htmlFor={emailId} className="text-sm font-medium">ایمیل *</label>
+                    <Input
+                      id={emailId}
+                      dir="ltr"
+                      type="email"
+                      {...form.register("email")}
+                      placeholder="you@example.com"
+                      aria-invalid={!!form.formState.errors.email}
+                      aria-describedby={form.formState.errors.email ? emailErrId : undefined}
+                    />
                     {form.formState.errors.email && (
-                      <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
+                      <p id={emailErrId} className="text-xs text-destructive">{form.formState.errors.email.message}</p>
                     )}
                   </div>
                   <div className="space-y-1">
-                    <label className="text-sm font-medium">تلفن</label>
-                    <Input dir="ltr" {...form.register("phone")} placeholder="09xxxxxxxxx" />
+                    <label htmlFor={phoneId} className="text-sm font-medium">تلفن</label>
+                    <Input id={phoneId} dir="ltr" {...form.register("phone")} placeholder="09xxxxxxxxx" />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-sm font-medium">موضوع</label>
-                    <Input {...form.register("subject")} placeholder="موضوع پیام" />
+                    <label htmlFor={subjectId} className="text-sm font-medium">موضوع</label>
+                    <Input id={subjectId} {...form.register("subject")} placeholder="موضوع پیام" />
                   </div>
                 </div>
                 <div className="space-y-1">
-                  <label className="text-sm font-medium">پیام *</label>
-                  <Textarea rows={6} {...form.register("message")} placeholder="پیام خود را اینجا بنویسید…" />
+                  <label htmlFor={messageId} className="text-sm font-medium">پیام *</label>
+                  <Textarea
+                    id={messageId}
+                    rows={6}
+                    {...form.register("message")}
+                    placeholder="پیام خود را اینجا بنویسید…"
+                    aria-invalid={!!form.formState.errors.message}
+                    aria-describedby={form.formState.errors.message ? messageErrId : undefined}
+                  />
                   {form.formState.errors.message && (
-                    <p className="text-xs text-destructive">{form.formState.errors.message.message}</p>
+                    <p id={messageErrId} className="text-xs text-destructive">{form.formState.errors.message.message}</p>
                   )}
                 </div>
                 <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
