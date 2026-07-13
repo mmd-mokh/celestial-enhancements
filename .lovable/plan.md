@@ -51,7 +51,7 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 1. Vitest wired (`bun test` → `vitest run`). Initial suite covers `BookingSchema` + `validateBookingDateRange` (9 tests). Pricing calc / `has_role` still deferred (no pure-JS pricing calc exists yet; `has_role` needs pgTAP infra).
 2. Playwright smoke — ✅ WIRED. `tests/a11y/smoke.spec.ts` (axe on 7 public routes) + new `tests/smoke/smoke.spec.ts` (route loads with no console errors, dark-mode toggle, `sitemap.xml`, `robots.txt`). Scripts: `bun run test:smoke`, `bun run test:e2e`. Deeper flows (booking happy path, sign-in, admin role change) still to add.
 3. ESLint restricted imports — ✅ DONE (`react-router-dom` and static `@/integrations/supabase/client.server` now error at lint time).
-4. Prettier + import-sort in pre-commit.
+4. Prettier + `eslint --fix` on staged files via `simple-git-hooks` + `lint-staged` — ✅ WIRED. Runs on `pre-commit` after `bun install` triggers the `prepare` script (`simple-git-hooks`). Import-sort deferred (would require adding `@trivago/prettier-plugin-sort-imports` or an ESLint sort rule).
 5. Remove dead files — audit reports ✅ DONE (`AUDIT_REPORT.md`, `AUDIT_REPORT_V2.md`); `public/gamio.js`, `public/css/tailwind-build.css`, `src/gamio-body.html` deferred until Phase 1 replaces them.
 
 ## Phase 7 — Security pass
