@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
+import { absUrl } from "@/lib/seo";
 
 const schema = z.object({
   name: z.string().trim().min(1, "نام الزامی است").max(120),
@@ -34,12 +35,12 @@ export const Route = createFileRoute("/contact")({
         property: "og:description",
         content: "فرم تماس، شماره پشتیبانی و راه‌های ارتباط با گیمیو.",
       },
-      { property: "og:url", content: "/contact" },
+      { property: "og:url", content: absUrl("/contact") },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/assets/images/home/dashboard.png" },
-      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
+      { property: "og:image", content: absUrl("/assets/images/home/dashboard.png") },
+      { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
     ],
-    links: [{ rel: "canonical", href: "/contact" }],
+    links: [{ rel: "canonical", href: absUrl("/contact") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -47,8 +48,8 @@ export const Route = createFileRoute("/contact")({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
-            { "@type": "ListItem", position: 2, name: "تماس با ما", item: "/contact" },
+            { "@type": "ListItem", position: 1, name: "خانه", item: absUrl("/") },
+            { "@type": "ListItem", position: 2, name: "تماس با ما", item: absUrl("/contact") },
           ],
         }),
       },
