@@ -1,0 +1,170 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://uolvrolvbknqjvmpepmh.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "gamio-mcp",
+      "version": "0.1.0",
+      "title": "Gamio"
+    },
+    "tools": [
+      {
+        "name": "list_consoles",
+        "title": "List consoles",
+        "description": "List the game consoles Gamio currently rents, including slug, name, tagline, and daily capacity.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_console_availability",
+        "title": "Get console availability",
+        "description": "Return per-day booked count and capacity for a console between two dates (inclusive). Use `list_consoles` to get valid slugs.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "console_slug": {
+              "type": "string",
+              "description": "Console slug, e.g. 'ps5' or 'xbox-series-x'."
+            },
+            "from": {
+              "type": "string",
+              "description": "Start date in YYYY-MM-DD."
+            },
+            "to": {
+              "type": "string",
+              "description": "End date in YYYY-MM-DD, inclusive."
+            }
+          },
+          "required": [
+            "console_slug",
+            "from",
+            "to"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_bookings",
+        "title": "List my bookings",
+        "description": "List the signed-in user's own console-rental bookings, newest first.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_booking",
+        "title": "Create booking",
+        "description": "Create a new console-rental booking for the signed-in user. Dates are inclusive (YYYY-MM-DD). Use `get_console_availability` first to confirm a slot is free.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 2,
+              "description": "Full name for the booking."
+            },
+            "phone": {
+              "type": "string",
+              "minLength": 6,
+              "description": "Contact phone number."
+            },
+            "console_slug": {
+              "type": "string",
+              "description": "Console slug from list_consoles, e.g. 'ps5'."
+            },
+            "package_type": {
+              "type": "string",
+              "description": "Package name, e.g. 'daily', 'weekend', 'weekly', 'monthly'."
+            },
+            "start_date": {
+              "type": "string",
+              "description": "Start date YYYY-MM-DD."
+            },
+            "end_date": {
+              "type": "string",
+              "description": "End date YYYY-MM-DD, inclusive."
+            },
+            "notes": {
+              "type": "string",
+              "description": "Optional notes for the booking."
+            }
+          },
+          "required": [
+            "name",
+            "phone",
+            "console_slug",
+            "package_type",
+            "start_date",
+            "end_date"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "cancel_booking",
+        "title": "Cancel booking",
+        "description": "Cancel one of the signed-in user's own bookings by id.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "booking_id": {
+              "type": "string",
+              "format": "uuid",
+              "description": "The booking id to cancel."
+            }
+          },
+          "required": [
+            "booking_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
