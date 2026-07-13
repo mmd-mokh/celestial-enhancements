@@ -28,7 +28,7 @@ export function SiteFooter() {
     <>
       <footer
         role="contentinfo"
-        className="flex w-full px-6 py-16 md:px-12 lg:px-20 text-black bg-gray-50"
+        className="flex w-full px-6 py-16 md:px-12 lg:px-20 text-white bg-gray-900"
       >
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">
@@ -40,12 +40,12 @@ export function SiteFooter() {
               height={120}
               loading="lazy"
             />
-            <p className="text-gray-700 leading-relaxed text-sm">
+            <p className="text-white leading-relaxed text-sm">
               گیمیو اولین و بزرگ‌ترین سرویس اجاره کنسول بازی در ایرانه. ما با هدف
               دموکراتیک‌کردن دسترسی به دنیای گیمینگ، امکان اجاره کنسول‌های نسل جدید
               رو با قیمت مناسب و کیفیت بالا فراهم کردیم.
             </p>
-            <div className="flex flex-col gap-2 text-sm text-gray-700">
+            <div className="flex flex-col gap-2 text-sm text-white">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-primary" />
                 <span>تهران، ایران</span>
