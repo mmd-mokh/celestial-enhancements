@@ -310,6 +310,16 @@ export type Database = {
           day: string
         }[]
       }
+      get_consoles_remaining: {
+        Args: never
+        Returns: {
+          booked: number
+          capacity: number
+          name: string
+          remaining: number
+          slug: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
