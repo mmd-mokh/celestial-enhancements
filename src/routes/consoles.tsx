@@ -6,7 +6,11 @@ import { ConsoleList } from "@/components/ConsoleCards";
 import { consolesQueryOptions } from "@/lib/queries";
 
 export const Route = createFileRoute("/consoles")({
-  head: () => ({
+  loader: async ({ context }) => {
+    const items = await context.queryClient.ensureQueryData(consolesQueryOptions());
+    return { items };
+  },
+  head: ({ loaderData }) => ({
     meta: [
       { title: "اجاره کنسول PS5، Xbox و Nintendo Switch | گیمیو" },
       {
@@ -21,6 +25,8 @@ export const Route = createFileRoute("/consoles")({
       },
       { property: "og:url", content: "/consoles" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/assets/images/home/dashboard.png" },
+      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
     ],
     links: [{ rel: "canonical", href: "/consoles" }],
     scripts: [
@@ -30,11 +36,14 @@ export const Route = createFileRoute("/consoles")({
           "@context": "https://schema.org",
           "@type": "ItemList",
           name: "کنسول‌های قابل اجاره",
-          itemListElement: [
-            { "@type": "Product", name: "PlayStation 5", position: 1 },
-            { "@type": "Product", name: "Xbox Series X", position: 2 },
-            { "@type": "Product", name: "Nintendo Switch", position: 3 },
-          ],
+          itemListElement: (loaderData?.items ?? []).map((c, i) => ({
+            "@type": "Product",
+            position: i + 1,
+            name: c.name,
+            description: c.tagline ?? undefined,
+            category: "Video Game Console",
+            brand: { "@type": "Organization", name: "گیمیو" },
+          })),
         }),
       },
       {
@@ -51,7 +60,6 @@ export const Route = createFileRoute("/consoles")({
     ],
   }),
   component: ConsolesPage,
-  loader: ({ context }) => context.queryClient.ensureQueryData(consolesQueryOptions()),
 });
 
 function ConsolesPage() {
