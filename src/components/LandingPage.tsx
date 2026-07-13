@@ -7,7 +7,6 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { Toaster } from "@/components/ui/sonner";
-import { Hero } from "@/components/sections/Hero";
 
 const BookingDialog = lazy(() =>
   import("@/components/BookingDialog").then((m) => ({ default: m.BookingDialog })),
@@ -82,12 +81,6 @@ export function LandingPage({ scrollTo }: Props) {
   return (
     <>
       <SiteHeader />
-      <Hero
-        onReserve={() => {
-          setDefaultPackage(undefined);
-          setBookingOpen(true);
-        }}
-      />
       <div
         className="tw-flex tw-min-h-[100dvh] tw-flex-col tw-bg-white"
         dangerouslySetInnerHTML={{ __html: gamioBody }}
