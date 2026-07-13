@@ -480,7 +480,7 @@ export function BookingDialog({
                           className={cn(
                             "grid h-12 w-12 place-items-center rounded-full transition-colors",
                             selected
-                              ? "bg-primary-foreground text-primary ring-2 ring-primary border border-primary"
+                              ? "bg-primary-foreground text-primary ring-2 ring-primary-foreground/60"
                               : "bg-primary/10 text-primary",
                           )}
                         >
@@ -511,7 +511,7 @@ export function BookingDialog({
                           <span className={cn(
                             "absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium",
                             values.packageType === packageItem.value
-                              ? "bg-primary-foreground text-primary border border-primary"
+                              ? "bg-primary-foreground text-primary"
                               : "bg-primary/15 text-primary",
                           )}>
                             <Sparkles className="h-3 w-3" aria-hidden="true" />
