@@ -41,7 +41,7 @@ export function HeroSection() {
               </span>
             </div>
 
-            <p className="mt-6 max-w-full sm:max-w-[500px] md:max-w-[650px] mx-auto px-4 text-center text-base sm:text-lg leading-relaxed text-gray-700">
+            <p className="mt-6 max-w-full sm:max-w-[500px] md:max-w-[650px] mx-auto px-4 text-center text-base sm:text-lg leading-relaxed text-white">
               اجاره کنسول‌های نسل جدید با چند کلیک. انعطاف کامل، بازی‌های
               انحصاری، و تحویل سریع به درب منزل.
             </p>
