@@ -1,7 +1,8 @@
 import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
-  testDir: "./tests/a11y",
+  testDir: "./tests",
+  testMatch: ["a11y/**/*.spec.ts", "smoke/**/*.spec.ts"],
   timeout: 30_000,
   fullyParallel: true,
   reporter: "list",
