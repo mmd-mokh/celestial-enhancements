@@ -1,6 +1,3 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
-import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
 
 export type ConsoleRow = {
@@ -14,55 +11,7 @@ export type ConsoleRow = {
   sort_order: number | null;
 };
 
-/**
- * Hydrates the consoles grid in the ported HTML (identified by
- * aria-label="کنسول‌های موجود") with DB-backed cards.
- */
-export function ConsoleCards() {
-  const [mount, setMount] = useState<HTMLElement | null>(null);
-  const [items, setItems] = useState<ConsoleRow[] | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    let tries = 0;
-    const find = () => {
-      const el = document.querySelector<HTMLElement>(
-        'div[aria-label="کنسول‌های موجود"]',
-      );
-      if (el) {
-        el.innerHTML = "";
-        setMount(el);
-        return;
-      }
-      if (tries++ < 20) setTimeout(find, 100);
-    };
-    find();
-
-    (async () => {
-      const { data } = await supabase
-        .from("consoles")
-        .select("slug,name,tagline,features,icon,accent_from,accent_to,sort_order")
-        .eq("active", true)
-        .order("sort_order");
-      if (!cancelled && data) {
-        // Hide legacy consoles from the landing grid; they remain bookable
-        // in the reserve dialog.
-        const HIDDEN = new Set(["ps4", "xbox-series-s", "xbox-one"]);
-        setItems((data as ConsoleRow[]).filter((r) => !HIDDEN.has(r.slug)));
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  if (!mount || !items) return null;
-
-  return createPortal(<ConsoleList items={items} />, mount);
-}
-
-/** Standalone renderer for console cards. Used by dedicated /consoles page. */
+/** Standalone renderer for console cards. Used by /consoles and landing. */
 export function ConsoleList({ items }: { items: ConsoleRow[] }) {
   return (
     <>

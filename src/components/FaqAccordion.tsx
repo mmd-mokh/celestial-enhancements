@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import {
   Accordion,
   AccordionContent,
@@ -50,39 +48,7 @@ export const FAQS: Array<{ q: string; a: string }> = [
   },
 ];
 
-/**
- * Replaces the static `<details>` FAQ list in the ported HTML blob with a
- * shadcn Accordion. Uses the same container div (`.tw-max-w-4xl.tw-mx-auto`
- * inside `#faq`) so the surrounding layout stays intact.
- */
-export function FaqAccordion() {
-  const [mount, setMount] = useState<HTMLElement | null>(null);
-
-  useEffect(() => {
-    let tries = 0;
-    const find = () => {
-      const faq = document.getElementById("faq");
-      if (faq) {
-        const list = faq.querySelector<HTMLElement>(
-          ".tw-max-w-4xl.tw-mx-auto.tw-w-full",
-        );
-        if (list) {
-          list.innerHTML = "";
-          setMount(list);
-          return;
-        }
-      }
-      if (tries++ < 20) setTimeout(find, 100);
-    };
-    find();
-  }, []);
-
-  if (!mount) return null;
-
-  return createPortal(<FaqList />, mount);
-}
-
-/** Standalone FAQ accordion (no portal). Used by dedicated /faq page. */
+/** FAQ accordion. Used by /faq and landing. */
 export function FaqList() {
   return (
     <Accordion type="single" collapsible className="tw-flex tw-flex-col tw-gap-4">
