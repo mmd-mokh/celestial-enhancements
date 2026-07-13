@@ -1,22 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
-
-const CreateBookingInput = z.object({
-  name: z.string().trim().min(2).max(120),
-  phone: z.string().trim().min(6).max(30),
-  consoleType: z.string().min(1),
-  packageType: z.string().min(1),
-  startDate: z.string().min(1),
-  endDate: z.string().min(1),
-  notes: z.string().max(1000).optional(),
-});
+import { BookingSchema } from "@/lib/booking-validation";
 
 export type CreateBookingResult =
   | { ok: true; id: string }
   | { ok: false; code: string; message: string };
 
 export const createBooking = createServerFn({ method: "POST" })
-  .inputValidator((input) => CreateBookingInput.parse(input))
+  .inputValidator((input) => BookingSchema.parse(input))
   .handler(async ({ data }): Promise<CreateBookingResult> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: newId, error } = await supabaseAdmin.rpc("create_booking", {
