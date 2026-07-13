@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { ConsoleList } from "@/components/ConsoleCards";
 import { consolesQueryOptions } from "@/lib/queries";
+import { absUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/consoles")({
   loader: async ({ context }) => {
@@ -23,12 +24,12 @@ export const Route = createFileRoute("/consoles")({
         property: "og:description",
         content: "PS5، Xbox Series X، و Nintendo Switch — اجاره روزانه تا ماهانه.",
       },
-      { property: "og:url", content: "/consoles" },
+      { property: "og:url", content: absUrl("/consoles") },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/assets/images/home/dashboard.png" },
-      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
+      { property: "og:image", content: absUrl("/assets/images/home/dashboard.png") },
+      { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
     ],
-    links: [{ rel: "canonical", href: "/consoles" }],
+    links: [{ rel: "canonical", href: absUrl("/consoles") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -52,8 +53,8 @@ export const Route = createFileRoute("/consoles")({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
-            { "@type": "ListItem", position: 2, name: "کنسول‌ها", item: "/consoles" },
+            { "@type": "ListItem", position: 1, name: "خانه", item: absUrl("/") },
+            { "@type": "ListItem", position: 2, name: "کنسول‌ها", item: absUrl("/consoles") },
           ],
         }),
       },
