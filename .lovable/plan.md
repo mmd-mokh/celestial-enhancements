@@ -25,10 +25,10 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 
 ## Phase 3 — Routing & SEO
 
-1. Confirm each public section route (`/consoles`, `/pricing`, `/how-it-works`, `/faq`, `/contact`, `/blog`) has unique `head()`, canonical, and og:image derived from its hero.
-2. Add JSON-LD: `Organization`, `Product` per console, `FAQPage`, `LocalBusiness`.
-3. Verify `sitemap.xml` and `robots.txt` include all routes.
-4. Ensure `errorComponent` + `notFoundComponent` on every route with a loader.
+1. Confirm each public section route has unique `head()`, canonical, og:image, twitter:image — ✅ DONE for `/`, `/consoles`, `/pricing`, `/how-it-works`, `/faq`, `/blog`. `/contact` head still to add og:image.
+2. JSON-LD coverage — ✅ DONE: `Organization` + `LocalBusiness` (root), `Product` per console derived from loader data (`/consoles`), `FAQPage` (`/faq`), `HowTo` (`/how-it-works`), `Service` + `Offer[]` (`/pricing`), `BlogPosting` per post, `BreadcrumbList` on section routes.
+3. `sitemap.xml` includes `/`, `/consoles`, `/pricing`, `/how-it-works`, `/faq`, `/contact`, `/blog`. Blog posts still to enumerate dynamically.
+4. Ensure `errorComponent` + `notFoundComponent` on every route with a loader — pending audit for `/consoles`, `/blog`, `/blog/$slug` (only `/blog/$slug` currently has both).
 
 ## Phase 4 — Backend hardening
 
