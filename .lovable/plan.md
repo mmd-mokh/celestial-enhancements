@@ -56,9 +56,9 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 
 ## Phase 7 — Security pass
 
-1. Run `security--run_security_scan`, resolve findings, update `@security-memory`.
-2. Verify CSP in `src/server.ts` — tighten `script-src` once inline gamio.js is gone (drop `'unsafe-inline'`/`'unsafe-eval'`).
-3. Confirm no service-role usage in client-reachable modules (`tanstack-supabase-import-graph`).
+1. Security scan — ✅ DONE. Only the 14 pre-accepted `SECURITY DEFINER` warnings; `@security-memory` refreshed with access model + accepted risks.
+2. CSP `script-src` tightening — deferred until Phase 1 removes `public/gamio.js`.
+3. Service-role audit — ✅ DONE. `supabaseAdmin` is only dynamic-imported inside `src/routes/api/public/booking-ical.$id.ts`; no static import from any client-reachable module.
 
 ---
 
