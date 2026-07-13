@@ -1,23 +1,14 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { sanitizeHtml } from "@/lib/sanitize";
-
-type Post = {
-  slug: string; title: string; excerpt: string | null; cover_url: string | null;
-  content: string; tags: string[] | null; published_at: string | null;
-};
+import { blogPostQueryOptions } from "@/lib/queries";
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: async ({ params }) => {
-    const { data } = await supabase
-      .from("posts")
-      .select("slug,title,excerpt,cover_url,content,tags,published_at")
-      .eq("slug", params.slug)
-      .eq("published", true)
-      .maybeSingle();
-    if (!data) throw notFound();
-    return { post: data as Post };
+  loader: async ({ context, params }) => {
+    const post = await context.queryClient.ensureQueryData(blogPostQueryOptions(params.slug));
+    if (!post) throw notFound();
+    return { post };
   },
   head: ({ loaderData }) => {
     const p = loaderData?.post;
@@ -60,7 +51,9 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function PostPage() {
-  const { post } = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const { data: postData } = useSuspenseQuery(blogPostQueryOptions(slug));
+  const post = postData!;
   const [html, setHtml] = useState("");
   useEffect(() => {
     // Simple line-break + paragraph rendering (content is plain text/markdown-ish).
