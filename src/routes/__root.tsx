@@ -124,12 +124,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/assets/logo/logo1.png" },
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "stylesheet", href: "/css/index.css" },
-      {
-        rel: "preload",
-        href: "/assets/images/home/dashboard.png",
-        as: "image",
-        fetchPriority: "high",
-      } as unknown as { rel: string; href: string },
     ],
     scripts: [
       {
