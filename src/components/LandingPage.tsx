@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { Hero } from "@/components/Hero";
 import { Toaster } from "@/components/ui/sonner";
 
 type Props = {
@@ -78,6 +79,12 @@ export function LandingPage({ scrollTo }: Props) {
   return (
     <>
       <SiteHeader />
+      <Hero
+        onReserve={() => {
+          setDefaultPackage(undefined);
+          setBookingOpen(true);
+        }}
+      />
       <div
         className="tw-flex tw-min-h-[100dvh] tw-flex-col tw-bg-white"
         dangerouslySetInnerHTML={{ __html: gamioBody }}
