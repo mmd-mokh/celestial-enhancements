@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -18,7 +18,6 @@ function safeNext(next: string): string {
 
 function AuthPage() {
   const { next } = Route.useSearch();
-  const navigate = useNavigate();
   const target = safeNext(next);
 
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -152,6 +151,3 @@ function AuthPage() {
     </main>
   );
 }
-
-// keep useNavigate import used
-void useNavigate;
