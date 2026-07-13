@@ -36,6 +36,8 @@ export const Route = createFileRoute("/contact")({
       },
       { property: "og:url", content: "/contact" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/assets/images/home/dashboard.png" },
+      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
     scripts: [
