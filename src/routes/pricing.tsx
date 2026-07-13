@@ -1,10 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PricingList } from "@/components/PricingCards";
-import { BookingDialog } from "@/components/BookingDialog";
 import { Toaster } from "@/components/ui/sonner";
+
+const BookingDialog = lazy(() =>
+  import("@/components/BookingDialog").then((m) => ({ default: m.BookingDialog })),
+);
 
 export const Route = createFileRoute("/pricing")({
   head: () => ({
@@ -68,7 +71,11 @@ function PricingPage() {
         </section>
       </main>
       <SiteFooter />
-      <BookingDialog open={open} onOpenChange={setOpen} defaultPackage={pkg} />
+      {open && (
+        <Suspense fallback={null}>
+          <BookingDialog open={open} onOpenChange={setOpen} defaultPackage={pkg} />
+        </Suspense>
+      )}
       <Toaster richColors position="top-center" dir="rtl" />
     </>
   );
