@@ -1,115 +1,79 @@
+# Gamio — Refactoring & System Optimization Plan
 
-# Gamio — Full Enhancements Plan
-
-Already shipped (Phase 1 + first pass of Phase 2):
-- ✅ Landing page port (RTL, Vazirmatn, all sections)
-- ✅ Booking flow with `bookings` table + RLS
-- ✅ Auth (email/password + Google) at `/auth`
-- ✅ Admin dashboard at `/admin` with role gating via `user_roles` + `has_role`
-
-Below is everything else, grouped by area. Each item is independently shippable — pick any subset.
+Goal: turn the current mix of legacy static HTML + React shell into a clean, fast, type-safe TanStack Start app, and tighten the backend (RLS, RPCs, indexes) for correctness and performance. Each phase is independently shippable.
 
 ---
 
-## A. Backend & product features
+## Phase 1 — Kill the HTML blob (biggest win)
 
-**A1. Dynamic consoles & pricing from DB**
-Replace hardcoded PS5/Xbox/Switch cards and the 4 pricing tiers with `consoles` and `pricing_plans` tables. Admin CRUD in `/admin`. Landing reads at build/request time.
+Today `src/gamio-body.html` is injected via `dangerouslySetInnerHTML` and driven by `public/gamio.js` + `public/css/tailwind-build.css`. This bypasses React, Tailwind v4, SSR, i18n, dark mode, and code-splitting.
 
-**A2. Real availability & calendar**
-`availability` table (console_id, date, slots). Booking dialog shows a date picker with only free slots. Prevents double-booking.
+Steps:
+1. Split `LandingPage` into real components: `Hero`, `Consoles`, `WhyUs`, `HowItWorks`, `Pricing`, `Testimonials`, `FAQ`, `CTA` (Header/Footer already exist).
+2. Move all styles into `src/styles.css` using Tailwind v4 tokens (no more `public/css/tailwind-build.css`, no `tw-` prefix).
+3. Delete `public/gamio.js` and `src/gamio-body.html` after each section is ported; replace scroll/nav behavior with Framer Motion + `IntersectionObserver` hooks.
+4. Replace hand-rolled mobile drawer with shadcn `Sheet`, desktop nav with `NavigationMenu`.
 
-**A3. Payments (Stripe)**
-Deposit or full payment per package. `payments` table linked to `bookings`. Webhook at `/api/public/stripe-webhook`. Status auto-advances to `confirmed` on paid.
+Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInnerHTML`, ~200 KB less shipped JS/CSS.
 
-**A4. Customer account area** (`/account`)
-Signed-in users see their own bookings, status, payment receipts, can cancel within a window.
+## Phase 2 — Data layer (TanStack Query + server fns)
 
-**A5. Contact form → DB + email**
-`contact_messages` table. Auto-reply + admin notification via Resend (or Lovable AI Gateway if we go that route).
+1. Introduce `src/lib/consoles.functions.ts`, `bookings.functions.ts`, `availability.functions.ts` using `createServerFn` — replace direct `supabase` calls from components.
+2. Define `queryOptions` factories in `src/lib/queries.ts`; loaders call `ensureQueryData`, components call `useSuspenseQuery` (per `tanstack-query-integration`).
+3. Public read fns use the server publishable client; authed fns use `requireSupabaseAuth`.
+4. Remove ad-hoc `useEffect` + `supabase.from(...)` fetches.
 
-**A6. Reviews / testimonials**
-`reviews` table, submit form for signed-in users who completed a booking, moderation queue in admin, display approved ones in the testimonials section.
+## Phase 3 — Routing & SEO
 
-**A7. Notifications**
-SMS confirmation to the phone number on booking (Kavenegar/Twilio) + email to admin on every new booking.
+1. Confirm each public section route (`/consoles`, `/pricing`, `/how-it-works`, `/faq`, `/contact`, `/blog`) has unique `head()`, canonical, and og:image derived from its hero.
+2. Add JSON-LD: `Organization`, `Product` per console, `FAQPage`, `LocalBusiness`.
+3. Verify `sitemap.xml` and `robots.txt` include all routes.
+4. Ensure `errorComponent` + `notFoundComponent` on every route with a loader.
 
-**A8. Coupons / promo codes**
-`coupons` table (code, discount, expiry, usage cap). Applied in booking dialog and validated server-side.
+## Phase 4 — Backend hardening
 
----
+1. Audit RLS on `bookings`, `consoles`, `packages`, `posts`, `contact_messages`, `newsletter_subscribers`, `user_roles`; confirm `GRANT`s per policy.
+2. Add indexes:
+   - `bookings (console_type, status, start_date, end_date)` — powers availability RPCs.
+   - `bookings (user_id, created_at desc)` — powers account/admin lists.
+   - `posts (published, published_at desc)`.
+3. Review RPCs (`create_booking`, `reschedule_booking`, `get_console_availability`, `get_consoles_remaining`) — extract the overlap-count CTE into a shared SQL fn to remove duplication (the source of the recent bug).
+4. Add DB-side rate limits already scaffolded in `create_booking`; extend to `contact_messages` and `newsletter_subscribers`.
+5. Run `supabase--linter` and fix findings.
 
-## B. Frontend & UX
+## Phase 5 — Performance
 
-**B1. i18n (fa/en)** with language switcher, auto `dir` swap, translated meta tags.
+1. Convert bundled hero/console images through `vite-imagetools` (AVIF + WebP), preload the LCP image in the home route `head().links`.
+2. Split heavy client-only pieces (charts in `AnalyticsCharts`, booking dialog) behind dynamic import / lazy route files.
+3. Set explicit `staleTime` on query options to cut refetches.
+4. Add `Cache-Control` headers on public GET server routes (`sitemap.xml`, `booking-ical`).
+5. Lighthouse budget in CI (fail on CLS > 0.1, LCP > 2.5s on mobile).
 
-**B2. Dark mode** toggle wired to the existing `.dark` tokens, persisted in localStorage, respects `prefers-color-scheme`.
+## Phase 6 — Quality & DX
 
-**B3. Framer Motion** replacement for the hand-rolled scroll animations in `gamio.js`, with `prefers-reduced-motion` support.
+1. Vitest for pricing calc, date-range validation, `has_role` behavior (via pgTAP or JS integration).
+2. Playwright smoke: booking happy path, sign-in, admin status change, dark mode toggle.
+3. ESLint: enable `no-restricted-imports` to forbid `react-router-dom`, `@/integrations/supabase/client.server` from client code.
+4. Prettier + import-sort in pre-commit.
+5. Remove dead files: `public/gamio.js`, `public/css/tailwind-build.css`, `src/gamio-body.html`, `AUDIT_REPORT.md`, `AUDIT_REPORT_V2.md` (after phases 1 & 4).
 
-**B4. shadcn nav + drawer** — replace hand-rolled mobile drawer with `Sheet`, desktop nav with `NavigationMenu`. Deletes a chunk of `gamio.js`.
+## Phase 7 — Security pass
 
-**B5. Accessibility pass** — focus rings, skip-link, aria-labels on icon buttons, color-contrast audit, keyboard nav for the pricing/console cards.
-
-**B6. Image optimization** — responsive `srcset`, lazy loading, AVIF/WebP variants, hero preload.
-
-**B7. Componentize the HTML blob** — progressively replace `dangerouslySetInnerHTML` with real React components (Header, Hero, Consoles, WhyUs, HowItWorks, Pricing, FAQ, Testimonials, CTA, Footer) so the whole page is type-safe and editable.
-
-**B8. Booking dialog polish** — multi-step (console → package → date → contact), inline validation with react-hook-form + zod, success screen with reservation ID.
-
----
-
-## C. SEO & growth
-
-**C1. Per-section routes** — `/consoles`, `/consoles/[slug]`, `/pricing`, `/how-it-works`, `/faq`, each with unique `head()` metadata, canonical, og:image derived from the section's hero.
-
-**C2. Structured data (JSON-LD)** — `Organization`, `Product` per console, `FAQPage`, `AggregateRating` once reviews exist, `LocalBusiness` if there's a physical location.
-
-**C3. `sitemap.xml` + `robots.txt`** generated from the route tree via a server route at `/api/public/sitemap.xml`.
-
-**C4. Blog** at `/blog` — MDX or DB-backed, tag pages, RSS feed. Content SEO for "اجاره پلی استیشن" and long-tail queries.
-
-**C5. Analytics + conversion events** — Plausible or PostHog, events on CTA clicks, dialog open, booking submit, payment success.
-
-**C6. Open Graph images** generated per route from a template (og-image server route).
+1. Run `security--run_security_scan`, resolve findings, update `@security-memory`.
+2. Verify CSP in `src/server.ts` — tighten `script-src` once inline gamio.js is gone (drop `'unsafe-inline'`/`'unsafe-eval'`).
+3. Confirm no service-role usage in client-reachable modules (`tanstack-supabase-import-graph`).
 
 ---
 
-## D. Admin & ops
+## Technical notes
 
-**D1. Admin: consoles/pricing/coupons CRUD** (depends on A1, A8).
+- Order matters: **Phase 1 unlocks everything else** — dark mode, i18n, real SEO, Tailwind v4 tokens, CSP tightening.
+- Phase 2 must land before Phase 5's query tuning is meaningful.
+- Migrations use plain `CREATE INDEX` (not CONCURRENTLY) per project rule.
+- No new external services; Lovable Cloud + Lovable AI Gateway only.
 
-**D2. Admin: analytics tab** — bookings per day/week, revenue, conversion funnel from visits → dialog opens → submissions → paid.
+## Suggested first PR
 
-**D3. Admin: export CSV** for bookings and payments.
+Phase 1 steps 1–2 for `Hero` + `Consoles` sections + Phase 4 step 2 (indexes). High visible impact, no behavior change for users, sets up everything after.
 
-**D4. Audit log** — `admin_actions` table capturing status changes and deletes.
-
-**D5. Rate limiting on public endpoints** (booking submit, contact form) via IP + phone dedup to block spam.
-
----
-
-## E. Quality & DX
-
-**E1. Vitest** tests for booking validation, pricing calc, `has_role` behavior.
-
-**E2. Playwright** smoke tests for the main flows (booking, sign-in, admin status change).
-
-**E3. Error/404 polish** — friendly Persian copy on the existing boundaries.
-
-**E4. Lighthouse budget in CI** — enforce Core Web Vitals targets, warn on regressions.
-
-**E5. Security scan pass** — run the built-in security scanner and resolve findings.
-
----
-
-## Suggested next slice
-
-If you want a single opinionated "next PR", I'd pick:
-**B2 (dark mode)** + **C1 (per-section routes with SEO)** + **B8 (booking dialog polish with zod/rhf)** + **D3 (CSV export)**.
-
-That's high user-visible value, no new external services, and sets the stage for payments (A3) after.
-
-## Which do you want?
-
-Reply with the letter/number codes you want (e.g. "A1, A3, B2, C1, C2") or say "next slice" for my recommendation above.
+Reply with the phases you want me to execute (e.g. "Phase 1", "Phase 1 + 4", or "all").
