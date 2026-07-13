@@ -51,6 +51,7 @@ type Props = {
 };
 
 type ConsoleOpt = { value: string; label: string; tagline: string };
+type ConsoleAvailability = { capacity: number; booked: number; remaining: number };
 type PackageOpt = { value: string; label: string; desc: string; hours: number };
 
 const FALLBACK_CONSOLES: ConsoleOpt[] = [
@@ -145,6 +146,7 @@ export function BookingDialog({
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [consoles, setConsoles] = useState<ConsoleOpt[]>(FALLBACK_CONSOLES);
   const [packages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
+  const [remainingBySlug, setRemainingBySlug] = useState<Record<string, ConsoleAvailability>>({});
   const [fullyBooked, setFullyBooked] = useState<Set<string>>(new Set());
   const [loadingAvailability, setLoadingAvailability] = useState(false);
 
@@ -167,8 +169,9 @@ export function BookingDialog({
     let cancelled = false;
 
     async function loadOptions() {
-      const [consoleResult] = await Promise.all([
+      const [consoleResult, remainingResult] = await Promise.all([
         supabase.from("consoles").select("slug,name").eq("active", true).order("sort_order"),
+        supabase.rpc("get_consoles_remaining"),
       ]);
 
       if (cancelled) return;
@@ -183,13 +186,25 @@ export function BookingDialog({
           })),
         );
       }
+
+      if (remainingResult.data?.length) {
+        const map: Record<string, ConsoleAvailability> = {};
+        for (const row of remainingResult.data) {
+          map[row.slug] = {
+            capacity: row.capacity ?? 0,
+            booked: row.booked ?? 0,
+            remaining: row.remaining ?? 0,
+          };
+        }
+        setRemainingBySlug(map);
+      }
     }
 
     loadOptions();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -474,10 +489,13 @@ export function BookingDialog({
                   {consoles.map((consoleItem) => {
                     const Icon = CONSOLE_ICON[consoleItem.value] ?? Gamepad2;
                     const selected = values.consoleType === consoleItem.value;
+                    const avail = remainingBySlug[consoleItem.value];
+                    const soldOut = avail ? avail.remaining <= 0 : false;
                     return (
                       <OptionButton
                         key={consoleItem.value}
                         selected={selected}
+                        disabled={soldOut}
                         onClick={() =>
                           form.setValue("consoleType", consoleItem.value, { shouldValidate: true })
                         }
@@ -494,6 +512,22 @@ export function BookingDialog({
                         </span>
                         <span className="font-semibold">{consoleItem.label}</span>
                         <span className="text-xs text-muted-foreground">{consoleItem.tagline}</span>
+                        {avail && (
+                          <span
+                            className={cn(
+                              "mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium",
+                              soldOut
+                                ? "bg-destructive/15 text-destructive"
+                                : selected
+                                  ? "bg-primary-foreground text-primary"
+                                  : "bg-primary/10 text-primary",
+                            )}
+                          >
+                            {soldOut
+                              ? "امروز موجود نیست"
+                              : `${toFaDigits(avail.remaining)} از ${toFaDigits(avail.capacity)} موجود`}
+                          </span>
+                        )}
                       </OptionButton>
                     );
                   })}
@@ -749,18 +783,22 @@ function OptionButton({
   children,
   onClick,
   selected,
+  disabled,
 }: {
   children: ReactNode;
   onClick: () => void;
   selected: boolean;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       aria-pressed={selected}
       className={cn(
         "group relative flex min-h-28 flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border p-4 text-center transition-all duration-200",
+        disabled && "opacity-50 cursor-not-allowed hover:translate-y-0 hover:shadow-none",
         selected
           ? "border-primary !bg-primary !text-primary-foreground shadow-lg shadow-primary/40 ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02] [&_.text-muted-foreground]:text-primary-foreground/80"
           : "border-border bg-card text-card-foreground hover:-translate-y-0.5 hover:border-primary/60 hover:bg-accent hover:shadow-sm",
