@@ -9,8 +9,12 @@ export const Route = createFileRoute("/blog")({
     meta: [
       { title: "بلاگ گیمیو | راهنما و اخبار دنیای گیمینگ" },
       { name: "description", content: "مقالات و راهنماهای گیمیو درباره کنسول‌های بازی، بازی‌های روز، و ترفندهای گیمینگ." },
-      { property: "og:title", content: "بلاگ گیمیو" },
-      { property: "og:description", content: "مقالات و راهنماهای دنیای گیمینگ." },
+      { property: "og:title", content: "بلاگ گیمیو | راهنما و اخبار دنیای گیمینگ" },
+      {
+        property: "og:description",
+        content:
+          "راهنماها، مقایسه‌ها و ترفندهای اجاره کنسول PS5، Xbox و Nintendo Switch — همه چیزی که برای شروع لازم داری.",
+      },
       { property: "og:url", content: absUrl("/blog") },
       { property: "og:type", content: "website" },
     ],
