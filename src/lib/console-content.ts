@@ -14,6 +14,8 @@ export type ConsoleContent = {
   specs: { label: string; value: string }[];
   popularGames: string[];
   price: { from: string; period: string };
+  /** Numeric price for schema.org offer (IRR). */
+  priceIRR: string;
 };
 
 export const CONSOLE_CONTENT: Record<string, ConsoleContent> = {
@@ -44,6 +46,7 @@ export const CONSOLE_CONTENT: Record<string, ConsoleContent> = {
       "Demon's Souls",
     ],
     price: { from: "۲۵۰,۰۰۰", period: "تومان از هر روز" },
+    priceIRR: "250000",
   },
   "xbox-series-x": {
     slug: "xbox-series-x",
@@ -72,6 +75,7 @@ export const CONSOLE_CONTENT: Record<string, ConsoleContent> = {
       "Gears 5",
     ],
     price: { from: "۲۵۰,۰۰۰", period: "تومان از هر روز" },
+    priceIRR: "250000",
   },
   "nintendo-switch": {
     slug: "nintendo-switch",
@@ -100,6 +104,7 @@ export const CONSOLE_CONTENT: Record<string, ConsoleContent> = {
       "Splatoon 3",
     ],
     price: { from: "۲۰۰,۰۰۰", period: "تومان از هر روز" },
+    priceIRR: "200000",
   },
 };
 
