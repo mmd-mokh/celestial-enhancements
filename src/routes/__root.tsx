@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SITE_URL, absUrl } from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -106,6 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "fa_IR" },
+      { property: "og:site_name", content: "گیمیو" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "گیمیو - اجاره کنسول بازی" },
       {
@@ -137,8 +139,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Organization",
           name: "گیمیو",
           alternateName: "Gamio",
-          url: "/",
-          logo: "/assets/logo/logo1.png",
+          url: SITE_URL,
+          logo: absUrl("/assets/logo/logo1.png"),
           description:
             "اجاره کنسول بازی PS5، Xbox Series X و Nintendo Switch در تهران با تحویل درب منزل.",
           areaServed: "IR",
@@ -158,8 +160,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
           name: "گیمیو",
-          image: "/assets/logo/logo1.png",
-          url: "/",
+          image: absUrl("/assets/logo/logo1.png"),
+          url: SITE_URL,
           priceRange: "$$",
           description:
             "اجاره کنسول بازی PS5، Xbox Series X و Nintendo Switch با تحویل درب منزل در تهران.",
@@ -185,6 +187,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
               closes: "23:59",
             },
           ],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "گیمیو",
+          url: SITE_URL,
+          inLanguage: "fa-IR",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: `${SITE_URL}/consoles?q={search_term_string}`,
+            "query-input": "required name=search_term_string",
+          },
         }),
       },
     ],
