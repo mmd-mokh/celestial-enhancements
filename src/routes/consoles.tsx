@@ -79,6 +79,9 @@ function ConsolesPage() {
               PS5، Xbox Series X، و Nintendo Switch — با دو دسته و همه لوازم اصلی.
             </p>
           </div>
+          <h2 className="max-w-7xl mx-auto text-2xl md:text-3xl font-bold text-gray-900 text-center mb-6">
+            انتخاب کنسول
+          </h2>
           <div
             className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             role="list"
