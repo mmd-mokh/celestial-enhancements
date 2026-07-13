@@ -48,9 +48,7 @@ export const Route = createFileRoute("/consoles/$slug")({
             brand: { "@type": "Organization", name: "گیمیو" },
             offers: {
               "@type": "Offer",
-              price: c.price.from.replace(/[۰-۹,]/g, (d) =>
-                "۰۱۲۳۴۵۶۷۸۹".indexOf(d) >= 0 ? String("۰۱۲۳۴۵۶۷۸۹".indexOf(d)) : "",
-              ),
+              price: c.priceIRR,
               priceCurrency: "IRR",
               availability: "https://schema.org/InStock",
               url,
