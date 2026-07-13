@@ -29,6 +29,16 @@ export default tseslint.config(
               message:
                 "TanStack Start does not use the Next.js `server-only` package. Rename the module to `*.server.ts` or mark it with `@tanstack/react-start/server-only`.",
             },
+            {
+              name: "react-router-dom",
+              message:
+                "This project uses TanStack Router. Import from `@tanstack/react-router` instead.",
+            },
+            {
+              name: "@/integrations/supabase/client.server",
+              message:
+                "Server-only admin client. Never import statically from client-reachable code — load inside a server-fn/route handler with `await import('@/integrations/supabase/client.server')`.",
+            },
           ],
         },
       ],
