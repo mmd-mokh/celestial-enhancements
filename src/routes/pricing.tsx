@@ -78,6 +78,9 @@ function PricingPage() {
               روزانه، آخر هفته، هفتگی و ماهانه — بدون هزینه پنهان، شامل بیمه و ارسال رایگان در تهران.
             </p>
           </div>
+          <h2 className="max-w-7xl mx-auto text-2xl md:text-3xl font-bold text-gray-900 text-center mb-6">
+            انتخاب پکیج مناسب
+          </h2>
           <div className="pricing-grid max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
             <PricingList
               onReserve={(slug) => {
