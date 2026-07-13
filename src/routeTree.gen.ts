@@ -19,6 +19,7 @@ import { Route as ConsolesRouteImport } from './routes/consoles'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RentSlugRouteImport } from './routes/rent.$slug'
 import { Route as ConsolesSlugRouteImport } from './routes/consoles.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
@@ -77,6 +78,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RentSlugRoute = RentSlugRouteImport.update({
+  id: '/rent/$slug',
+  path: '/rent/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsolesSlugRoute = ConsolesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
+  '/rent/$slug': typeof RentSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
+  '/rent/$slug': typeof RentSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
@@ -170,6 +178,7 @@ export interface FileRoutesById {
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
+  '/rent/$slug': typeof RentSlugRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
@@ -191,6 +200,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
     | '/consoles/$slug'
+    | '/rent/$slug'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/booking-ical/$id'
@@ -210,6 +220,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
     | '/consoles/$slug'
+    | '/rent/$slug'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/booking-ical/$id'
@@ -229,6 +240,7 @@ export interface FileRouteTypes {
     | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
     | '/consoles/$slug'
+    | '/rent/$slug'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/booking-ical/$id'
@@ -247,6 +259,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  RentSlugRoute: typeof RentSlugRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicBookingIcalIdRoute: typeof ApiPublicBookingIcalIdRoute
@@ -322,6 +335,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rent/$slug': {
+      id: '/rent/$slug'
+      path: '/rent/$slug'
+      fullPath: '/rent/$slug'
+      preLoaderRoute: typeof RentSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/consoles/$slug': {
@@ -412,6 +432,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  RentSlugRoute: RentSlugRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicBookingIcalIdRoute: ApiPublicBookingIcalIdRoute,
