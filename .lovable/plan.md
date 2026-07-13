@@ -48,7 +48,8 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 
 ## Phase 6 — Quality & DX
 
-1. Vitest wired (`bun test` → `vitest run`). Initial suite covers `BookingSchema` + `validateBookingDateRange` (9 tests). Pricing calc / `has_role` still deferred (no pure-JS pricing calc exists yet; `has_role` needs pgTAP infra).
+1. Vitest wired (`bun run test`). Initial suite covers `BookingSchema` + `validateBookingDateRange` (9 tests). `has_role` covered by pgTAP suite (see below). Pricing calc still deferred (no pure-JS pricing calc exists yet — prices are static strings in `PricingCards.tsx`).
+   - **pgTAP** — ✅ WIRED. `pgtap` extension installed into a dedicated `tests` schema (kept out of `public` per Supabase best practice); 5 assertions cover `has_role` (admin recognized, admin not moderator, plain user not admin, unknown uid not admin, `has_role(null,...)` returns false). Runner: `bun run test:pgtap` executes `tests.run_has_role_tests()` via `pg` against `SUPABASE_DB_URL` and fails on any `not ok` line. New `pgtap` CI job runs it when the `SUPABASE_DB_URL` GitHub secret is set.
 2. Playwright smoke — ✅ WIRED. `tests/a11y/smoke.spec.ts` (axe on 7 public routes) + new `tests/smoke/smoke.spec.ts` (route loads with no console errors, dark-mode toggle, `sitemap.xml`, `robots.txt`). Scripts: `bun run test:smoke`, `bun run test:e2e`. Deeper flows (booking happy path, sign-in, admin role change) still to add.
 3. ESLint restricted imports — ✅ DONE (`react-router-dom` and static `@/integrations/supabase/client.server` now error at lint time).
 4. Prettier + `eslint --fix` on staged files via `simple-git-hooks` + `lint-staged` — ✅ WIRED. Runs on `pre-commit` after `bun install` triggers the `prepare` script (`simple-git-hooks`). Import-sort deferred (would require adding `@trivago/prettier-plugin-sort-imports` or an ESLint sort rule).

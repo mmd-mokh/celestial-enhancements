@@ -1,0 +1,11 @@
+ALTER FUNCTION tests._admin_uid() SET search_path = tests, public;
+ALTER FUNCTION tests._plain_uid() SET search_path = tests, public;
+ALTER FUNCTION tests._unknown_uid() SET search_path = tests, public;
+ALTER FUNCTION tests._seed_has_role_fixture() SET search_path = tests, public;
+ALTER FUNCTION tests._teardown_has_role_fixture() SET search_path = tests, public;
+ALTER FUNCTION tests.test_admin_has_admin_role() SET search_path = tests, public;
+ALTER FUNCTION tests.test_admin_lacks_moderator_role() SET search_path = tests, public;
+ALTER FUNCTION tests.test_plain_user_is_not_admin() SET search_path = tests, public;
+ALTER FUNCTION tests.test_unknown_uid_is_not_admin() SET search_path = tests, public;
+ALTER FUNCTION tests.test_null_uid_returns_false() SET search_path = tests, public;
+ALTER FUNCTION tests.run_has_role_tests() SET search_path = tests, public;
