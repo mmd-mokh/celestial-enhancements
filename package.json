@@ -14,7 +14,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:smoke": "playwright test smoke",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "prepare": "simple-git-hooks || true"
   },
   "dependencies": {
     "@fontsource-variable/vazirmatn": "^5.2.8",
@@ -101,5 +102,12 @@
     "typescript-eslint": "^8.56.1",
     "vite": "^8.0.16",
     "vitest": "^4.1.10"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "bunx lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": "prettier --write",
+    "*.{ts,tsx}": "eslint --fix"
   }
 }
