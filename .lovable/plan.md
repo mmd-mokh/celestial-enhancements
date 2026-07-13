@@ -48,7 +48,7 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 
 ## Phase 6 — Quality & DX
 
-1. Vitest for pricing calc, date-range validation, `has_role` behavior (via pgTAP or JS integration).
+1. Vitest wired (`bun test` → `vitest run`). Initial suite covers `BookingSchema` + `validateBookingDateRange` (9 tests). Pricing calc / `has_role` still deferred (no pure-JS pricing calc exists yet; `has_role` needs pgTAP infra).
 2. Playwright smoke: booking happy path, sign-in, admin status change, dark mode toggle (Playwright already wired via `tests/a11y/smoke.spec.ts`).
 3. ESLint restricted imports — ✅ DONE (`react-router-dom` and static `@/integrations/supabase/client.server` now error at lint time).
 4. Prettier + import-sort in pre-commit.
