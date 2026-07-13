@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import gamioBody from "../gamio-body.html?raw";
-import { BookingDialog } from "@/components/BookingDialog";
 import { PricingCards } from "@/components/PricingCards";
 import { ConsoleCards } from "@/components/ConsoleCards";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -8,6 +7,10 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { FaqAccordion } from "@/components/FaqAccordion";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { Toaster } from "@/components/ui/sonner";
+
+const BookingDialog = lazy(() =>
+  import("@/components/BookingDialog").then((m) => ({ default: m.BookingDialog })),
+);
 
 type Props = {
   /** Optional section id to smoothly scroll into view after mount (e.g. "pricing"). */
@@ -92,11 +95,15 @@ export function LandingPage({ scrollTo }: Props) {
       <FaqAccordion />
       <NewsletterForm />
       <SiteFooter />
-      <BookingDialog
-        open={bookingOpen}
-        onOpenChange={setBookingOpen}
-        defaultPackage={defaultPackage}
-      />
+      {bookingOpen && (
+        <Suspense fallback={null}>
+          <BookingDialog
+            open={bookingOpen}
+            onOpenChange={setBookingOpen}
+            defaultPackage={defaultPackage}
+          />
+        </Suspense>
+      )}
       <Toaster richColors position="top-center" dir="rtl" />
     </>
   );
