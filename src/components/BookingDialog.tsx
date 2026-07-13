@@ -12,10 +12,14 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  Cpu,
+  Gamepad,
   Gamepad2,
   Loader2,
+  Joystick,
   MonitorPlay,
   PackageCheck,
+  Rocket,
   Sparkles,
   Tv,
   UserRound,
@@ -80,11 +84,11 @@ const FALLBACK_PACKAGES: PackageOpt[] = PACKAGES.map((p) => ({
 }));
 
 const CONSOLE_ICON: Record<string, typeof Gamepad2> = {
-  ps5: Gamepad2,
-  ps4: Gamepad2,
-  xbox: MonitorPlay,
-  "xbox-series-s": MonitorPlay,
-  "xbox-one": MonitorPlay,
+  ps5: Rocket,
+  ps4: Joystick,
+  xbox: Gamepad2,
+  "xbox-series-s": Cpu,
+  "xbox-one": Gamepad,
   switch: Tv,
 };
 

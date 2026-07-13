@@ -44,7 +44,12 @@ export function ConsoleCards() {
         .select("slug,name,tagline,features,icon,accent_from,accent_to,sort_order")
         .eq("active", true)
         .order("sort_order");
-      if (!cancelled && data) setItems(data as ConsoleRow[]);
+      if (!cancelled && data) {
+        // Hide legacy consoles from the landing grid; they remain bookable
+        // in the reserve dialog.
+        const HIDDEN = new Set(["ps4", "xbox-series-s", "xbox-one"]);
+        setItems((data as ConsoleRow[]).filter((r) => !HIDDEN.has(r.slug)));
+      }
     })();
 
     return () => {
