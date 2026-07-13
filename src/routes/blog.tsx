@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { blogListQueryOptions } from "@/lib/queries";
+import { absUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
@@ -10,13 +11,16 @@ export const Route = createFileRoute("/blog")({
       { name: "description", content: "مقالات و راهنماهای گیمیو درباره کنسول‌های بازی، بازی‌های روز، و ترفندهای گیمینگ." },
       { property: "og:title", content: "بلاگ گیمیو" },
       { property: "og:description", content: "مقالات و راهنماهای دنیای گیمینگ." },
+      { property: "og:url", content: absUrl("/blog") },
+      { property: "og:type", content: "website" },
     ],
+    links: [{ rel: "canonical", href: absUrl("/blog") }],
     scripts: [
       { type: "application/ld+json", children: JSON.stringify({
         "@context": "https://schema.org", "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
-          { "@type": "ListItem", position: 2, name: "بلاگ", item: "/blog" },
+          { "@type": "ListItem", position: 1, name: "خانه", item: absUrl("/") },
+          { "@type": "ListItem", position: 2, name: "بلاگ", item: absUrl("/blog") },
         ],
       }) },
     ],
