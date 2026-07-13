@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { blogListQueryOptions } from "@/lib/queries";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
@@ -22,9 +22,8 @@ export const Route = createFileRoute("/blog")({
     ],
   }),
   component: BlogLayout,
+  loader: ({ context }) => context.queryClient.ensureQueryData(blogListQueryOptions()),
 });
-
-type Post = { slug: string; title: string; excerpt: string | null; cover_url: string | null; published_at: string | null; tags: string[] | null };
 
 function BlogLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -33,17 +32,7 @@ function BlogLayout() {
 }
 
 function BlogIndex() {
-  const [posts, setPosts] = useState<Post[] | null>(null);
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase
-        .from("posts")
-        .select("slug,title,excerpt,cover_url,published_at,tags")
-        .eq("published", true)
-        .order("published_at", { ascending: false, nullsFirst: false });
-      setPosts((data ?? []) as Post[]);
-    })();
-  }, []);
+  const { data: posts } = useSuspenseQuery(blogListQueryOptions());
   return (
     <div dir="rtl" className="min-h-dvh bg-background p-6" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
       <div className="mx-auto max-w-4xl space-y-6">
@@ -51,9 +40,7 @@ function BlogIndex() {
           <h1 className="text-4xl font-bold">بلاگ گیمیو</h1>
           <p className="text-muted-foreground">راهنما، اخبار و ترفندهای دنیای گیمینگ</p>
         </header>
-        {posts == null ? (
-          <p className="text-center text-muted-foreground">در حال بارگذاری…</p>
-        ) : posts.length === 0 ? (
+        {posts.length === 0 ? (
           <p className="text-center text-muted-foreground py-12">هنوز مطلبی منتشر نشده است.</p>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
