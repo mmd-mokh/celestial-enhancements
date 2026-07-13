@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { throwLogged } from "@/lib/server-errors";
 import { z } from "zod";
 
 export type ConsoleAvailabilityRow = {
@@ -13,7 +14,7 @@ export const getConsolesRemaining = createServerFn({ method: "GET" }).handler(
   async (): Promise<ConsoleAvailabilityRow[]> => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin.rpc("get_consoles_remaining");
-    if (error) throw new Error(error.message);
+    if (error) throwLogged("getConsolesRemaining", error, "Could not load availability.");
     return (data ?? []).map((r) => ({
       slug: r.slug,
       name: r.name,
@@ -43,7 +44,7 @@ export const getConsoleAvailability = createServerFn({ method: "GET" })
       _from: data.from,
       _to: data.to,
     });
-    if (error) throw new Error(error.message);
+    if (error) throwLogged("getConsoleAvailability", error, "Could not load availability.");
     return (rows ?? []).map((r) => ({
       day: String(r.day),
       booked: r.booked ?? 0,

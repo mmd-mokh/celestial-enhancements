@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { consolesQueryOptions } from "@/lib/queries";
 import { CONSOLE_CONTENT } from "@/lib/console-content";
 import { absUrl } from "@/lib/seo";
+import { RouteErrorFallback } from "@/components/RouteBoundaries";
 
 export const Route = createFileRoute("/consoles/$slug")({
   loader: async ({ context, params }) => {
@@ -71,6 +72,9 @@ export const Route = createFileRoute("/consoles/$slug")({
     };
   },
   component: ConsoleDetailPage,
+  errorComponent: ({ error, reset }) => (
+    <RouteErrorFallback error={error} reset={reset} boundary="consoles_slug" />
+  ),
   notFoundComponent: () => (
     <>
       <SiteHeader />

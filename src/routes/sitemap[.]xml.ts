@@ -49,8 +49,10 @@ export const Route = createFileRoute("/sitemap.xml")({
               priority: "0.6",
             });
           }
-        } catch {
-          // best-effort: omit blog post entries if the query fails
+        } catch (err) {
+          // best-effort: omit blog post entries if the query fails, but log
+          // so Server Logs still show the failure.
+          console.error("[sitemap] failed to load posts", err);
         }
 
         const urls = entries

@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { throwLogged } from "@/lib/server-errors";
 
 export type PostSummary = {
   slug: string;
@@ -20,7 +21,7 @@ export const listPublishedPosts = createServerFn({ method: "GET" }).handler(
       .select("slug,title,excerpt,cover_url,published_at,tags")
       .eq("published", true)
       .order("published_at", { ascending: false, nullsFirst: false });
-    if (error) throw new Error(error.message);
+    if (error) throwLogged("listPublishedPosts", error, "Could not load posts.");
     return (data ?? []) as PostSummary[];
   },
 );
@@ -35,6 +36,6 @@ export const getPublishedPost = createServerFn({ method: "GET" })
       .eq("slug", data.slug)
       .eq("published", true)
       .maybeSingle();
-    if (error) throw new Error(error.message);
+    if (error) throwLogged("getPublishedPost", error, "Could not load this post.");
     return (row ?? null) as PostDetail | null;
   });
