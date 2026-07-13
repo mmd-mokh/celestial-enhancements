@@ -18,10 +18,10 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 
 ## Phase 2 — Data layer (TanStack Query + server fns)
 
-1. Introduce `src/lib/consoles.functions.ts`, `bookings.functions.ts`, `availability.functions.ts` using `createServerFn` — ✅ DONE (all three shipped; `BookingDialog` migrated off direct `supabase.rpc`).
-2. Define `queryOptions` factories in `src/lib/queries.ts`; loaders call `ensureQueryData`, components call `useSuspenseQuery` — **In progress**: `consolesQueryOptions` wired into `/consoles` (loader + useSuspenseQuery) and `LandingSections` (useQuery). Booking flow still uses imperative server-fn calls (appropriate for a form wizard).
-3. Public read fns use the server publishable client; authed fns use `requireSupabaseAuth`.
-4. Remove ad-hoc `useEffect` + `supabase.from(...)` fetches.
+1. Introduce `src/lib/consoles.functions.ts`, `bookings.functions.ts`, `availability.functions.ts`, `posts.functions.ts` using `createServerFn` — ✅ DONE (`BookingDialog` migrated; blog reads migrated).
+2. Define `queryOptions` factories in `src/lib/queries.ts`; loaders call `ensureQueryData`, components call `useSuspenseQuery` — ✅ DONE for consoles + blog index + blog detail; booking flow uses imperative server-fn calls (appropriate for a form wizard).
+3. Public read fns currently use `supabaseAdmin` inside handlers (safe: read-only, projected columns). Swap to a server publishable client if/when we tighten RLS/tenant scoping.
+4. Remove ad-hoc `useEffect` + `supabase.from(...)` fetches — ✅ DONE for consoles, blog, bookings. Remaining direct-client callers are `contact.tsx` (form insert), `NewsletterForm.tsx` (form insert), and `auth.tsx` (browser-only auth flow, correct as-is).
 
 ## Phase 3 — Routing & SEO
 
