@@ -23,6 +23,23 @@ export const Route = createFileRoute("/blog")({
   }),
   component: BlogLayout,
   loader: ({ context }) => context.queryClient.ensureQueryData(blogListQueryOptions()),
+  errorComponent: ({ error }) => (
+    <div dir="rtl" className="min-h-dvh bg-background p-6 flex items-center justify-center" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
+      <div className="text-center space-y-4 max-w-md">
+        <h1 className="text-2xl font-bold">خطا در بارگذاری بلاگ</h1>
+        <p className="text-muted-foreground">{error.message || "لطفاً دوباره تلاش کنید."}</p>
+        <Link to="/" className="text-sm text-primary hover:underline">بازگشت به صفحه اصلی</Link>
+      </div>
+    </div>
+  ),
+  notFoundComponent: () => (
+    <div dir="rtl" className="min-h-dvh bg-background p-6 flex items-center justify-center" style={{ fontFamily: "Vazirmatn, sans-serif" }}>
+      <div className="text-center space-y-4">
+        <h1 className="text-2xl font-bold">مطلبی پیدا نشد</h1>
+        <Link to="/blog" className="text-sm text-primary hover:underline">بازگشت به بلاگ</Link>
+      </div>
+    </div>
+  ),
 });
 
 function BlogLayout() {
