@@ -49,6 +49,8 @@ export function NewsletterForm() {
     formState: { errors, isSubmitting },
   } = useForm<Values>({ resolver: zodResolver(schema) });
 
+  if (!mount) return null;
+
   async function onSubmit(v: Values) {
     const { error } = await supabase
       .from("newsletter_subscribers")
@@ -66,7 +68,7 @@ export function NewsletterForm() {
     reset();
   }
 
-  const formNode = (
+  return createPortal(
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="tw-flex tw-flex-col tw-w-full tw-max-w-md tw-gap-4 tw-mt-6"
@@ -113,9 +115,7 @@ export function NewsletterForm() {
         </a>{" "}
         ما را می‌پذیرید.
       </p>
-    </form>
+    </form>,
+    mount,
   );
-
-  if (!mount) return formNode;
-  return createPortal(formNode, mount);
 }

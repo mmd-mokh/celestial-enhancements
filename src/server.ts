@@ -14,10 +14,7 @@ const SECURITY_HEADERS: Record<string, string> = {
     "img-src 'self' data: https: blob:",
     "font-src 'self' data:",
     "style-src 'self' 'unsafe-inline'",
-    // 'unsafe-inline' remains for the inline theme-init script in __root.tsx
-    // and TanStack's <Scripts /> hydration payload. 'unsafe-eval' has been
-    // dropped now that public/gamio.js (the last consumer) is gone.
-    "script-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
     "connect-src 'self' https://*.supabase.co https://*.lovable.app https://*.lovable.dev wss://*.supabase.co",
     "frame-ancestors 'none'",
     "base-uri 'self'",
