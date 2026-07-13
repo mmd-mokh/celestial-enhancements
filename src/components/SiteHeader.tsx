@@ -87,7 +87,16 @@ export function SiteHeader() {
           <ThemeToggle />
         </div>
 
-        <a href="#pricing" aria-label="رزرو کنسول" className="btn btn-enhanced nav-cta">
+        <a
+          href="#pricing"
+          aria-label="رزرو کنسول"
+          className="btn btn-enhanced nav-cta"
+          onClick={() => {
+            void import("@/lib/analytics").then((m) =>
+              m.trackEvent("cta_click", { location: "header" }),
+            );
+          }}
+        >
           <span>همین الان رزرو کن</span>
           <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         </a>
@@ -139,6 +148,11 @@ export function SiteHeader() {
                   <a
                     href="#pricing"
                     className="btn btn-enhanced flex items-center justify-center gap-2 w-full"
+                    onClick={() => {
+                      void import("@/lib/analytics").then((m) =>
+                        m.trackEvent("cta_click", { location: "header_mobile" }),
+                      );
+                    }}
                   >
                     <span>همین الان رزرو کن</span>
                     <ChevronLeft className="h-4 w-4" aria-hidden="true" />
