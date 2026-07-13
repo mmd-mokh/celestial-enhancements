@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { MousePointerClick, PackageCheck, Truck, Gamepad2 } from "lucide-react";
+import { absUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/how-it-works")({
   head: () => ({
@@ -17,12 +18,12 @@ export const Route = createFileRoute("/how-it-works")({
         property: "og:description",
         content: "چهار مرحله ساده تا تجربه گیمینگ در خانه.",
       },
-      { property: "og:url", content: "/how-it-works" },
+      { property: "og:url", content: absUrl("/how-it-works") },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/assets/images/home/dashboard.png" },
-      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
+      { property: "og:image", content: absUrl("/assets/images/home/dashboard.png") },
+      { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
     ],
-    links: [{ rel: "canonical", href: "/how-it-works" }],
+    links: [{ rel: "canonical", href: absUrl("/how-it-works") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -44,8 +45,8 @@ export const Route = createFileRoute("/how-it-works")({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
-            { "@type": "ListItem", position: 2, name: "چطور کار می‌کند", item: "/how-it-works" },
+            { "@type": "ListItem", position: 1, name: "خانه", item: absUrl("/") },
+            { "@type": "ListItem", position: 2, name: "چطور کار می‌کند", item: absUrl("/how-it-works") },
           ],
         }),
       },
