@@ -33,12 +33,9 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 ## Phase 4 — Backend hardening
 
 1. Audit RLS on `bookings`, `consoles`, `packages`, `posts`, `contact_messages`, `newsletter_subscribers`, `user_roles`; confirm `GRANT`s per policy.
-2. Add indexes:
-   - `bookings (console_type, status, start_date, end_date)` — powers availability RPCs.
-   - `bookings (user_id, created_at desc)` — powers account/admin lists.
-   - `posts (published, published_at desc)`.
+2. Add indexes: ✅ DONE (bookings composite, bookings user_id, posts published).
 3. Review RPCs (`create_booking`, `reschedule_booking`, `get_console_availability`, `get_consoles_remaining`) — extract the overlap-count CTE into a shared SQL fn to remove duplication (the source of the recent bug).
-4. Add DB-side rate limits already scaffolded in `create_booking`; extend to `contact_messages` and `newsletter_subscribers`.
+4. Rate limits: ✅ DONE (contact_messages 5/hr, newsletter 3/hr via BEFORE INSERT triggers).
 5. Run `supabase--linter` and fix findings.
 
 ## Phase 5 — Performance
