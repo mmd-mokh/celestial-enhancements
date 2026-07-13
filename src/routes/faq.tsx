@@ -19,6 +19,8 @@ export const Route = createFileRoute("/faq")({
       },
       { property: "og:url", content: "/faq" },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: "/assets/images/home/dashboard.png" },
+      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
     ],
     links: [{ rel: "canonical", href: "/faq" }],
     scripts: [
