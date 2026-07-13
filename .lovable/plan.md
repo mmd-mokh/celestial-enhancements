@@ -12,7 +12,7 @@ Steps:
 1. Split `LandingPage` into real components — ✅ DONE (`HeroSection`, `LandingSections` cover all 8 sections; portals removed).
 2. Move all styles into `src/styles.css` using Tailwind v4 tokens (no more `tw-` prefix, retire `public/css/index.css`). **⏸️ SKIPPED — REMIND USER LATER.** Progress so far: empty `tailwind-build.css` + link removed; dead `tw-*` dark-mode selectors purged from `styles.css`. Remaining: `public/css/index.css` (1.9 KLoC) still shipped and defines ~60 custom classes used by components (`btn-enhanced`, `console-card`, `pricing-card-enhanced`, `site-header`, `primary-nav__link`, …). Full migration = rewrite each rule as Tailwind v4 utilities in JSX or `@utility`/scoped rules in `styles.css`, then drop the `<link>` in `__root.tsx`. Best done section-by-section (header → pricing → consoles → footer).
 3. Delete `public/gamio.js` and `src/gamio-body.html` — ✅ DONE.
-4. Replace hand-rolled mobile drawer with shadcn `Sheet`, desktop nav with `NavigationMenu` — pending (Header still uses custom drawer).
+4. Replace hand-rolled mobile drawer with shadcn `Sheet` — ✅ DONE. Desktop nav stays a flat anchor `<ul>` (no submenus, so `NavigationMenu` would be over-engineered).
 
 Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInnerHTML`, ~200 KB less shipped JS/CSS.
 
@@ -42,7 +42,7 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 
 1. Convert bundled hero/console images through `vite-imagetools` (AVIF + WebP), preload the LCP image in the home route `head().links` — deferred until Phase 1 ports images into React components.
 2. Split heavy client-only pieces — ✅ DONE: `BookingDialog` is now lazy-loaded in `LandingPage` and `pricing.tsx`, rendered only when opened. `AnalyticsCharts` has no consumer yet.
-3. Set explicit `staleTime` on query options — deferred to Phase 2 (no TanStack Query call sites yet).
+3. Set explicit `staleTime` on query options — ✅ DONE (5 min on consoles, blog list, blog detail).
 4. Cache-Control on public GET routes — ✅ DONE: `sitemap.xml` (`public, max-age=3600`) and `booking-ical.$id` (`private, max-age=300`).
 5. Lighthouse budget in CI (fail on CLS > 0.1, LCP > 2.5s on mobile).
 
