@@ -152,6 +152,7 @@ export function BookingDialog({
 }: Props) {
   const [step, setStep] = useState(0);
   const [reservationId, setReservationId] = useState<string | null>(null);
+  const [icalToken, setIcalToken] = useState<string | null>(null);
   const [consoles, setConsoles] = useState<ConsoleOpt[]>(FALLBACK_CONSOLES);
   const [packages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
   const [remainingBySlug, setRemainingBySlug] = useState<Record<string, ConsoleAvailability>>({});
@@ -384,6 +385,7 @@ export function BookingDialog({
     }
 
     setReservationId(result.id);
+    setIcalToken(result.icalToken);
     toast.success("درخواست رزرو ثبت شد!");
     trackEvent("booking_submit", {
       console_type: data.consoleType,
@@ -397,6 +399,7 @@ export function BookingDialog({
     window.setTimeout(() => {
       setStep(0);
       setReservationId(null);
+      setIcalToken(null);
       form.reset();
     }, 180);
   };
@@ -430,9 +433,12 @@ export function BookingDialog({
               </div>
             )}
 
-            {reservationId && (
+            {reservationId && icalToken && (
               <Button asChild variant="outline" className="w-full">
-                <a href={`/api/public/booking-ical/${reservationId}`} download>
+                <a
+                  href={`/api/public/booking-ical/${reservationId}?t=${icalToken}`}
+                  download
+                >
                   <CalendarPlus className="h-4 w-4" aria-hidden="true" />
                   افزودن به تقویم
                 </a>

@@ -9,6 +9,12 @@ export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>) => ({
     next: typeof s.next === "string" ? s.next : "",
   }),
+  head: () => ({
+    meta: [
+      { title: "ورود | گیمیو" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
   component: AuthPage,
 });
 

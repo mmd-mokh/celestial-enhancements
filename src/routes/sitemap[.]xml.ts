@@ -1,9 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 import { CONSOLE_SLUGS } from "@/lib/console-content";
 import { RENT_SLUGS } from "@/lib/rent-content";
+import { SITE_URL } from "@/lib/seo";
 
-const BASE_URL = "https://star-crafting-suite.lovable.app";
+const BASE_URL = SITE_URL;
 
 interface SitemapEntry {
   path: string;
@@ -34,8 +37,22 @@ export const Route = createFileRoute("/sitemap.xml")({
         }
 
         try {
-          const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-          const { data: posts } = await supabaseAdmin
+          const url = process.env.SUPABASE_URL!;
+          const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
+          const supabasePublic = createClient<Database>(url, key, {
+            auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+            global: {
+              fetch: (input, init) => {
+                const h = new Headers(init?.headers);
+                if (key.startsWith("sb_") && h.get("Authorization") === `Bearer ${key}`) {
+                  h.delete("Authorization");
+                }
+                h.set("apikey", key);
+                return fetch(input, { ...init, headers: h });
+              },
+            },
+          });
+          const { data: posts } = await supabasePublic
             .from("posts")
             .select("slug, published_at, updated_at")
             .eq("published", true)
