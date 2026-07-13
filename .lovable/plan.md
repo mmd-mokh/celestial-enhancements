@@ -25,10 +25,13 @@ Mobile nav (`Sheet`) and desktop nav (`NavigationMenu`) already live in `SiteHea
 
 ## This turn — Hero only
 
-- Create `src/components/sections/Hero.tsx` (RTL, semantic tokens, Framer Motion fade-in, wired to `#pricing` anchor).
-- Remove hero markup (lines ~13–105 of `gamio-body.html`).
-- Insert `<Hero onReserve={...} />` at the top of `LandingPage`, before the remaining injected HTML.
-- Verify visually with a Playwright screenshot at 1280×1800 and mobile 390×844.
+### ✅ DONE — Hero slice shipped
+- `src/components/sections/Hero.tsx` created with semantic Tailwind v4 tokens (`bg-background`, `text-foreground`, `text-muted-foreground`, `bg-primary`, `border-border`) and Framer Motion fade-in.
+- Hero markup removed from `src/gamio-body.html` (1600 → 1508 lines).
+- `<Hero onReserve>` opens the lazy `BookingDialog` directly (bypasses the click-delegation heuristic for its CTA).
+- Verified with Playwright at 1280×1800 and 390×844: hero renders in React, dark-mode tokens active.
+
+### Next slice — Trust metrics (5000+ / 98% / 24/7)
 
 No behavior change for users — just the hero rendered by React with dark-mode-ready tokens. Remaining sections still render from the HTML blob and continue to work.
 
