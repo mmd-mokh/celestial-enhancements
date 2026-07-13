@@ -49,10 +49,10 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 ## Phase 6 — Quality & DX
 
 1. Vitest for pricing calc, date-range validation, `has_role` behavior (via pgTAP or JS integration).
-2. Playwright smoke: booking happy path, sign-in, admin status change, dark mode toggle.
-3. ESLint: enable `no-restricted-imports` to forbid `react-router-dom`, `@/integrations/supabase/client.server` from client code.
+2. Playwright smoke: booking happy path, sign-in, admin status change, dark mode toggle (Playwright already wired via `tests/a11y/smoke.spec.ts`).
+3. ESLint restricted imports — ✅ DONE (`react-router-dom` and static `@/integrations/supabase/client.server` now error at lint time).
 4. Prettier + import-sort in pre-commit.
-5. Remove dead files: `public/gamio.js`, `public/css/tailwind-build.css`, `src/gamio-body.html`, `AUDIT_REPORT.md`, `AUDIT_REPORT_V2.md` (after phases 1 & 4).
+5. Remove dead files — audit reports ✅ DONE (`AUDIT_REPORT.md`, `AUDIT_REPORT_V2.md`); `public/gamio.js`, `public/css/tailwind-build.css`, `src/gamio-body.html` deferred until Phase 1 replaces them.
 
 ## Phase 7 — Security pass
 
