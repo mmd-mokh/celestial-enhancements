@@ -47,6 +47,7 @@ import { getConsoles } from "@/lib/consoles.functions";
 import { getConsolesRemaining, getConsoleAvailability } from "@/lib/availability.functions";
 import { createBooking } from "@/lib/bookings.functions";
 import { trackEvent } from "@/lib/analytics";
+import { reportLovableError } from "@/lib/lovable-error-reporting";
 
 const PERSIAN_DATE_LIB = getPersianDateLib({ locale: dayPickerFaIR });
 
@@ -348,7 +349,11 @@ export function BookingDialog({
           notes: data.notes?.trim() || undefined,
         },
       });
-    } catch {
+    } catch (err) {
+      console.error("[BookingDialog] createBooking failed", err);
+      reportLovableError(err instanceof Error ? err : new Error(String(err)), {
+        boundary: "booking_dialog_submit",
+      });
       toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
       return;
     }
