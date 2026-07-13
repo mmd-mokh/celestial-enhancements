@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { BookingSchema } from "@/lib/booking-validation";
 
 export type CreateBookingResult =
-  | { ok: true; id: string }
+  | { ok: true; id: string; icalToken: string }
   | { ok: false; code: string; message: string };
 
 export const createBooking = createServerFn({ method: "POST" })
@@ -33,5 +33,6 @@ export const createBooking = createServerFn({ method: "POST" })
       return { ok: false, code, message: error.message ?? "unknown" };
     }
     if (!newId) return { ok: false, code: "unknown", message: "empty_id" };
-    return { ok: true, id: newId as string };
+    const { signBookingId } = await import("@/lib/booking-token.server");
+    return { ok: true, id: newId as string, icalToken: signBookingId(newId as string) };
   });

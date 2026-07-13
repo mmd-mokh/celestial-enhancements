@@ -1,6 +1,4 @@
 import { motion } from "framer-motion";
-import { Link } from "@tanstack/react-router";
-import { CONSOLE_CONTENT } from "@/lib/console-content";
 
 export type ConsoleRow = {
   slug: string;
@@ -48,15 +46,6 @@ export function ConsoleList({ items }: { items: ConsoleRow[] }) {
               </li>
             ))}
           </ul>
-          {CONSOLE_CONTENT[c.slug] && (
-            <Link
-              to="/consoles/$slug"
-              params={{ slug: c.slug }}
-              className="mt-4 inline-block text-primary font-semibold hover:underline"
-            >
-              اطلاعات بیشتر ←
-            </Link>
-          )}
         </motion.article>
       ))}
     </>

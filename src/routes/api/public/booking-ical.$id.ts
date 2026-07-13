@@ -17,9 +17,17 @@ function esc(s: string) {
 export const Route = createFileRoute("/api/public/booking-ical/$id")({
   server: {
     handlers: {
-      GET: async ({ params }) => {
+      GET: async ({ params, request }) => {
         const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
         if (!UUID_RE.test(params.id)) return new Response("Not found", { status: 404 });
+        const token = new URL(request.url).searchParams.get("t") ?? "";
+        const { verifyBookingToken } = await import("@/lib/booking-token.server");
+        if (!verifyBookingToken(params.id, token)) {
+          return new Response("Forbidden", {
+            status: 403,
+            headers: { "X-Robots-Tag": "noindex" },
+          });
+        }
         const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
         const { data, error } = await supabaseAdmin
           .from("bookings")
@@ -29,7 +37,7 @@ export const Route = createFileRoute("/api/public/booking-ical/$id")({
         if (error || !data) return new Response("Not found", { status: 404 });
         if (!data.start_date || !data.end_date) return new Response("No dates", { status: 400 });
 
-        const console = CONSOLE_LABEL[data.console_type ?? ""] ?? data.console_type ?? "";
+        const consoleLabel = CONSOLE_LABEL[data.console_type ?? ""] ?? data.console_type ?? "";
         const end = new Date(data.end_date);
         end.setDate(end.getDate() + 1); // DTEND is exclusive for all-day events
         const dtend = end.toISOString().slice(0, 10).replace(/-/g, "");
@@ -46,7 +54,7 @@ export const Route = createFileRoute("/api/public/booking-ical/$id")({
           `DTSTAMP:${now}`,
           `DTSTART;VALUE=DATE:${fmtDate(data.start_date)}`,
           `DTEND;VALUE=DATE:${dtend}`,
-          `SUMMARY:${esc(`رزرو گیمیو - ${console}`)}`,
+          `SUMMARY:${esc(`رزرو گیمیو - ${consoleLabel}`)}`,
           `DESCRIPTION:${esc(`پکیج: ${data.package_type ?? "-"}\nوضعیت: ${data.status}\n${data.notes ?? ""}`)}`,
           `STATUS:${data.status === "cancelled" ? "CANCELLED" : "CONFIRMED"}`,
           "END:VEVENT",
@@ -58,6 +66,7 @@ export const Route = createFileRoute("/api/public/booking-ical/$id")({
             "Content-Type": "text/calendar; charset=utf-8",
             "Content-Disposition": `attachment; filename="gamio-booking-${data.id.slice(0, 8)}.ics"`,
             "Cache-Control": "private, max-age=300",
+            "X-Robots-Tag": "noindex",
           },
         });
       },
