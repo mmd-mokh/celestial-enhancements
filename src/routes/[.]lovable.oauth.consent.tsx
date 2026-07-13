@@ -23,8 +23,10 @@ function oauth(): OAuthNamespace {
   return authAny.oauth;
 }
 
-function isSameOriginPath(value: string | undefined): value is string {
-  return typeof value === "string" && value.startsWith("/") && !value.startsWith("//");
+function isSafeRedirect(value: string | undefined): boolean {
+  if (!value) return false;
+  if (value.startsWith("/") && !value.startsWith("//")) return true;
+  return value.startsWith("http://") || value.startsWith("https://");
 }
 
 export const Route = createFileRoute("/.lovable/oauth/consent")({
@@ -88,7 +90,7 @@ function Consent() {
       return;
     }
     const target: string | undefined = data?.redirect_url ?? data?.redirect_to;
-    if (!target || (!isSameOriginPath(target) && !target.startsWith("http"))) {
+    if (!target || !isSafeRedirect(target)) {
       setBusy(false);
       setError("No redirect returned by the authorization server.");
       return;
