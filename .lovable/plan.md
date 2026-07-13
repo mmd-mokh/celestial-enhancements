@@ -32,7 +32,7 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 
 ## Phase 4 — Backend hardening
 
-1. Audit RLS on `bookings`, `consoles`, `packages`, `posts`, `contact_messages`, `newsletter_subscribers`, `user_roles`; confirm `GRANT`s per policy.
+1. Audit RLS on `bookings`, `consoles`, `packages`, `posts`, `contact_messages`, `newsletter_subscribers`, `user_roles`; confirm `GRANT`s per policy — ✅ DONE. Revoked broad default grants (TRUNCATE/TRIGGER/REFERENCES/MAINTAIN from anon+authenticated on every public table — TRUNCATE bypasses RLS, so this closed a real hole). Anon now has only the minimum grants matching its policies (INSERT on bookings/contact_messages/newsletter, SELECT on consoles/packages/posts, none on user_roles). Added missing admin policies: `newsletter_subscribers` (SELECT+DELETE), `user_roles` (SELECT+INSERT+UPDATE+DELETE).
 2. Add indexes: ✅ DONE (bookings composite, bookings user_id, posts published).
 3. Review RPCs — ✅ DONE (extracted overlap CTE into `public.booking_peak_overlap`; `create_booking` + `reschedule_booking` now share it).
 4. Rate limits: ✅ DONE (contact_messages 5/hr, newsletter 3/hr via BEFORE INSERT triggers).
