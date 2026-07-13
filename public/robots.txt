@@ -5,5 +5,9 @@ Disallow: /admin
 Disallow: /auth
 Disallow: /_authenticated
 Disallow: /api/
+Disallow: /mcp
+Disallow: /.mcp/
+Disallow: /.well-known/
+Disallow: /.lovable/
 
-Sitemap: https://star-crafting-suite.lovable.app/sitemap.xml
+Sitemap: https://id-preview--de632f54-da5d-4a46-a731-9abbaafa7bd0.lovable.app/sitemap.xml
