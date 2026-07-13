@@ -213,6 +213,18 @@ export function BookingDialog({
 
   const packageDays = Math.max(1, Math.ceil((selectedPackage?.hours ?? 24) / 24));
 
+  // Bug fix: when the user changes console or package after picking a date,
+  // the previously selected startDate may now overlap unavailable days or
+  // exceed the allowed window. Clear it so the user re-picks in step 2.
+  useEffect(() => {
+    if (!open) return;
+    if (values.startDate) {
+      form.setValue("startDate", undefined as unknown as Date, { shouldValidate: false });
+      form.clearErrors("startDate");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [values.consoleType, values.packageType]);
+
   useEffect(() => {
     if (!open || step !== 2 || !values.consoleType) return;
     let cancelled = false;
@@ -277,7 +289,22 @@ export function BookingDialog({
       return;
     }
 
-    form.handleSubmit(onSubmit)();
+    // Bug fix: on final submit, re-validate every step. Without this, if a
+    // prior-step field became invalid (e.g. startDate cleared after changing
+    // package), handleSubmit silently no-ops and the user sees nothing.
+    const allValid = await form.trigger();
+    if (!allValid) {
+      const errs = form.formState.errors;
+      if (errs.consoleType) setStep(0);
+      else if (errs.packageType) setStep(1);
+      else if (errs.startDate) {
+        setStep(2);
+        toast.error("لطفاً تاریخ شروع را انتخاب کنید.");
+      }
+      return;
+    }
+
+    await form.handleSubmit(onSubmit)();
   };
 
   const onSubmit = async (data: FormValues) => {
@@ -296,21 +323,37 @@ export function BookingDialog({
 
     if (error) {
       const message = (error.message || "").toLowerCase();
-      if (message.includes("no_availability")) {
+      const details = ((error as { details?: string }).details || "").toLowerCase();
+      const combined = `${message} ${details}`;
+      if (combined.includes("no_availability")) {
         toast.error("این کنسول در تاریخ انتخابی رزرو شده. لطفاً تاریخ دیگری انتخاب کنید.");
         setStep(2);
-      } else if (message.includes("past_date")) {
+      } else if (combined.includes("past_date")) {
         toast.error("تاریخ شروع نمی‌تواند در گذشته باشد.");
         setStep(2);
-      } else if (message.includes("rate_limited")) {
+      } else if (combined.includes("rate_limited")) {
         toast.error("تعداد رزروهای اخیر شما زیاد است. لطفاً یک ساعت دیگر تلاش کنید.");
+      } else if (combined.includes("console_unavailable")) {
+        toast.error("این کنسول در حال حاضر در دسترس نیست.");
+        setStep(0);
+      } else if (combined.includes("invalid_phone")) {
+        toast.error("شماره تماس معتبر نیست.");
+        setStep(3);
+      } else if (combined.includes("invalid_name")) {
+        toast.error("نام وارد شده معتبر نیست.");
+        setStep(3);
       } else {
         toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
       }
       return;
     }
 
-    setReservationId(newId ?? "");
+    // Bug fix: only show success screen when we actually received a booking id.
+    if (!newId) {
+      toast.error("پاسخ نامعتبر از سرور. لطفاً دوباره تلاش کنید.");
+      return;
+    }
+    setReservationId(newId);
     toast.success("درخواست رزرو ثبت شد!");
   };
 
@@ -380,9 +423,9 @@ export function BookingDialog({
               </DialogHeader>
 
               <ol className="relative mt-5 flex items-center justify-between" aria-label="مراحل رزرو">
-                <div className="absolute inset-x-4 top-4 -z-0 h-0.5 rounded-full bg-border" aria-hidden="true" />
+                <div className="absolute inset-x-4 top-4 z-0 h-0.5 rounded-full bg-border" aria-hidden="true" />
                 <div
-                  className="absolute right-4 top-4 -z-0 h-0.5 rounded-full bg-primary transition-all duration-500"
+                  className="absolute right-4 top-4 z-0 h-0.5 rounded-full bg-primary transition-all duration-500"
                   style={{ width: `calc((100% - 2rem) * ${step / (steps.length - 1)})` }}
                   aria-hidden="true"
                 />
@@ -637,7 +680,10 @@ export function BookingDialog({
               <DialogFooter className="flex-col-reverse gap-2 sm:flex-row-reverse sm:justify-between sm:space-x-0">
                 <Button
                   type="submit"
-                  disabled={form.formState.isSubmitting}
+                  disabled={
+                    form.formState.isSubmitting ||
+                    (step === 2 && (!selectedDate || loadingAvailability))
+                  }
                   size="lg"
                   className="w-full font-semibold sm:w-auto sm:min-w-40"
                 >
