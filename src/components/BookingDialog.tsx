@@ -508,7 +508,12 @@ export function BookingDialog({
                         }
                       >
                         {badge && (
-                          <span className="absolute top-2 left-2 inline-flex items-center gap-1 rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-medium text-primary">
+                          <span className={cn(
+                            "absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium",
+                            values.packageType === packageItem.value
+                              ? "bg-primary-foreground text-primary"
+                              : "bg-primary/15 text-primary",
+                          )}>
                             <Sparkles className="h-3 w-3" aria-hidden="true" />
                             {badge}
                           </span>
