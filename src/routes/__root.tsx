@@ -154,6 +154,41 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           ],
         }),
       },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "LocalBusiness",
+          name: "گیمیو",
+          image: "/assets/logo/logo1.png",
+          url: "/",
+          priceRange: "$$",
+          description:
+            "اجاره کنسول بازی PS5، Xbox Series X و Nintendo Switch با تحویل درب منزل در تهران.",
+          address: {
+            "@type": "PostalAddress",
+            addressCountry: "IR",
+            addressLocality: "Tehran",
+          },
+          areaServed: { "@type": "City", name: "Tehran" },
+          openingHoursSpecification: [
+            {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: [
+                "Saturday",
+                "Sunday",
+                "Monday",
+                "Tuesday",
+                "Wednesday",
+                "Thursday",
+                "Friday",
+              ],
+              opens: "00:00",
+              closes: "23:59",
+            },
+          ],
+        }),
+      },
     ],
   }),
   shellComponent: RootShell,
