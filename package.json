@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "test:smoke": "playwright test smoke",
     "test:e2e": "playwright test",
-    "prepare": "simple-git-hooks || true"
+    "prepare": "simple-git-hooks || true",
+    "test:pgtap": "node scripts/run-pgtap.mjs"
   },
   "dependencies": {
     "@fontsource-variable/vazirmatn": "^5.2.8",
