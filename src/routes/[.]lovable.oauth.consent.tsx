@@ -87,13 +87,13 @@ function Consent() {
       setError(err.message);
       return;
     }
-    const target = data?.redirect_url ?? data?.redirect_to;
-    if (!isSameOriginPath(target) && !target?.startsWith("http")) {
+    const target: string | undefined = data?.redirect_url ?? data?.redirect_to;
+    if (!target || (!isSameOriginPath(target) && !target.startsWith("http"))) {
       setBusy(false);
       setError("No redirect returned by the authorization server.");
       return;
     }
-    window.location.href = target!;
+    window.location.href = target;
   }
 
   return (
@@ -116,7 +116,7 @@ function Consent() {
 
         {scopeList.length > 0 && (
           <ul className="text-sm space-y-1">
-            {scopeList.map((s) => (
+            {scopeList.map((s: string) => (
               <li key={s} className="text-foreground">• {s}</li>
             ))}
           </ul>
