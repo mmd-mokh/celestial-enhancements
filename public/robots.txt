@@ -4,3 +4,6 @@ Allow: /
 Disallow: /admin
 Disallow: /auth
 Disallow: /_authenticated
+Disallow: /api/
+
+Sitemap: https://star-crafting-suite.lovable.app/sitemap.xml
