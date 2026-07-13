@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { ConsoleList, type ConsoleRow } from "@/components/ConsoleCards";
-import { supabase } from "@/integrations/supabase/client";
+import { ConsoleList } from "@/components/ConsoleCards";
+import { consolesQueryOptions } from "@/lib/queries";
 
 export const Route = createFileRoute("/consoles")({
   head: () => ({
@@ -51,22 +51,11 @@ export const Route = createFileRoute("/consoles")({
     ],
   }),
   component: ConsolesPage,
+  loader: ({ context }) => context.queryClient.ensureQueryData(consolesQueryOptions()),
 });
 
 function ConsolesPage() {
-  const [items, setItems] = useState<ConsoleRow[] | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase
-        .from("consoles")
-        .select("slug,name,tagline,features,icon,accent_from,accent_to,sort_order")
-        .eq("active", true)
-        .order("sort_order");
-      if (!cancelled && data) setItems(data as ConsoleRow[]);
-    })();
-    return () => { cancelled = true; };
-  }, []);
+  const { data: items } = useSuspenseQuery(consolesQueryOptions());
   return (
     <>
       <SiteHeader />
@@ -85,7 +74,7 @@ function ConsolesPage() {
             role="list"
             aria-label="کنسول‌های موجود"
           >
-            {items ? <ConsoleList items={items} /> : <p className="text-center text-gray-500">در حال بارگذاری…</p>}
+            <ConsoleList items={items} />
           </div>
         </section>
       </main>
