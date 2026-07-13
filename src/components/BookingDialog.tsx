@@ -138,7 +138,7 @@ export function BookingDialog({
   const [step, setStep] = useState(0);
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [consoles, setConsoles] = useState<ConsoleOpt[]>(FALLBACK_CONSOLES);
-  const [packages, setPackages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
+  const [packages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
   const [fullyBooked, setFullyBooked] = useState<Set<string>>(new Set());
   const [loadingAvailability, setLoadingAvailability] = useState(false);
 
