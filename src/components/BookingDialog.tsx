@@ -527,9 +527,7 @@ export function BookingDialog({
                                   : "bg-primary/10 text-primary",
                             )}
                           >
-                            {soldOut
-                              ? "امروز موجود نیست"
-                              : `${toFaDigits(avail.remaining)} از ${toFaDigits(avail.capacity)} موجود`}
+                            {soldOut ? "ناموجود" : "موجود"}
                           </span>
                         )}
                       </OptionButton>
