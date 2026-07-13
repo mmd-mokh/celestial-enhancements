@@ -46,6 +46,7 @@ import { PACKAGES } from "@/components/PricingCards";
 import { getConsoles } from "@/lib/consoles.functions";
 import { getConsolesRemaining, getConsoleAvailability } from "@/lib/availability.functions";
 import { createBooking } from "@/lib/bookings.functions";
+import { trackEvent } from "@/lib/analytics";
 
 const PERSIAN_DATE_LIB = getPersianDateLib({ locale: dayPickerFaIR });
 
@@ -379,6 +380,11 @@ export function BookingDialog({
 
     setReservationId(result.id);
     toast.success("درخواست رزرو ثبت شد!");
+    trackEvent("booking_submit", {
+      console_type: data.consoleType,
+      package_type: data.packageType,
+      days: packageDays,
+    });
   };
 
   const close = () => {
