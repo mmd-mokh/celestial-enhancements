@@ -10,7 +10,7 @@ export function FinalCtaSection() {
       role="region"
       aria-labelledby="final-cta-heading"
       className="flex w-full flex-col place-content-center place-items-center gap-6 px-6 py-20 md:px-12 lg:px-20 text-white"
-      style={{ backgroundImage: "linear-gradient(to right, #9333ea, #6b21a8)" }}
+      style={{ backgroundImage: "linear-gradient(to right, #6C5CE7, #4b3fc7)" }}
     >
       <div className="max-w-7xl mx-auto w-full flex flex-col items-center gap-6">
         <h2
