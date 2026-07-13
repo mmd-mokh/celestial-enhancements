@@ -89,7 +89,7 @@ export function SiteHeader() {
 
         <a href="#pricing" aria-label="رزرو کنسول" className="btn btn-enhanced nav-cta">
           <span>همین الان رزرو کن</span>
-          <ChevronLeft className="tw-h-4 tw-w-4" aria-hidden="true" />
+          <ChevronLeft className="h-4 w-4" aria-hidden="true" />
         </a>
 
         <div className="nav-actions">
@@ -101,31 +101,31 @@ export function SiteHeader() {
                 aria-label="باز کردن منو"
                 aria-expanded={open}
               >
-                {open ? <X className="tw-h-6 tw-w-6" /> : <Menu className="tw-h-6 tw-w-6" />}
+                {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </SheetTrigger>
-            <SheetContent side="right" className="tw-flex tw-flex-col tw-gap-6" dir="rtl">
-              <SheetHeader className="tw-text-right">
-                <SheetTitle className="tw-flex tw-items-center tw-gap-2">
+            <SheetContent side="right" className="flex flex-col gap-6" dir="rtl">
+              <SheetHeader className="text-right">
+                <SheetTitle className="flex items-center gap-2">
                   <img
                     src="/assets/logo/logo1.png"
                     alt=""
-                    className="tw-h-9 tw-w-9"
+                    className="h-9 w-9"
                   />
                   <span>گیمیو</span>
                 </SheetTitle>
               </SheetHeader>
 
               <nav aria-label="منوی موبایل">
-                <ul className="tw-flex tw-flex-col tw-gap-1" role="list">
+                <ul className="flex flex-col gap-1" role="list">
                   {NAV.map((item) => (
                     <li key={item.href}>
                       <SheetClose asChild>
                         <a
                           href={item.href}
-                          className="tw-flex tw-items-center tw-gap-3 tw-rounded-md tw-px-3 tw-py-3 tw-text-base tw-font-semibold hover:tw-bg-muted"
+                          className="flex items-center gap-3 rounded-md px-3 py-3 text-base font-semibold hover:bg-muted"
                         >
-                          <item.Icon className="tw-h-5 tw-w-5 tw-text-primary" aria-hidden="true" />
+                          <item.Icon className="h-5 w-5 text-primary" aria-hidden="true" />
                           <span>{item.label}</span>
                         </a>
                       </SheetClose>
@@ -134,14 +134,14 @@ export function SiteHeader() {
                 </ul>
               </nav>
 
-              <div className="tw-mt-auto">
+              <div className="mt-auto">
                 <SheetClose asChild>
                   <a
                     href="#pricing"
-                    className="btn btn-enhanced tw-flex tw-items-center tw-justify-center tw-gap-2 tw-w-full"
+                    className="btn btn-enhanced flex items-center justify-center gap-2 w-full"
                   >
                     <span>همین الان رزرو کن</span>
-                    <ChevronLeft className="tw-h-4 tw-w-4" aria-hidden="true" />
+                    <ChevronLeft className="h-4 w-4" aria-hidden="true" />
                   </a>
                 </SheetClose>
               </div>

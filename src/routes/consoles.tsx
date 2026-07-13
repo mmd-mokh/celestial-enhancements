@@ -70,22 +70,22 @@ function ConsolesPage() {
   return (
     <>
       <SiteHeader />
-      <main className="tw-min-h-screen tw-bg-white">
-        <section id="consoles" className="tw-px-4 md:tw-px-8 lg:tw-px-16 tw-py-16">
-          <div className="tw-max-w-7xl tw-mx-auto tw-flex tw-flex-col tw-gap-4 tw-text-center tw-mb-10">
-            <h1 className="tw-text-4xl md:tw-text-5xl tw-font-extrabold tw-text-gray-900">
+      <main className="min-h-screen bg-white">
+        <section id="consoles" className="px-4 md:px-8 lg:px-16 py-16">
+          <div className="max-w-7xl mx-auto flex flex-col gap-4 text-center mb-10">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
               کنسول‌های موجود برای اجاره
             </h1>
-            <p className="tw-text-lg tw-text-gray-700 tw-max-w-2xl tw-mx-auto">
+            <p className="text-lg text-gray-700 max-w-2xl mx-auto">
               PS5، Xbox Series X، و Nintendo Switch — با دو دسته و همه لوازم اصلی.
             </p>
           </div>
           <div
-            className="tw-max-w-7xl tw-mx-auto tw-grid tw-grid-cols-1 md:tw-grid-cols-2 lg:tw-grid-cols-3 tw-gap-6"
+            className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             role="list"
             aria-label="کنسول‌های موجود"
           >
-            {items ? <ConsoleList items={items} /> : <p className="tw-text-center tw-text-gray-500">در حال بارگذاری…</p>}
+            {items ? <ConsoleList items={items} /> : <p className="text-center text-gray-500">در حال بارگذاری…</p>}
           </div>
         </section>
       </main>

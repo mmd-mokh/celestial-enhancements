@@ -46,13 +46,13 @@ export function NewsletterFormStandalone() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="tw-flex tw-flex-col tw-w-full tw-max-w-md tw-gap-4 tw-mt-6"
+      className="flex flex-col w-full max-w-md gap-4 mt-6"
       noValidate
     >
-      <div className="tw-flex tw-flex-col tw-gap-2">
+      <div className="flex flex-col gap-2">
         <label
           htmlFor="newsletter-email"
-          className="tw-text-sm tw-font-semibold tw-text-gray-700 tw-text-right"
+          className="text-sm font-semibold text-gray-700 text-right"
         >
           آدرس ایمیل شما
         </label>
@@ -62,14 +62,14 @@ export function NewsletterFormStandalone() {
           placeholder="example@email.com"
           aria-invalid={!!errors.email}
           {...register("email")}
-          className="tw-h-12 tw-text-base"
+          className="h-12 text-base"
           dir="ltr"
         />
         {errors.email && (
           <span
             role="alert"
             aria-live="polite"
-            className="tw-text-xs tw-text-red-600 tw-text-right"
+            className="text-xs text-red-600 text-right"
           >
             {errors.email.message}
           </span>
@@ -78,18 +78,18 @@ export function NewsletterFormStandalone() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="btn-secondary-enhanced tw-w-full tw-h-12 tw-px-6 tw-rounded-full tw-border-2 tw-border-primary tw-bg-transparent tw-font-semibold tw-text-primary tw-flex tw-items-center tw-justify-center tw-gap-2 disabled:tw-opacity-60"
+        className="btn-secondary-enhanced w-full h-12 px-6 rounded-full border-2 border-primary bg-transparent font-semibold text-primary flex items-center justify-center gap-2 disabled:opacity-60"
       >
-        {isSubmitting && <Loader2 className="tw-h-4 tw-w-4 tw-animate-spin" />}
+        {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
         عضویت در خبرنامه
       </button>
-      <p className="tw-text-xs tw-text-gray-700 tw-text-center tw-leading-relaxed">
+      <p className="text-xs text-gray-700 text-center leading-relaxed">
         با عضویت در خبرنامه، شما{" "}
-        <a href="#" className="tw-text-primary tw-underline hover:tw-text-primary-700">
+        <a href="#" className="text-primary underline hover:text-primary-700">
           شرایط و قوانین
         </a>{" "}
         و{" "}
-        <a href="#" className="tw-text-primary tw-underline hover:tw-text-primary-700">
+        <a href="#" className="text-primary underline hover:text-primary-700">
           حریم خصوصی
         </a>{" "}
         ما را می‌پذیرید.

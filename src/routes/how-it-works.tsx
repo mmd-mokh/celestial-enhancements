@@ -49,23 +49,23 @@ function HowItWorksPage() {
   return (
     <>
       <SiteHeader />
-      <main className="tw-min-h-screen tw-bg-white">
-        <section id="how-it-works" className="tw-px-4 md:tw-px-8 lg:tw-px-16 tw-py-16">
-          <div className="tw-max-w-4xl tw-mx-auto tw-flex tw-flex-col tw-gap-4 tw-text-center tw-mb-12">
-            <h1 className="tw-text-4xl md:tw-text-5xl tw-font-extrabold tw-text-gray-900">
+      <main className="min-h-screen bg-white">
+        <section id="how-it-works" className="px-4 md:px-8 lg:px-16 py-16">
+          <div className="max-w-4xl mx-auto flex flex-col gap-4 text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
               چطور کنسول اجاره کنیم؟
             </h1>
-            <p className="tw-text-lg tw-text-gray-700">در ۴ مرحله ساده تا تجربه گیمینگ در خانه.</p>
+            <p className="text-lg text-gray-700">در ۴ مرحله ساده تا تجربه گیمینگ در خانه.</p>
           </div>
-          <ol className="tw-max-w-4xl tw-mx-auto tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
+          <ol className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
             {STEPS.map(({ Icon, title, body }) => (
-              <li key={title} className="tw-flex tw-gap-4 tw-bg-white tw-rounded-xl tw-shadow-md tw-p-6 tw-items-start">
-                <div className="tw-shrink-0 tw-h-12 tw-w-12 tw-rounded-full tw-bg-primary/10 tw-flex tw-items-center tw-justify-center tw-text-primary">
-                  <Icon className="tw-h-6 tw-w-6" aria-hidden="true" />
+              <li key={title} className="flex gap-4 bg-white rounded-xl shadow-md p-6 items-start">
+                <div className="shrink-0 h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                  <Icon className="h-6 w-6" aria-hidden="true" />
                 </div>
-                <div className="tw-flex tw-flex-col tw-gap-2 tw-text-right">
-                  <h2 className="tw-text-xl tw-font-bold tw-text-gray-900">{title}</h2>
-                  <p className="tw-text-gray-700 tw-leading-relaxed">{body}</p>
+                <div className="flex flex-col gap-2 text-right">
+                  <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+                  <p className="text-gray-700 leading-relaxed">{body}</p>
                 </div>
               </li>
             ))}

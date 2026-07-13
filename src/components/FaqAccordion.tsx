@@ -51,17 +51,17 @@ export const FAQS: Array<{ q: string; a: string }> = [
 /** FAQ accordion. Used by /faq and landing. */
 export function FaqList() {
   return (
-    <Accordion type="single" collapsible className="tw-flex tw-flex-col tw-gap-4">
+    <Accordion type="single" collapsible className="flex flex-col gap-4">
       {FAQS.map((item, i) => (
         <AccordionItem
           key={i}
           value={`item-${i}`}
-          className="tw-bg-white tw-rounded-lg tw-shadow-md tw-border tw-border-transparent data-[state=open]:tw-border-primary/30"
+          className="bg-white rounded-lg shadow-md border border-transparent data-[state=open]:border-primary/30"
         >
-          <AccordionTrigger className="tw-px-6 tw-py-5 tw-font-bold tw-text-lg tw-text-gray-800 hover:tw-text-primary tw-text-right">
+          <AccordionTrigger className="px-6 py-5 font-bold text-lg text-gray-800 hover:text-primary text-right">
             {item.q}
           </AccordionTrigger>
-          <AccordionContent className="tw-px-6 tw-pb-5 tw-text-gray-700 tw-leading-relaxed">
+          <AccordionContent className="px-6 pb-5 text-gray-700 leading-relaxed">
             {item.a}
           </AccordionContent>
         </AccordionItem>

@@ -75,17 +75,17 @@ function FaqPage() {
   return (
     <>
       <SiteHeader />
-      <main className="tw-min-h-screen tw-bg-white">
-        <section id="faq" className="tw-px-4 md:tw-px-8 lg:tw-px-16 tw-py-16">
-          <div className="tw-max-w-4xl tw-mx-auto tw-flex tw-flex-col tw-gap-4 tw-text-center tw-mb-10">
-            <h1 className="tw-text-4xl md:tw-text-5xl tw-font-extrabold tw-text-gray-900">
+      <main className="min-h-screen bg-white">
+        <section id="faq" className="px-4 md:px-8 lg:px-16 py-16">
+          <div className="max-w-4xl mx-auto flex flex-col gap-4 text-center mb-10">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900">
               سوالات متداول
             </h1>
-            <p className="tw-text-lg tw-text-gray-700">
+            <p className="text-lg text-gray-700">
               هر چیزی که قبل از اجاره کنسول لازم داری بدونی.
             </p>
           </div>
-          <div className="tw-max-w-4xl tw-mx-auto tw-w-full">
+          <div className="max-w-4xl mx-auto w-full">
             <FaqList />
           </div>
         </section>
