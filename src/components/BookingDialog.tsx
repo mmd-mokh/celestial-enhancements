@@ -51,6 +51,7 @@ type Props = {
 };
 
 type ConsoleOpt = { value: string; label: string; tagline: string };
+type ConsoleAvailability = { capacity: number; booked: number; remaining: number };
 type PackageOpt = { value: string; label: string; desc: string; hours: number };
 
 const FALLBACK_CONSOLES: ConsoleOpt[] = [
@@ -145,6 +146,7 @@ export function BookingDialog({
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [consoles, setConsoles] = useState<ConsoleOpt[]>(FALLBACK_CONSOLES);
   const [packages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
+  const [remainingBySlug, setRemainingBySlug] = useState<Record<string, ConsoleAvailability>>({});
   const [fullyBooked, setFullyBooked] = useState<Set<string>>(new Set());
   const [loadingAvailability, setLoadingAvailability] = useState(false);
 
@@ -167,8 +169,9 @@ export function BookingDialog({
     let cancelled = false;
 
     async function loadOptions() {
-      const [consoleResult] = await Promise.all([
+      const [consoleResult, remainingResult] = await Promise.all([
         supabase.from("consoles").select("slug,name").eq("active", true).order("sort_order"),
+        supabase.rpc("get_consoles_remaining"),
       ]);
 
       if (cancelled) return;
@@ -183,13 +186,25 @@ export function BookingDialog({
           })),
         );
       }
+
+      if (remainingResult.data?.length) {
+        const map: Record<string, ConsoleAvailability> = {};
+        for (const row of remainingResult.data) {
+          map[row.slug] = {
+            capacity: row.capacity ?? 0,
+            booked: row.booked ?? 0,
+            remaining: row.remaining ?? 0,
+          };
+        }
+        setRemainingBySlug(map);
+      }
     }
 
     loadOptions();
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
