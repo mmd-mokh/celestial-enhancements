@@ -291,14 +291,19 @@ summary:focus-visible {
 
 /* ===== ACCESSIBILITY: Link Styles ===== */
 /* Ensure links are distinguishable from regular text */
-a:not(.btn):not(.header-links):not([class*="tw-bg-"]) {
+a:not([class*="btn"]):not(.header-links):not(.footer-link):not(.link-enhanced):not(.nav-cta):not([class*="bg-"]) {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 2px;
 }
 
-a:not(.btn):not(.header-links):not([class*="tw-bg-"]):hover {
+a:not([class*="btn"]):not(.header-links):not(.footer-link):not(.link-enhanced):not(.nav-cta):not([class*="bg-"]):hover {
     text-decoration-thickness: 2px;
+}
+
+/* Never underline button-like elements or their inner text */
+button, button *, a[class*="btn"], a[class*="btn"] * {
+    text-decoration: none !important;
 }
 
 /* External link indicator (if needed in future) */

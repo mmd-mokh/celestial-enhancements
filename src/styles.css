@@ -82,8 +82,8 @@
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.62 0.20 260);
+  --primary-foreground: oklch(0.99 0.005 260);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
   --muted: oklch(0.968 0.007 247.896);
@@ -117,8 +117,8 @@
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: oklch(0.208 0.042 265.755);
   --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
+  --primary: oklch(0.72 0.17 260);
+  --primary-foreground: oklch(0.15 0.03 260);
   --secondary: oklch(0.279 0.041 260.031);
   --secondary-foreground: oklch(0.984 0.003 247.858);
   --muted: oklch(0.279 0.041 260.031);
@@ -178,15 +178,35 @@ html.dark .tw-bg-gray-100 {
 
 html.dark .tw-text-black,
 html.dark .tw-text-gray-900,
-html.dark .tw-text-gray-800 {
+html.dark .tw-text-gray-800,
+html.dark .text-black,
+html.dark .text-gray-900,
+html.dark .text-gray-800 {
   color: var(--color-foreground) !important;
 }
 
 html.dark .tw-text-gray-700,
 html.dark .tw-text-gray-600,
 html.dark .tw-text-gray-500,
-html.dark .tw-text-gray-400 {
+html.dark .tw-text-gray-400,
+html.dark .text-gray-700,
+html.dark .text-gray-600,
+html.dark .text-gray-500,
+html.dark .text-gray-400 {
   color: var(--color-muted-foreground) !important;
+}
+
+html.dark .bg-white,
+html.dark .bg-gray-50,
+html.dark .bg-gray-100 {
+  background-color: var(--color-card) !important;
+  color: var(--color-card-foreground);
+}
+
+html.dark footer.bg-gray-50,
+html.dark footer.text-black {
+  background-color: var(--color-card) !important;
+  color: var(--color-card-foreground) !important;
 }
 
 /* Ported cards/surfaces default to white — lift to dark surface tone. */
