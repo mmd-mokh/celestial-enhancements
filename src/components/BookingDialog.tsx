@@ -40,10 +40,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { supabase } from "@/integrations/supabase/client";
 import { toFaDigits } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 import { PACKAGES } from "@/components/PricingCards";
+import { getConsoles } from "@/lib/consoles.functions";
+import { getConsolesRemaining, getConsoleAvailability } from "@/lib/availability.functions";
+import { createBooking } from "@/lib/bookings.functions";
 
 const PERSIAN_DATE_LIB = getPersianDateLib({ locale: dayPickerFaIR });
 
@@ -173,34 +175,36 @@ export function BookingDialog({
     let cancelled = false;
 
     async function loadOptions() {
-      const [consoleResult, remainingResult] = await Promise.all([
-        supabase.from("consoles").select("slug,name").eq("active", true).order("sort_order"),
-        supabase.rpc("get_consoles_remaining"),
-      ]);
-
-      if (cancelled) return;
-
-      if (consoleResult.data?.length) {
-        setConsoles(
-          consoleResult.data.map((row) => ({
-            value: row.slug,
-            label: row.name,
-            tagline:
-              FALLBACK_CONSOLES.find((item) => item.value === row.slug)?.tagline ?? "کنسول اختصاصی",
-          })),
-        );
-      }
-
-      if (remainingResult.data?.length) {
-        const map: Record<string, ConsoleAvailability> = {};
-        for (const row of remainingResult.data) {
-          map[row.slug] = {
-            capacity: row.capacity ?? 0,
-            booked: row.booked ?? 0,
-            remaining: row.remaining ?? 0,
-          };
+      try {
+        const [consoleRows, remainingRows] = await Promise.all([
+          getConsoles(),
+          getConsolesRemaining(),
+        ]);
+        if (cancelled) return;
+        if (consoleRows.length) {
+          setConsoles(
+            consoleRows.map((row) => ({
+              value: row.slug,
+              label: row.name,
+              tagline:
+                FALLBACK_CONSOLES.find((item) => item.value === row.slug)?.tagline ??
+                "کنسول اختصاصی",
+            })),
+          );
         }
-        setRemainingBySlug(map);
+        if (remainingRows.length) {
+          const map: Record<string, ConsoleAvailability> = {};
+          for (const row of remainingRows) {
+            map[row.slug] = {
+              capacity: row.capacity,
+              booked: row.booked,
+              remaining: row.remaining,
+            };
+          }
+          setRemainingBySlug(map);
+        }
+      } catch {
+        /* fall back to hardcoded consoles */
       }
     }
 
@@ -252,26 +256,26 @@ export function BookingDialog({
     setFullyBooked(new Set());
     setLoadingAvailability(true);
 
-    supabase
-      .rpc("get_console_availability", {
-        _console_slug: values.consoleType,
-        _from: format(today, "yyyy-MM-dd"),
-        _to: format(addDays(today, 90), "yyyy-MM-dd"),
-      })
-      .then(({ data, error }) => {
+    getConsoleAvailability({
+      data: {
+        consoleSlug: values.consoleType,
+        from: format(today, "yyyy-MM-dd"),
+        to: format(addDays(today, 90), "yyyy-MM-dd"),
+      },
+    })
+      .then((rows) => {
         if (cancelled) return;
         setLoadingAvailability(false);
-
-        if (error || !data) {
-          toast.error("موجودی تقویم دریافت نشد؛ لطفاً دوباره تلاش کنید.");
-          return;
-        }
-
         const unavailable = new Set<string>();
-        for (const row of data) {
+        for (const row of rows) {
           if (row.capacity > 0 && row.booked >= row.capacity) unavailable.add(row.day);
         }
         setFullyBooked(unavailable);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setLoadingAvailability(false);
+        toast.error("موجودی تقویم دریافت نشد؛ لطفاً دوباره تلاش کنید.");
       });
 
     return () => {
@@ -330,35 +334,41 @@ export function BookingDialog({
     const start = data.startDate;
     const end = addDays(start, packageDays - 1);
 
-    const { data: newId, error } = await supabase.rpc("create_booking", {
-      _name: data.name.trim(),
-      _phone: toAsciiDigits(data.phone).trim(),
-      _console_type: data.consoleType,
-      _package_type: data.packageType,
-      _start_date: format(start, "yyyy-MM-dd"),
-      _end_date: format(end, "yyyy-MM-dd"),
-      _notes: data.notes?.trim() || undefined,
-    });
+    let result;
+    try {
+      result = await createBooking({
+        data: {
+          name: data.name.trim(),
+          phone: toAsciiDigits(data.phone).trim(),
+          consoleType: data.consoleType,
+          packageType: data.packageType,
+          startDate: format(start, "yyyy-MM-dd"),
+          endDate: format(end, "yyyy-MM-dd"),
+          notes: data.notes?.trim() || undefined,
+        },
+      });
+    } catch {
+      toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
+      return;
+    }
 
-    if (error) {
-      const message = (error.message || "").toLowerCase();
-      const details = ((error as { details?: string }).details || "").toLowerCase();
-      const combined = `${message} ${details}`;
-      if (combined.includes("no_availability")) {
+    if (!result.ok) {
+      const code = result.code;
+      if (code === "no_availability") {
         toast.error("این کنسول در تاریخ انتخابی رزرو شده. لطفاً تاریخ دیگری انتخاب کنید.");
         setStep(2);
-      } else if (combined.includes("past_date")) {
+      } else if (code === "past_date") {
         toast.error("تاریخ شروع نمی‌تواند در گذشته باشد.");
         setStep(2);
-      } else if (combined.includes("rate_limited")) {
+      } else if (code === "rate_limited") {
         toast.error("تعداد رزروهای اخیر شما زیاد است. لطفاً یک ساعت دیگر تلاش کنید.");
-      } else if (combined.includes("console_unavailable")) {
+      } else if (code === "console_unavailable") {
         toast.error("این کنسول در حال حاضر در دسترس نیست.");
         setStep(0);
-      } else if (combined.includes("invalid_phone")) {
+      } else if (code === "invalid_phone") {
         toast.error("شماره تماس معتبر نیست.");
         setStep(3);
-      } else if (combined.includes("invalid_name")) {
+      } else if (code === "invalid_name") {
         toast.error("نام وارد شده معتبر نیست.");
         setStep(3);
       } else {
@@ -367,12 +377,7 @@ export function BookingDialog({
       return;
     }
 
-    // Bug fix: only show success screen when we actually received a booking id.
-    if (!newId) {
-      toast.error("پاسخ نامعتبر از سرور. لطفاً دوباره تلاش کنید.");
-      return;
-    }
-    setReservationId(newId);
+    setReservationId(result.id);
     toast.success("درخواست رزرو ثبت شد!");
   };
 
