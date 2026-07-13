@@ -289,6 +289,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      booking_peak_overlap: {
+        Args: {
+          _console_slug: string
+          _end_date: string
+          _exclude_booking_id?: string
+          _start_date: string
+        }
+        Returns: number
+      }
       cancel_booking: { Args: { _booking_id: string }; Returns: undefined }
       create_booking: {
         Args: {
