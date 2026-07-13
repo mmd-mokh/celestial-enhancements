@@ -13,6 +13,9 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SITE_URL, absUrl } from "@/lib/seo";
 
+const GA4_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID as string | undefined;
+const GSC_TOKEN = import.meta.env.VITE_GSC_VERIFICATION as string | undefined;
+
 function NotFoundComponent() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-background px-4">
@@ -114,6 +117,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "twitter:description",
         content: "PS5، Xbox، Switch - اجاره کن، تجربه کن، لذت ببر!",
       },
+      ...(GSC_TOKEN
+        ? [{ name: "google-site-verification", content: GSC_TOKEN }]
+        : []),
     ],
     links: [
       {
@@ -126,6 +132,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: "/css/index.css" },
     ],
     scripts: [
+      ...(GA4_ID
+        ? [
+            {
+              src: `https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`,
+              async: true,
+            },
+            {
+              children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config','${GA4_ID}',{send_page_view:false});`,
+            },
+          ]
+        : []),
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -227,6 +244,23 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!GA4_ID || typeof window === "undefined") return;
+    const track = () => {
+      const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+      if (typeof w.gtag !== "function") return;
+      w.gtag("event", "page_view", {
+        page_path: window.location.pathname + window.location.search,
+        page_location: window.location.href,
+        page_title: document.title,
+      });
+    };
+    track();
+    const unsub = router.subscribe("onResolved", track);
+    return () => unsub();
+  }, [router]);
 
   return (
     <QueryClientProvider client={queryClient}>
