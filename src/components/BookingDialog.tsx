@@ -480,7 +480,7 @@ export function BookingDialog({
                           className={cn(
                             "grid h-12 w-12 place-items-center rounded-full transition-colors",
                             selected
-                              ? "bg-primary text-primary-foreground"
+                              ? "bg-primary-foreground text-primary ring-2 ring-primary-foreground/60"
                               : "bg-primary/10 text-primary",
                           )}
                         >
