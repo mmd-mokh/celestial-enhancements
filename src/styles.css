@@ -250,3 +250,13 @@ html.dark #newsletter-form-mount .tw-text-gray-700 {
 }
 
 /* Bottom copyright bar stays dark in both modes — leave alone. */
+
+/* Site footer: force white text on all descendants in both light and dark. */
+footer[role="contentinfo"],
+footer[role="contentinfo"] * {
+  color: #ffffff !important;
+}
+footer[role="contentinfo"] .text-primary,
+footer[role="contentinfo"] svg.text-primary {
+  color: var(--color-primary) !important;
+}
