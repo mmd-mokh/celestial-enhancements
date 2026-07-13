@@ -39,6 +39,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toFaDigits } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
+import { PACKAGES } from "@/components/PricingCards";
 
 const PERSIAN_DATE_LIB = getPersianDateLib({ locale: dayPickerFaIR });
 
@@ -58,12 +59,21 @@ const FALLBACK_CONSOLES: ConsoleOpt[] = [
   { value: "switch", label: "Nintendo Switch", tagline: "بازی همه‌جا" },
 ];
 
-const FALLBACK_PACKAGES: PackageOpt[] = [
-  { value: "daily", label: "روزانه", desc: "۲۴ ساعت", hours: 24 },
-  { value: "weekend", label: "آخر هفته", desc: "پنجشنبه تا شنبه", hours: 72 },
-  { value: "weekly", label: "هفتگی", desc: "۷ روز کامل", hours: 168 },
-  { value: "monthly", label: "ماهانه", desc: "۳۰ روز، بهترین قیمت", hours: 720 },
-];
+const PACKAGE_HOURS: Record<string, number> = {
+  daily: 24,
+  weekend: 72,
+  weekly: 168,
+  monthly: 720,
+};
+
+// Sync with the landing page PricingCards.PACKAGES so the dialog always
+// shows the same list, names, and durations as the main website.
+const FALLBACK_PACKAGES: PackageOpt[] = PACKAGES.map((p) => ({
+  value: p.slug,
+  label: p.name,
+  desc: p.description,
+  hours: PACKAGE_HOURS[p.slug] ?? 24,
+}));
 
 const CONSOLE_ICON: Record<string, typeof Gamepad2> = {
   ps5: Gamepad2,
@@ -128,7 +138,7 @@ export function BookingDialog({
   const [step, setStep] = useState(0);
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [consoles, setConsoles] = useState<ConsoleOpt[]>(FALLBACK_CONSOLES);
-  const [packages, setPackages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
+  const [packages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
   const [fullyBooked, setFullyBooked] = useState<Set<string>>(new Set());
   const [loadingAvailability, setLoadingAvailability] = useState(false);
 
@@ -151,13 +161,8 @@ export function BookingDialog({
     let cancelled = false;
 
     async function loadOptions() {
-      const [consoleResult, packageResult] = await Promise.all([
+      const [consoleResult] = await Promise.all([
         supabase.from("consoles").select("slug,name").eq("active", true).order("sort_order"),
-        supabase
-          .from("packages")
-          .select("slug,name,description,duration_hours")
-          .eq("active", true)
-          .order("sort_order"),
       ]);
 
       if (cancelled) return;
@@ -169,17 +174,6 @@ export function BookingDialog({
             label: row.name,
             tagline:
               FALLBACK_CONSOLES.find((item) => item.value === row.slug)?.tagline ?? "کنسول اختصاصی",
-          })),
-        );
-      }
-
-      if (packageResult.data?.length) {
-        setPackages(
-          packageResult.data.map((row) => ({
-            value: row.slug,
-            label: row.name,
-            desc: row.description ?? `${toFaDigits(row.duration_hours ?? 24)} ساعت`,
-            hours: Number(row.duration_hours ?? 24),
           })),
         );
       }
