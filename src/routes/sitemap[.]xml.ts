@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { CONSOLE_SLUGS } from "@/lib/console-content";
+import { RENT_SLUGS } from "@/lib/rent-content";
 
 const BASE_URL = "https://star-crafting-suite.lovable.app";
 
@@ -23,6 +25,13 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/contact", changefreq: "yearly", priority: "0.6" },
           { path: "/blog", changefreq: "weekly", priority: "0.7" },
         ];
+
+        for (const slug of CONSOLE_SLUGS) {
+          entries.push({ path: `/consoles/${slug}`, changefreq: "monthly", priority: "0.8" });
+        }
+        for (const slug of RENT_SLUGS) {
+          entries.push({ path: `/rent/${slug}`, changefreq: "monthly", priority: "0.7" });
+        }
 
         try {
           const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
