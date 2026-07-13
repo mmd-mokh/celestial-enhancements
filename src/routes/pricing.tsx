@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { PricingList } from "@/components/PricingCards";
 import { Toaster } from "@/components/ui/sonner";
+import { absUrl } from "@/lib/seo";
 
 const BookingDialog = lazy(() =>
   import("@/components/BookingDialog").then((m) => ({ default: m.BookingDialog })),
@@ -23,12 +24,12 @@ export const Route = createFileRoute("/pricing")({
         property: "og:description",
         content: "پکیج‌های منعطف روزانه، آخر هفته، هفتگی و ماهانه — بدون هزینه پنهان.",
       },
-      { property: "og:url", content: "/pricing" },
+      { property: "og:url", content: absUrl("/pricing") },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/assets/images/home/dashboard.png" },
-      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
+      { property: "og:image", content: absUrl("/assets/images/home/dashboard.png") },
+      { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
     ],
-    links: [{ rel: "canonical", href: "/pricing" }],
+    links: [{ rel: "canonical", href: absUrl("/pricing") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -52,8 +53,8 @@ export const Route = createFileRoute("/pricing")({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
-            { "@type": "ListItem", position: 2, name: "قیمت‌ها", item: "/pricing" },
+            { "@type": "ListItem", position: 1, name: "خانه", item: absUrl("/") },
+            { "@type": "ListItem", position: 2, name: "قیمت‌ها", item: absUrl("/pricing") },
           ],
         }),
       },

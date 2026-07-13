@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { blogPostQueryOptions } from "@/lib/queries";
+import { absUrl, SITE_URL } from "@/lib/seo";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ context, params }) => {
@@ -10,9 +11,18 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!post) throw notFound();
     return { post };
   },
-  head: ({ loaderData }) => {
+  head: ({ loaderData, params }) => {
     const p = loaderData?.post;
-    if (!p) return { meta: [{ title: "بلاگ گیمیو" }] };
+    const url = absUrl(`/blog/${params.slug}`);
+    if (!p) {
+      return {
+        meta: [
+          { title: "بلاگ گیمیو" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
+    }
+    const image = p.cover_url ? absUrl(p.cover_url) : undefined;
     return {
       meta: [
         { title: `${p.title} | بلاگ گیمیو` },
@@ -20,13 +30,30 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:title", content: p.title },
         { property: "og:description", content: p.excerpt ?? p.title },
         { property: "og:type", content: "article" },
-        ...(p.cover_url ? [{ property: "og:image" as const, content: p.cover_url }] : []),
+        { property: "og:url", content: url },
+        ...(image ? [{ property: "og:image" as const, content: image }] : []),
+        ...(image ? [{ name: "twitter:image" as const, content: image }] : []),
       ],
+      links: [{ rel: "canonical", href: url }],
       scripts: [
         { type: "application/ld+json", children: JSON.stringify({
-          "@context": "https://schema.org", "@type": "BlogPosting",
-          headline: p.title, description: p.excerpt, image: p.cover_url,
-          datePublished: p.published_at, keywords: (p.tags ?? []).join(", "),
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: p.title,
+          description: p.excerpt ?? undefined,
+          image: image ?? undefined,
+          datePublished: p.published_at ?? undefined,
+          dateModified: p.published_at ?? undefined,
+          author: { "@type": "Organization", name: "گیمیو" },
+          publisher: {
+            "@type": "Organization",
+            name: "گیمیو",
+            logo: { "@type": "ImageObject", url: absUrl("/assets/logo/logo1.png") },
+          },
+          mainEntityOfPage: { "@type": "WebPage", "@id": url },
+          inLanguage: "fa-IR",
+          keywords: (p.tags ?? []).join(", "),
+          url: SITE_URL,
         }) },
       ],
     };

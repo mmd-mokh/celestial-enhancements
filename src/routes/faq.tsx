@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { FaqList } from "@/components/FaqAccordion";
+import { absUrl } from "@/lib/seo";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
@@ -17,12 +18,12 @@ export const Route = createFileRoute("/faq")({
         property: "og:description",
         content: "همه چیزی که قبل از اجاره کنسول لازم دارید بدانید.",
       },
-      { property: "og:url", content: "/faq" },
+      { property: "og:url", content: absUrl("/faq") },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/assets/images/home/dashboard.png" },
-      { name: "twitter:image", content: "/assets/images/home/dashboard.png" },
+      { property: "og:image", content: absUrl("/assets/images/home/dashboard.png") },
+      { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
     ],
-    links: [{ rel: "canonical", href: "/faq" }],
+    links: [{ rel: "canonical", href: absUrl("/faq") }],
     scripts: [
       {
         type: "application/ld+json",
@@ -63,8 +64,8 @@ export const Route = createFileRoute("/faq")({
           "@context": "https://schema.org",
           "@type": "BreadcrumbList",
           itemListElement: [
-            { "@type": "ListItem", position: 1, name: "خانه", item: "/" },
-            { "@type": "ListItem", position: 2, name: "سوالات متداول", item: "/faq" },
+            { "@type": "ListItem", position: 1, name: "خانه", item: absUrl("/") },
+            { "@type": "ListItem", position: 2, name: "سوالات متداول", item: absUrl("/faq") },
           ],
         }),
       },
