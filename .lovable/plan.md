@@ -40,10 +40,10 @@ Outcome: one source of truth, real HMR, working dark mode, no `dangerouslySetInn
 
 ## Phase 5 — Performance
 
-1. Convert bundled hero/console images through `vite-imagetools` (AVIF + WebP), preload the LCP image in the home route `head().links`.
-2. Split heavy client-only pieces (charts in `AnalyticsCharts`, booking dialog) behind dynamic import / lazy route files.
-3. Set explicit `staleTime` on query options to cut refetches.
-4. Add `Cache-Control` headers on public GET server routes (`sitemap.xml`, `booking-ical`).
+1. Convert bundled hero/console images through `vite-imagetools` (AVIF + WebP), preload the LCP image in the home route `head().links` — deferred until Phase 1 ports images into React components.
+2. Split heavy client-only pieces — ✅ DONE: `BookingDialog` is now lazy-loaded in `LandingPage` and `pricing.tsx`, rendered only when opened. `AnalyticsCharts` has no consumer yet.
+3. Set explicit `staleTime` on query options — deferred to Phase 2 (no TanStack Query call sites yet).
+4. Cache-Control on public GET routes — ✅ DONE: `sitemap.xml` (`public, max-age=3600`) and `booking-ical.$id` (`private, max-age=300`).
 5. Lighthouse budget in CI (fail on CLS > 0.1, LCP > 2.5s on mobile).
 
 ## Phase 6 — Quality & DX
