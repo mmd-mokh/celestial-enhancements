@@ -20,6 +20,86 @@ type Values = z.infer<typeof schema>;
  * validated react-hook-form + zod version. Mounts into the existing
  * form element so surrounding copy/labels are preserved.
  */
+export function NewsletterFormStandalone() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<Values>({ resolver: zodResolver(schema) });
+
+  async function onSubmit(v: Values) {
+    const { error } = await supabase
+      .from("newsletter_subscribers")
+      .insert({ email: v.email.trim().toLowerCase(), source: "landing" });
+    if (error) {
+      if (error.code === "23505") {
+        toast.success("قبلاً عضو شده‌ای — ممنونیم!");
+        reset();
+        return;
+      }
+      toast.error("ثبت انجام نشد. لطفاً دوباره امتحان کن.");
+      return;
+    }
+    toast.success("ثبت شد! به‌زودی از ما خبر می‌شنوی.");
+    reset();
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="tw-flex tw-flex-col tw-w-full tw-max-w-md tw-gap-4 tw-mt-6"
+      noValidate
+    >
+      <div className="tw-flex tw-flex-col tw-gap-2">
+        <label
+          htmlFor="newsletter-email"
+          className="tw-text-sm tw-font-semibold tw-text-gray-700 tw-text-right"
+        >
+          آدرس ایمیل شما
+        </label>
+        <Input
+          id="newsletter-email"
+          type="email"
+          placeholder="example@email.com"
+          aria-invalid={!!errors.email}
+          {...register("email")}
+          className="tw-h-12 tw-text-base"
+          dir="ltr"
+        />
+        {errors.email && (
+          <span
+            role="alert"
+            aria-live="polite"
+            className="tw-text-xs tw-text-red-600 tw-text-right"
+          >
+            {errors.email.message}
+          </span>
+        )}
+      </div>
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="btn-secondary-enhanced tw-w-full tw-h-12 tw-px-6 tw-rounded-full tw-border-2 tw-border-primary tw-bg-transparent tw-font-semibold tw-text-primary tw-flex tw-items-center tw-justify-center tw-gap-2 disabled:tw-opacity-60"
+      >
+        {isSubmitting && <Loader2 className="tw-h-4 tw-w-4 tw-animate-spin" />}
+        عضویت در خبرنامه
+      </button>
+      <p className="tw-text-xs tw-text-gray-700 tw-text-center tw-leading-relaxed">
+        با عضویت در خبرنامه، شما{" "}
+        <a href="#" className="tw-text-primary tw-underline hover:tw-text-primary-700">
+          شرایط و قوانین
+        </a>{" "}
+        و{" "}
+        <a href="#" className="tw-text-primary tw-underline hover:tw-text-primary-700">
+          حریم خصوصی
+        </a>{" "}
+        ما را می‌پذیرید.
+      </p>
+    </form>
+  );
+}
+
 export function NewsletterForm() {
   const [mount, setMount] = useState<HTMLElement | null>(null);
 
