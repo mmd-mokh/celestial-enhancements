@@ -55,7 +55,10 @@ type PackageOpt = { value: string; label: string; desc: string; hours: number };
 
 const FALLBACK_CONSOLES: ConsoleOpt[] = [
   { value: "ps5", label: "PlayStation 5", tagline: "نسل جدید سونی" },
+  { value: "ps4", label: "PlayStation 4", tagline: "کلاسیک محبوب سونی" },
   { value: "xbox", label: "Xbox Series X", tagline: "قدرت مایکروسافت" },
+  { value: "xbox-series-s", label: "Xbox Series S", tagline: "نسل جدید، فشرده" },
+  { value: "xbox-one", label: "Xbox One", tagline: "انتخاب مقرون‌به‌صرفه" },
   { value: "switch", label: "Nintendo Switch", tagline: "بازی همه‌جا" },
 ];
 
@@ -77,7 +80,10 @@ const FALLBACK_PACKAGES: PackageOpt[] = PACKAGES.map((p) => ({
 
 const CONSOLE_ICON: Record<string, typeof Gamepad2> = {
   ps5: Gamepad2,
+  ps4: Gamepad2,
   xbox: MonitorPlay,
+  "xbox-series-s": MonitorPlay,
+  "xbox-one": MonitorPlay,
   switch: Tv,
 };
 
