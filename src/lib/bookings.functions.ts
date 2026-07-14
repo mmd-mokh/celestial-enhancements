@@ -77,8 +77,8 @@ export const getBookingByToken = createServerFn({ method: "GET" })
     z.object({ id: z.string().uuid(), token: z.string().min(10) }).parse(input),
   )
   .handler(async ({ data }): Promise<GetBookingByTokenResult> => {
-    const { verifyBookingId } = await import("@/lib/booking-token.server");
-    if (!verifyBookingId(data.id, data.token)) return { ok: false, code: "invalid_token" };
+    const { verifyBookingToken } = await import("@/lib/booking-token.server");
+    if (!verifyBookingToken(data.id, data.token)) return { ok: false, code: "invalid_token" };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: rows, error } = await supabaseAdmin.rpc("get_booking_summary", {
       _booking_id: data.id,
