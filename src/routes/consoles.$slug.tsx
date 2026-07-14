@@ -6,6 +6,7 @@ import { consolesQueryOptions } from "@/lib/queries";
 import { CONSOLE_CONTENT } from "@/lib/console-content";
 import { absUrl } from "@/lib/seo";
 import { RouteErrorFallback } from "@/components/RouteBoundaries";
+import { BsIcon } from "@/components/BsIcon";
 
 export const Route = createFileRoute("/consoles/$slug")({
   loader: async ({ context, params }) => {
