@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import { throwLogged } from "@/lib/server-errors";
 
 export type ConsoleRow = {
@@ -24,3 +25,17 @@ export const getConsoles = createServerFn({ method: "GET" }).handler(
     return (data ?? []) as ConsoleRow[];
   },
 );
+
+export const getConsoleBySlug = createServerFn({ method: "GET" })
+  .inputValidator((input) => z.object({ slug: z.string().min(1) }).parse(input))
+  .handler(async ({ data }): Promise<ConsoleRow | null> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row, error } = await supabaseAdmin
+      .from("consoles")
+      .select("slug,name,tagline,features,icon,accent_from,accent_to,sort_order")
+      .eq("active", true)
+      .eq("slug", data.slug)
+      .maybeSingle();
+    if (error) throwLogged("getConsoleBySlug", error, "Could not load console.");
+    return (row ?? null) as ConsoleRow | null;
+  });
