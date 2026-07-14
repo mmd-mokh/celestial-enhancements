@@ -71,6 +71,51 @@ bun run lint
 
 Environment variables are auto-managed by Lovable Cloud (`VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID`). Do not edit `.env` by hand.
 
+### Running a fully local backend (self-hosted Supabase in Docker)
+
+You can run the entire backend — Postgres, PostgREST (Data API), GoTrue (Auth),
+Realtime, and Studio — locally in Docker with the Supabase CLI. The app code
+doesn't change; only the URL/keys the client points at do.
+
+**One-time setup**
+
+1. Install Docker Desktop and the [Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started).
+2. Copy the local env template into place:
+   ```bash
+   cp .env.local.example .env
+   ```
+   (Or keep both and load `.env.local` via your tooling.) The values in the
+   template are the CLI's fixed local defaults — identical on every machine.
+
+**Every session**
+
+```bash
+supabase start          # boots Postgres + PostgREST + GoTrue + Realtime + Studio
+                        # and auto-applies every file in supabase/migrations/
+bun dev                 # http://localhost:8080
+```
+
+Useful URLs after `supabase start`:
+
+| Service        | URL                                                        |
+| -------------- | ---------------------------------------------------------- |
+| Data API       | http://127.0.0.1:54321                                     |
+| Studio (GUI)   | http://127.0.0.1:54323                                     |
+| Postgres       | `postgresql://postgres:postgres@127.0.0.1:54322/postgres`  |
+| Inbucket mail  | http://127.0.0.1:54324 (catches auth emails)               |
+
+Common commands:
+
+```bash
+supabase stop                 # shut everything down
+supabase db reset             # wipe DB and re-run all migrations + seed
+supabase migration new <name> # scaffold a new migration file
+supabase gen types typescript --local > src/integrations/supabase/types.ts
+```
+
+> Switching back to Lovable Cloud: restore the original `.env` values (they
+> live in your Lovable project settings) and run `supabase stop`.
+
 ---
 
 ## Project structure
