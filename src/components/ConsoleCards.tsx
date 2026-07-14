@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
 import { BsIcon } from "@/components/BsIcon";
+import { FadeInUp } from "@/components/sections/primitives";
+import { cn } from "@/lib/utils";
 
 export type ConsoleRow = {
   slug: string;
@@ -17,14 +18,12 @@ export function ConsoleList({ items }: { items: ConsoleRow[] }) {
   return (
     <>
       {items.map((c, i) => (
-        <motion.article
+        <FadeInUp
           key={c.slug}
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
-          whileHover={{ y: -6, transition: { duration: 0.2 } }}
-          className="console-card"
+          index={i}
+          className={cn(
+            "console-card transition-transform duration-200 hover:-translate-y-1.5",
+          )}
           role="listitem"
           data-console={c.slug}
           style={
@@ -47,7 +46,7 @@ export function ConsoleList({ items }: { items: ConsoleRow[] }) {
               </li>
             ))}
           </ul>
-        </motion.article>
+        </FadeInUp>
       ))}
     </>
   );

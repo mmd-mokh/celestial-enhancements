@@ -1,6 +1,6 @@
-import { motion, type MotionProps } from "framer-motion";
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useReveal } from "@/hooks/use-reveal";
 
 /**
  * Common outer <section> shell used by every landing section.
@@ -72,31 +72,34 @@ export function SectionHeading({
   );
 }
 
-/** Fade-in-up motion wrapper used by section grid cards. */
+/**
+ * Fade-in-up reveal wrapper used by section grid cards.
+ * CSS-transition + IntersectionObserver replacement for framer-motion.
+ */
 type FadeInUpProps = {
   index?: number;
   step?: number;
   className?: string;
   children: ReactNode;
-} & MotionProps;
+} & Omit<HTMLAttributes<HTMLDivElement>, "className" | "children">;
 
 export function FadeInUp({
   index = 0,
   step = 0.08,
   className,
   children,
-  ...motionProps
+  style,
+  ...rest
 }: FadeInUpProps) {
+  const { ref, revealed } = useReveal<HTMLDivElement>();
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.5, delay: index * step, ease: "easeOut" }}
-      className={className}
-      {...motionProps}
+    <div
+      ref={ref}
+      className={cn("reveal-up", revealed && "is-visible", className)}
+      style={{ transitionDelay: `${index * step}s`, ...style }}
+      {...rest}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }
