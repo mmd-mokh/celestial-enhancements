@@ -14,3 +14,29 @@ export function throwLogged(
   console.error(`[server-fn:${op}]`, rawError);
   throw new Error(publicMessage);
 }
+
+export function isLocalBackendUnavailableError(rawError: unknown) {
+  const code =
+    rawError && typeof rawError === "object" && "code" in rawError
+      ? String((rawError as { code?: unknown }).code)
+      : "";
+  const message =
+    rawError instanceof Error
+      ? rawError.message
+      : rawError && typeof rawError === "object" && "message" in rawError
+        ? String((rawError as { message?: unknown }).message)
+        : String(rawError ?? "");
+
+  return (
+    code === "PGRST202" ||
+    code === "PGRST205" ||
+    message.includes("schema cache") ||
+    message.includes("Could not find the table") ||
+    message.includes("Could not find the function") ||
+    message.includes("Missing public backend environment variables")
+  );
+}
+
+export function warnLocalFallback(op: string, rawError: unknown) {
+  console.warn(`[server-fn:${op}] Local backend data unavailable; using fallback data.`, rawError);
+}
