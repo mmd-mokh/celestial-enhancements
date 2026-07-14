@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import { BsIcon } from "@/components/BsIcon";
+import { FadeInUp } from "@/components/sections/primitives";
 
 type Pkg = {
   slug: string;
@@ -89,16 +89,12 @@ export function PricingList({ onReserve }: Props) {
       {PACKAGES.map((p, i) => {
         const featured = !!p.popular;
         return (
-          <motion.div
+          <FadeInUp
             key={p.slug}
             data-package={p.slug}
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.5, delay: i * 0.08, ease: "easeOut" }}
-            whileHover={{ y: -8, transition: { duration: 0.2 } }}
+            index={i}
             className={cn(
-              "pricing-card-enhanced flex flex-col place-items-center gap-4 rounded-xl p-4 md:p-6 lg:p-8 bg-white",
+              "pricing-card-enhanced flex flex-col place-items-center gap-4 rounded-xl p-4 md:p-6 lg:p-8 bg-white transition-transform duration-200 hover:-translate-y-2",
               featured
                 ? "pricing-card-featured shadow-2xl bg-gradient-to-br from-primary-50 to-white border-[3px] border-primary relative lg:scale-105"
                 : "shadow-lg",
@@ -145,7 +141,7 @@ export function PricingList({ onReserve }: Props) {
             >
               رزرو کن
             </button>
-          </motion.div>
+          </FadeInUp>
         );
       })}
     </>
