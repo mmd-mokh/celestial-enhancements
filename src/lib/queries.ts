@@ -1,11 +1,18 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getConsoles } from "@/lib/consoles.functions";
+import { getConsoles, getConsoleBySlug } from "@/lib/consoles.functions";
 import { listPublishedPosts, getPublishedPost } from "@/lib/posts.functions";
 
 export const consolesQueryOptions = () =>
   queryOptions({
     queryKey: ["consoles"],
     queryFn: () => getConsoles(),
+    staleTime: 5 * 60 * 1000,
+  });
+
+export const consoleBySlugQueryOptions = (slug: string) =>
+  queryOptions({
+    queryKey: ["consoles", "detail", slug],
+    queryFn: () => getConsoleBySlug({ data: { slug } }),
     staleTime: 5 * 60 * 1000,
   });
 
