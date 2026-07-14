@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { addDays, format } from "date-fns";
-import { getConsoles } from "@/lib/consoles.functions";
 import {
-  getConsolesRemaining,
+  getConsolesWithRemaining,
   getConsoleAvailability,
 } from "@/lib/availability.functions";
 import {
@@ -16,14 +15,12 @@ export function useConsoleOptions(enabled: boolean) {
   return useQuery({
     enabled,
     queryKey: ["booking", "console-options"],
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
     queryFn: async () => {
-      const [consoleRows, remainingRows] = await Promise.all([
-        getConsoles(),
-        getConsolesRemaining(),
-      ]);
-      const consoles: ConsoleOpt[] = consoleRows.length
-        ? consoleRows.map((row) => ({
+      const rows = await getConsolesWithRemaining();
+      const consoles: ConsoleOpt[] = rows.length
+        ? rows.map((row) => ({
             value: row.slug,
             label: row.name,
             tagline:
@@ -32,7 +29,7 @@ export function useConsoleOptions(enabled: boolean) {
           }))
         : FALLBACK_CONSOLES;
       const remainingBySlug: Record<string, ConsoleAvailability> = {};
-      for (const row of remainingRows) {
+      for (const row of rows) {
         remainingBySlug[row.slug] = {
           capacity: row.capacity,
           booked: row.booked,
@@ -48,7 +45,8 @@ export function useConsoleAvailability(consoleSlug: string, enabled: boolean) {
   return useQuery({
     enabled: enabled && !!consoleSlug,
     queryKey: ["booking", "availability", consoleSlug],
-    staleTime: 60 * 1000,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
     queryFn: async () => {
       const today = startOfToday();
       const rows = await getConsoleAvailability({
