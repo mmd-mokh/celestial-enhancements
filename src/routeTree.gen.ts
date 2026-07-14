@@ -16,7 +16,6 @@ import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ConsolesRouteImport } from './routes/consoles'
-import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RentSlugRouteImport } from './routes/rent.$slug'
@@ -63,11 +62,6 @@ const ConsolesRoute = ConsolesRouteImport.update({
   path: '/consoles',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -89,9 +83,9 @@ const ConsolesSlugRoute = ConsolesSlugRouteImport.update({
   getParentRoute: () => ConsolesRoute,
 } as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const Char91DotwellKnownChar93OauthProtectedResourceRoute =
   Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
@@ -125,7 +119,6 @@ const ApiPublicBookingIcalIdRoute = ApiPublicBookingIcalIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/consoles': typeof ConsolesRouteWithChildren
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -145,7 +138,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/consoles': typeof ConsolesRouteWithChildren
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -166,7 +158,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/consoles': typeof ConsolesRouteWithChildren
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -188,7 +179,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
-    | '/blog'
     | '/consoles'
     | '/contact'
     | '/faq'
@@ -208,7 +198,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/blog'
     | '/consoles'
     | '/contact'
     | '/faq'
@@ -228,7 +217,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
-    | '/blog'
     | '/consoles'
     | '/contact'
     | '/faq'
@@ -249,7 +237,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
-  BlogRoute: typeof BlogRouteWithChildren
   ConsolesRoute: typeof ConsolesRouteWithChildren
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
@@ -259,6 +246,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   RentSlugRoute: typeof RentSlugRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -316,13 +304,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsolesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -353,10 +334,10 @@ declare module '@tanstack/react-router' {
     }
     '/blog/$slug': {
       id: '/blog/$slug'
-      path: '/$slug'
+      path: '/blog/$slug'
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+      parentRoute: typeof rootRouteImport
     }
     '/.well-known/oauth-protected-resource': {
       id: '/.well-known/oauth-protected-resource'
@@ -396,16 +377,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
-
 interface ConsolesRouteChildren {
   ConsolesSlugRoute: typeof ConsolesSlugRoute
 }
@@ -421,7 +392,6 @@ const ConsolesRouteWithChildren = ConsolesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
-  BlogRoute: BlogRouteWithChildren,
   ConsolesRoute: ConsolesRouteWithChildren,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
@@ -432,6 +402,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  BlogSlugRoute: BlogSlugRoute,
   RentSlugRoute: RentSlugRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
