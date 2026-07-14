@@ -36,6 +36,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           entries.push({ path: `/rent/${slug}`, changefreq: "monthly", priority: "0.7" });
         }
 
+        let postsFailed = false;
         try {
           const url = process.env.SUPABASE_URL!;
           const key = process.env.SUPABASE_PUBLISHABLE_KEY!;
@@ -70,6 +71,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           // best-effort: omit blog post entries if the query fails, but log
           // so Server Logs still show the failure.
           console.error("[sitemap] failed to load posts", err);
+          postsFailed = true;
         }
 
         const urls = entries
@@ -97,7 +99,11 @@ export const Route = createFileRoute("/sitemap.xml")({
         return new Response(xml, {
           headers: {
             "Content-Type": "application/xml",
-            "Cache-Control": "public, max-age=3600",
+            // If posts couldn't be loaded, don't let a partial sitemap get
+            // cached for an hour — force a re-fetch on the next request.
+            "Cache-Control": postsFailed
+              ? "no-store"
+              : "public, max-age=3600",
           },
         });
       },
