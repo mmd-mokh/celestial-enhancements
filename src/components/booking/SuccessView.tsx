@@ -1,4 +1,4 @@
-import { CalendarPlus, CheckCircle2 } from "lucide-react";
+import { CalendarPlus, CheckCircle2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
@@ -29,12 +29,20 @@ export function SuccessView({
       </div>
 
       {icalToken && (
-        <Button asChild variant="outline" className="w-full">
-          <a href={`/api/public/booking-ical/${reservationId}?t=${icalToken}`} download>
-            <CalendarPlus className="h-4 w-4" aria-hidden="true" />
-            افزودن به تقویم
-          </a>
-        </Button>
+        <>
+          <Button asChild variant="outline" className="w-full">
+            <a href={`/api/public/booking-ical/${reservationId}?t=${icalToken}`} download>
+              <CalendarPlus className="h-4 w-4" aria-hidden="true" />
+              افزودن به تقویم
+            </a>
+          </Button>
+          <Button asChild variant="ghost" className="w-full">
+            <a href={`/booking/${reservationId}?t=${icalToken}`}>
+              <ExternalLink className="h-4 w-4" aria-hidden="true" />
+              مشاهده وضعیت رزرو
+            </a>
+          </Button>
+        </>
       )}
       <Button className="w-full" onClick={onClose}>
         بستن

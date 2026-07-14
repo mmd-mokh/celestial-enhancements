@@ -22,9 +22,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as RentSlugRouteImport } from './routes/rent.$slug'
 import { Route as ConsolesSlugRouteImport } from './routes/consoles.$slug'
+import { Route as BookingIdRouteImport } from './routes/booking.$id'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as ApiPublicCspReportRouteImport } from './routes/api/public/csp-report'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicBookingIcalIdRouteImport } from './routes/api/public/booking-ical.$id'
@@ -94,6 +96,11 @@ const ConsolesSlugRoute = ConsolesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ConsolesRoute,
 } as any)
+const BookingIdRoute = BookingIdRouteImport.update({
+  id: '/booking/$id',
+  path: '/booking/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -111,6 +118,11 @@ const Char91DotmcpChar93ListToolsRoute =
     path: '/.mcp/list-tools',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicCspReportRoute = ApiPublicCspReportRouteImport.update({
+  id: '/api/public/csp-report',
+  path: '/api/public/csp-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
@@ -142,11 +154,13 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/api/public/csp-report': typeof ApiPublicCspReportRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
 }
 export interface FileRoutesByTo {
@@ -162,11 +176,13 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/api/public/csp-report': typeof ApiPublicCspReportRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
 }
 export interface FileRoutesById {
@@ -184,11 +200,13 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/api/public/csp-report': typeof ApiPublicCspReportRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
 }
 export interface FileRouteTypes {
@@ -207,11 +225,13 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
+    | '/booking/$id'
     | '/consoles/$slug'
     | '/rent/$slug'
     | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/api/public/csp-report'
     | '/api/public/booking-ical/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -227,11 +247,13 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
+    | '/booking/$id'
     | '/consoles/$slug'
     | '/rent/$slug'
     | '/blog'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/api/public/csp-report'
     | '/api/public/booking-ical/$id'
   id:
     | '__root__'
@@ -248,11 +270,13 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
+    | '/booking/$id'
     | '/consoles/$slug'
     | '/rent/$slug'
     | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/api/public/csp-report'
     | '/api/public/booking-ical/$id'
   fileRoutesById: FileRoutesById
 }
@@ -269,9 +293,11 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  BookingIdRoute: typeof BookingIdRoute
   RentSlugRoute: typeof RentSlugRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
+  ApiPublicCspReportRoute: typeof ApiPublicCspReportRoute
   ApiPublicBookingIcalIdRoute: typeof ApiPublicBookingIcalIdRoute
 }
 
@@ -368,6 +394,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsolesSlugRouteImport
       parentRoute: typeof ConsolesRoute
     }
+    '/booking/$id': {
+      id: '/booking/$id'
+      path: '/booking/$id'
+      fullPath: '/booking/$id'
+      preLoaderRoute: typeof BookingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/$slug'
@@ -387,6 +420,13 @@ declare module '@tanstack/react-router' {
       path: '/.mcp/list-tools'
       fullPath: '/.mcp/list-tools'
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/csp-report': {
+      id: '/api/public/csp-report'
+      path: '/api/public/csp-report'
+      fullPath: '/api/public/csp-report'
+      preLoaderRoute: typeof ApiPublicCspReportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.mcp/invoke-tool/$tool': {
@@ -451,9 +491,11 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  BookingIdRoute: BookingIdRoute,
   RentSlugRoute: RentSlugRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
+  ApiPublicCspReportRoute: ApiPublicCspReportRoute,
   ApiPublicBookingIcalIdRoute: ApiPublicBookingIcalIdRoute,
 }
 export const routeTree = rootRouteImport

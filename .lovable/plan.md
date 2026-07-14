@@ -1,76 +1,51 @@
-# Project Quality Pass
+# Enhancement plan — round 2
 
-A single execution plan that batches all outstanding fixes across correctness, security, performance, accessibility, SEO, data model, and code quality. Grouped into phases so we can ship it in order and stop after any phase if you want.
+Focused on the high-impact items still open. Grouped so each phase is independently reviewable.
 
-## Phase 1 — Correctness & hydration
+## Phase 1 — Robust error signaling (backend + client)
+- Migration: rewrite `create_booking`, `cancel_booking`, `reschedule_booking`, and the two rate-limit triggers to `RAISE EXCEPTION ... USING ERRCODE = '<sqlstate>', MESSAGE = '<code>'`. Use distinct SQLSTATEs (e.g. `P0001` with stable `MESSAGE` tokens) so client parsing is locale-independent.
+- Update `src/lib/bookings.functions.ts` to read `error.code` / `error.message` token instead of substring-matching a concatenated string.
+- Add unit test covering the mapping.
 
-- Sitemap: guard `new Date(lastmod).toISOString()` against invalid strings.
-- `calendar.tsx`: replace locale-dependent `data-day` with `toISOString().slice(0,10)`.
-- `BookingSchema`: enforce `YYYY-MM-DD` on `startDate` / `endDate`.
-- `bookings.functions.ts`: switch from message substring matching to explicit Postgres `SQLSTATE` codes raised by `create_booking`.
-- Normalize phone (trim + strip zero-width / RTL marks) on both write and rate-limit lookup.
-- Move blog index into `src/routes/blog.index.tsx`; make `blog.tsx` a pure `<Outlet/>` layout (removes the `useRouterState` hack).
-- Verify `consoles.$slug.tsx` and `rent.$slug.tsx` loaders throw `notFound()` for unknown slugs.
+## Phase 2 — Booking status page
+- New public route `src/routes/booking.$id.tsx` — accepts the signed iCal token as `?t=` query so an anonymous booker can view their own booking without auth.
+- Server fn `getBookingByToken` in `src/lib/bookings.functions.ts`: verifies HMAC via `booking-token.server`, returns booking summary (status, dates, console, package).
+- Success view (`SuccessView.tsx`) links to this page and the iCal file.
+- Owner-authenticated users see the same page via `/booking/$id` without token (RLS enforces).
 
-## Phase 2 — Security
+## Phase 3 — CAPTCHA on anonymous forms
+- Integrate Cloudflare Turnstile (free, no PII):
+  - Request `TURNSTILE_SITE_KEY` (publishable, in code) + `TURNSTILE_SECRET_KEY` (via add_secret).
+  - Wrap `BookingDialog` submit + `NewsletterForm` submit with a Turnstile widget.
+  - New server fn `verifyTurnstile` called at top of `createBooking` and newsletter insert paths for anonymous users only (skip when `auth.uid()` is present).
+- Fail closed: no token → reject with `captcha_required`.
 
-- Stop using `supabaseAdmin` for public blog reads: switch `listPublishedPosts` / `getPublishedPost` to the anon publishable client + `TO anon` SELECT policy scoped to `published = true`.
-- Normalize booking error surface: opaque codes only, never raw `error.message`.
-- iCal token: confirm HMAC uses `timingSafeEqual` and per-booking material.
-- Add security headers on SSR responses: `Content-Security-Policy`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`, `X-Content-Type-Options: nosniff`.
-- Enable Supabase CAPTCHA for anonymous booking + newsletter forms.
+## Phase 4 — pgTAP coverage
+- Extend `tests/db/` (create if missing) with suites for:
+  - `create_booking`: capacity enforcement, rate limit (>=5/hour), past date rejection, invalid dates.
+  - `cancel_booking`: owner-only, no-op after past start.
+  - `has_role`: already scaffolded — verify runner still passes.
+- Register new runners in `scripts/run-pgtap.mjs`.
 
-## Phase 3 — Data model / RLS audit
-
-- `consoles`: RLS enabled + public read policy + explicit `GRANT SELECT TO anon`.
-- `bookings`: no anon SELECT; owner-only via `auth.uid()`; service_role full.
-- `posts`: anon SELECT only where `published = true`.
-- `user_roles`: no anon access; `has_role()` is the only entry point.
-- Add `updated_at` triggers where the column exists but no trigger is wired.
-
-## Phase 4 — Performance
-
-- Split `useConsoleAvailability` cache per `(slug, monthKey)`; prefetch next month on hover.
-- Dynamic-import the calendar step of `BookingDialog` so `react-day-picker/persian` + date-fns locales don't ship in the initial bundle.
-- Preload the hero LCP image via `<link rel="preload" as="image">` and serve AVIF/WebP variants.
-- Preload Vazirmatn with `<link rel="preload" as="font" crossorigin>` in `__root.tsx`.
-- Confirm blog list query never selects `content`.
-
-## Phase 5 — Accessibility
-
-- `OptionButton`: add `sr-only` "انتخاب شد" when selected; explicit `focus-visible` styles even when disabled.
-- Calendar wrapper: `aria-label`; disabled days announce "رزرو کامل".
-- `BookingDialog`: verify focus trap and focus return to the trigger button in `HeroSection`.
-
-## Phase 6 — SEO
-
-- `blog.tsx` head: add `og:image` from the newest post's cover.
-- `blog.$slug.tsx`: add `article:published_time`, `article:tag`, and `Article` JSON-LD.
-- Sitemap: add `hreflang="fa-IR"`, `changefreq`, `priority` for the homepage.
-- Audit `consoles.tsx`, `pricing.tsx`, `faq.tsx`, `how-it-works.tsx`, `contact.tsx` for missing `<link rel="canonical">`.
-- `robots.txt`: ensure absolute sitemap URL.
-
-## Phase 7 — DX & tests
-
-- Centralize `queryOptions` factories in `src/lib/queries.ts`; remove ad-hoc keys.
-- Split `useConsoleOptions` into two independent queries so consoles list and remaining counts refresh separately.
-- Add unit test for `formatDateFa` (UTC-stable regression for the blog hydration fix).
-- Add pgtap tests for `create_booking` rate-limit branches.
-- Add tests for MCP tool handlers.
-- Refresh `AGENTS.md` / `README.md` for TanStack Start + Lovable Cloud terminology (no Supabase dashboard references).
-
-## Explicitly out of scope
-
-- New features (booking status page, PWA service worker, skeletons) — happy to plan separately later.
-- Any visual redesign; presentation only changes where a11y/SEO requires it.
+## Phase 5 — CSP (report-only)
+- Extend `securityHeadersMiddleware` in `src/start.ts` with `Content-Security-Policy-Report-Only` covering: `default-src 'self'`, allow Supabase (`*.supabase.co`), Google Fonts, Turnstile (`challenges.cloudflare.com`), inline styles (`'unsafe-inline'` for Tailwind runtime — evaluate `'unsafe-hashes'` later), `img-src` with `data:` and Supabase storage.
+- Add `report-uri` pointing to a new `/api/public/csp-report` route that logs violations (rate-limited).
+- Keep report-only until we've observed one full deploy cycle without violations, then flip to enforcing in a follow-up.
 
 ## Technical notes
+- All migrations wrap in a transaction; keep existing RLS/GRANTs intact.
+- Turnstile widget is client-only; render inside `<ClientOnly>` in dialog to avoid SSR mismatch.
+- Booking token route is public but data is scoped by HMAC — no new RLS policy needed (server-fn uses `supabaseAdmin` after verifying token).
+- CSP violation endpoint validates `application/csp-report` MIME and truncates payloads before logging.
 
-- `SQLSTATE` codes: raise `P0001` with `USING ERRCODE = '23514'` (or custom) per branch so the client switches on `error.code`.
-- CSP: start report-only, then enforce; must allow Supabase project URL, Lovable AI Gateway, GA4, and inline theme bootstrap script (via hash).
-- Anon client for posts: use `createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)` inside the server-fn handler with no session persistence, mirroring the pattern in `server-side-modern`.
-- Blog route split: `src/routes/blog.tsx` becomes `component: () => <Outlet />` with the layout's head; `blog.index.tsx` owns the list + its own head.
+## Out of scope (deferred)
+- Admin dashboard UI.
+- Transactional email (Resend) — needs domain + template design first.
+- Enforcing CSP (only report-only in this round).
 
-## Execution order
-
-Phases run 1 → 7. Each phase is independent enough to review in isolation. I'll pause after Phase 3 (data model requires a migration approval) and after Phase 6 for a sanity check, then finish Phase 7.
+## Order of execution
+1. Phase 1 (migration + client) — smallest surface, unblocks better error UX everywhere.
+2. Phase 4 (pgTAP) — validates Phase 1 changes.
+3. Phase 2 (status page).
+4. Phase 3 (CAPTCHA) — needs Turnstile secret from user.
+5. Phase 5 (CSP report-only) — last, after all new origins are known.
