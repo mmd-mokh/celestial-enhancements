@@ -27,7 +27,7 @@ export const Route = createFileRoute("/")({
         rel: "preload",
         as: "image",
         href: "/assets/images/home/dashboard.png",
-        fetchpriority: "high",
+        fetchPriority: "high",
       },
     ],
   }),
