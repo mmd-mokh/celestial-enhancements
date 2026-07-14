@@ -1,34 +1,18 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { addDays, differenceInCalendarDays, format } from "date-fns";
-import { faIR as dayPickerFaIR, getDateLib as getPersianDateLib } from "react-day-picker/persian";
+import { addDays, format } from "date-fns";
 import {
-  CalendarCheck2,
   CalendarDays,
-  CalendarPlus,
-  Check,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Cpu,
-  Gamepad,
   Gamepad2,
   Loader2,
-  Joystick,
-  MonitorPlay,
   PackageCheck,
-  Rocket,
-  Sparkles,
-  Tv,
-  UserRound,
-  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -37,19 +21,28 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { toFaDigits } from "@/lib/i18n";
-import { cn } from "@/lib/utils";
-import { PACKAGES } from "@/components/PricingCards";
-import { getConsoles } from "@/lib/consoles.functions";
-import { getConsolesRemaining, getConsoleAvailability } from "@/lib/availability.functions";
 import { createBooking } from "@/lib/bookings.functions";
 import { trackEvent } from "@/lib/analytics";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 
-const PERSIAN_DATE_LIB = getPersianDateLib({ locale: dayPickerFaIR });
+import {
+  FALLBACK_CONSOLES,
+  FALLBACK_PACKAGES,
+  STEPS,
+} from "./booking/constants";
+import {
+  bookingFormSchema,
+  toAsciiDigits,
+  type BookingFormValues,
+} from "./booking/schema";
+import { useConsoleOptions, useConsoleAvailability } from "./booking/hooks";
+import { StepIndicator } from "./booking/StepIndicator";
+import { StepConsole } from "./booking/StepConsole";
+import { StepPackage } from "./booking/StepPackage";
+import { StepDate, formatDisplayDate } from "./booking/StepDate";
+import { StepContact } from "./booking/StepContact";
+import { SuccessView } from "./booking/SuccessView";
 
 type Props = {
   open: boolean;
@@ -57,92 +50,6 @@ type Props = {
   defaultPackage?: string;
   defaultConsole?: string;
 };
-
-type ConsoleOpt = { value: string; label: string; tagline: string };
-type ConsoleAvailability = { capacity: number; booked: number; remaining: number };
-type PackageOpt = { value: string; label: string; desc: string; hours: number };
-
-const FALLBACK_CONSOLES: ConsoleOpt[] = [
-  { value: "ps5", label: "PlayStation 5", tagline: "نسل جدید سونی" },
-  { value: "ps4", label: "PlayStation 4", tagline: "کلاسیک محبوب سونی" },
-  { value: "xbox", label: "Xbox Series X", tagline: "قدرت مایکروسافت" },
-  { value: "xbox-series-s", label: "Xbox Series S", tagline: "نسل جدید، فشرده" },
-  { value: "xbox-one", label: "Xbox One", tagline: "انتخاب مقرون‌به‌صرفه" },
-  { value: "switch", label: "Nintendo Switch", tagline: "بازی همه‌جا" },
-];
-
-const PACKAGE_HOURS: Record<string, number> = {
-  daily: 24,
-  weekend: 72,
-  weekly: 168,
-  monthly: 720,
-};
-
-// Sync with the landing page PricingCards.PACKAGES so the dialog always
-// shows the same list, names, and durations as the main website.
-const FALLBACK_PACKAGES: PackageOpt[] = PACKAGES.map((p) => ({
-  value: p.slug,
-  label: p.name,
-  desc: p.description,
-  hours: PACKAGE_HOURS[p.slug] ?? 24,
-}));
-
-const CONSOLE_ICON: Record<string, typeof Gamepad2> = {
-  ps5: Rocket,
-  ps4: Joystick,
-  xbox: Gamepad2,
-  "xbox-series-s": Cpu,
-  "xbox-one": Gamepad,
-  switch: Tv,
-};
-
-const PACKAGE_BADGE: Record<string, string> = {
-  monthly: "بهترین قیمت",
-  weekend: "پرطرفدار",
-};
-
-const steps = [
-  { label: "کنسول", Icon: Gamepad2 },
-  { label: "پکیج", Icon: PackageCheck },
-  { label: "تاریخ", Icon: CalendarDays },
-  { label: "تماس", Icon: UserRound },
-] as const;
-
-const schema = z.object({
-  consoleType: z.string().min(1, "کنسول را انتخاب کنید"),
-  packageType: z.string().min(1, "پکیج را انتخاب کنید"),
-  startDate: z.date({ message: "تاریخ شروع را انتخاب کنید" }),
-  name: z
-    .string()
-    .trim()
-    .min(2, "نام باید حداقل ۲ حرف باشد")
-    .max(120, "نام بیش از حد طولانی است"),
-  phone: z
-    .string()
-    .trim()
-    .min(6, "شماره تماس معتبر نیست")
-    .max(30, "شماره تماس بیش از حد طولانی است")
-    .regex(/^[0-9+\-\s()]+$/, "فقط عدد و علامت‌های + - مجاز است"),
-  notes: z.string().max(1000, "توضیحات بیش از حد طولانی است").optional(),
-});
-
-type FormValues = z.infer<typeof schema>;
-
-function toAsciiDigits(value: string) {
-  return value
-    .replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)))
-    .replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)));
-}
-
-function startOfToday() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return today;
-}
-
-function formatDisplayDate(date: Date) {
-  return PERSIAN_DATE_LIB.format(date, "yyyy/MM/dd");
-}
 
 export function BookingDialog({
   open,
@@ -153,14 +60,14 @@ export function BookingDialog({
   const [step, setStep] = useState(0);
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [icalToken, setIcalToken] = useState<string | null>(null);
-  const [consoles, setConsoles] = useState<ConsoleOpt[]>(FALLBACK_CONSOLES);
-  const [packages] = useState<PackageOpt[]>(FALLBACK_PACKAGES);
-  const [remainingBySlug, setRemainingBySlug] = useState<Record<string, ConsoleAvailability>>({});
-  const [fullyBooked, setFullyBooked] = useState<Set<string>>(new Set());
-  const [loadingAvailability, setLoadingAvailability] = useState(false);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  const optionsQuery = useConsoleOptions(open);
+  const consoles = optionsQuery.data?.consoles ?? FALLBACK_CONSOLES;
+  const remainingBySlug = optionsQuery.data?.remainingBySlug ?? {};
+  const packages = FALLBACK_PACKAGES;
+
+  const form = useForm<BookingFormValues>({
+    resolver: zodResolver(bookingFormSchema),
     mode: "onTouched",
     defaultValues: {
       consoleType: defaultConsole ?? "ps5",
@@ -175,53 +82,9 @@ export function BookingDialog({
   const values = form.watch();
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function loadOptions() {
-      try {
-        const [consoleRows, remainingRows] = await Promise.all([
-          getConsoles(),
-          getConsolesRemaining(),
-        ]);
-        if (cancelled) return;
-        if (consoleRows.length) {
-          setConsoles(
-            consoleRows.map((row) => ({
-              value: row.slug,
-              label: row.name,
-              tagline:
-                FALLBACK_CONSOLES.find((item) => item.value === row.slug)?.tagline ??
-                "کنسول اختصاصی",
-            })),
-          );
-        }
-        if (remainingRows.length) {
-          const map: Record<string, ConsoleAvailability> = {};
-          for (const row of remainingRows) {
-            map[row.slug] = {
-              capacity: row.capacity,
-              booked: row.booked,
-              remaining: row.remaining,
-            };
-          }
-          setRemainingBySlug(map);
-        }
-      } catch {
-        /* fall back to hardcoded consoles */
-      }
-    }
-
-    loadOptions();
-    return () => {
-      cancelled = true;
-    };
-  }, [open]);
-
-  useEffect(() => {
     if (!open) return;
     setStep(0);
     setReservationId(null);
-    setFullyBooked(new Set());
     form.reset({
       consoleType: defaultConsole ?? "ps5",
       packageType: defaultPackage ?? "weekend",
@@ -251,56 +114,21 @@ export function BookingDialog({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [values.consoleType, values.packageType]);
 
+  const availabilityQuery = useConsoleAvailability(
+    values.consoleType,
+    open && step === 2,
+  );
+  const fullyBooked = availabilityQuery.data ?? new Set<string>();
+  const loadingAvailability = availabilityQuery.isFetching;
+
   useEffect(() => {
-    if (!open || step !== 2 || !values.consoleType) return;
-    let cancelled = false;
-    const today = startOfToday();
-
-    setFullyBooked(new Set());
-    setLoadingAvailability(true);
-
-    getConsoleAvailability({
-      data: {
-        consoleSlug: values.consoleType,
-        from: format(today, "yyyy-MM-dd"),
-        to: format(addDays(today, 90), "yyyy-MM-dd"),
-      },
-    })
-      .then((rows) => {
-        if (cancelled) return;
-        setLoadingAvailability(false);
-        const unavailable = new Set<string>();
-        for (const row of rows) {
-          if (row.capacity > 0 && row.booked >= row.capacity) unavailable.add(row.day);
-        }
-        setFullyBooked(unavailable);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setLoadingAvailability(false);
-        toast.error("موجودی تقویم دریافت نشد؛ لطفاً دوباره تلاش کنید.");
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [open, step, values.consoleType]);
-
-  const isDayDisabled = (date: Date) => {
-    const today = startOfToday();
-    const latestStart = addDays(today, 91 - packageDays);
-
-    if (date < today || date > latestStart) return true;
-
-    for (let index = 0; index < packageDays; index++) {
-      if (fullyBooked.has(format(addDays(date, index), "yyyy-MM-dd"))) return true;
+    if (availabilityQuery.isError) {
+      toast.error("موجودی تقویم دریافت نشد؛ لطفاً دوباره تلاش کنید.");
     }
-
-    return false;
-  };
+  }, [availabilityQuery.isError]);
 
   const goNext = async () => {
-    const fields: Array<Array<keyof FormValues>> = [
+    const fields: Array<Array<keyof BookingFormValues>> = [
       ["consoleType"],
       ["packageType"],
       ["startDate"],
@@ -310,7 +138,7 @@ export function BookingDialog({
     const valid = await form.trigger(fields[step]);
     if (!valid) return;
 
-    if (step < steps.length - 1) {
+    if (step < STEPS.length - 1) {
       setStep((current) => current + 1);
       return;
     }
@@ -333,7 +161,7 @@ export function BookingDialog({
     await form.handleSubmit(onSubmit)();
   };
 
-  const onSubmit = async (data: FormValues) => {
+  const onSubmit = async (data: BookingFormValues) => {
     const start = data.startDate;
     const end = addDays(start, packageDays - 1);
 
@@ -415,39 +243,7 @@ export function BookingDialog({
         className="max-h-[92dvh] overflow-y-auto border-border bg-popover p-0 text-popover-foreground shadow-2xl sm:max-w-2xl"
       >
         {reservationId !== null ? (
-          <div className="space-y-5 px-5 py-8 text-center sm:px-8">
-            <CheckCircle2 className="mx-auto h-14 w-14 text-primary" aria-hidden="true" />
-            <div className="space-y-2">
-              <DialogTitle className="text-center text-2xl">درخواست شما ثبت شد</DialogTitle>
-              <DialogDescription className="text-center">
-                تیم گیمیو در کمتر از ۳۰ دقیقه برای هماهنگی نهایی تماس می‌گیرد.
-              </DialogDescription>
-            </div>
-
-            {reservationId && (
-              <div className="rounded-md border border-border bg-muted p-3 text-sm">
-                <div className="mb-1 text-xs text-muted-foreground">کد پیگیری</div>
-                <div dir="ltr" className="break-all font-mono text-xs text-foreground">
-                  {reservationId}
-                </div>
-              </div>
-            )}
-
-            {reservationId && icalToken && (
-              <Button asChild variant="outline" className="w-full">
-                <a
-                  href={`/api/public/booking-ical/${reservationId}?t=${icalToken}`}
-                  download
-                >
-                  <CalendarPlus className="h-4 w-4" aria-hidden="true" />
-                  افزودن به تقویم
-                </a>
-              </Button>
-            )}
-            <Button className="w-full" onClick={close}>
-              بستن
-            </Button>
-          </div>
+          <SuccessView reservationId={reservationId} icalToken={icalToken} onClose={close} />
         ) : (
           <>
             <div className="border-b border-border bg-gradient-to-b from-card to-card/60 px-5 pb-5 pt-6 text-card-foreground sm:px-7">
@@ -455,52 +251,14 @@ export function BookingDialog({
                 <div className="flex items-center justify-between gap-3">
                   <DialogTitle className="text-right text-xl sm:text-2xl">رزرو کنسول</DialogTitle>
                   <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-                    گام {toFaDigits(step + 1)} از {toFaDigits(steps.length)}
+                    گام {toFaDigits(step + 1)} از {toFaDigits(STEPS.length)}
                   </span>
                 </div>
                 <DialogDescription className="text-right text-sm">
-                  {steps[step].label} را مشخص کنید؛ ثبت نهایی در مرحله آخر انجام می‌شود.
+                  {STEPS[step].label} را مشخص کنید؛ ثبت نهایی در مرحله آخر انجام می‌شود.
                 </DialogDescription>
               </DialogHeader>
-
-              <ol className="relative mt-5 flex items-center justify-between" aria-label="مراحل رزرو">
-                <div className="absolute inset-x-4 top-4 z-0 h-0.5 rounded-full bg-border" aria-hidden="true" />
-                <div
-                  className="absolute right-4 top-4 z-0 h-0.5 rounded-full bg-primary transition-all duration-500"
-                  style={{ width: `calc((100% - 2rem) * ${step / (steps.length - 1)})` }}
-                  aria-hidden="true"
-                />
-                {steps.map(({ label, Icon }, index) => {
-                  const active = index === step;
-                  const done = index < step;
-                  return (
-                    <li key={label} className="relative z-10 flex flex-col items-center gap-1.5">
-                      <span
-                        className={cn(
-                          "grid h-8 w-8 place-items-center rounded-full border-2 text-xs font-semibold transition-all",
-                          done && "border-primary bg-primary text-primary-foreground",
-                          active && "border-primary bg-primary text-primary-foreground shadow-lg shadow-primary/40 scale-110",
-                          !active && !done && "border-border bg-background text-muted-foreground",
-                        )}
-                      >
-                        {done ? (
-                          <Check className="h-4 w-4" aria-hidden="true" />
-                        ) : (
-                          <Icon className="h-4 w-4" aria-hidden="true" />
-                        )}
-                      </span>
-                      <span
-                        className={cn(
-                          "text-[11px] font-medium transition-colors",
-                          active || done ? "text-foreground" : "text-muted-foreground",
-                        )}
-                      >
-                        {label}
-                      </span>
-                    </li>
-                  );
-                })}
-              </ol>
+              <StepIndicator step={step} />
             </div>
 
             <form
@@ -511,218 +269,47 @@ export function BookingDialog({
               className="space-y-5 px-5 py-5 sm:px-7"
             >
               {step === 0 && (
-                <div className="grid gap-3 sm:grid-cols-3">
-                  {consoles.map((consoleItem) => {
-                    const Icon = CONSOLE_ICON[consoleItem.value] ?? Gamepad2;
-                    const selected = values.consoleType === consoleItem.value;
-                    const avail = remainingBySlug[consoleItem.value];
-                    const soldOut = avail ? avail.remaining <= 0 : false;
-                    return (
-                      <OptionButton
-                        key={consoleItem.value}
-                        selected={selected}
-                        disabled={soldOut}
-                        onClick={() =>
-                          form.setValue("consoleType", consoleItem.value, { shouldValidate: true })
-                        }
-                      >
-                        <span
-                          className={cn(
-                            "grid h-12 w-12 place-items-center rounded-full transition-colors",
-                            selected
-                              ? "bg-primary-foreground text-primary ring-2 ring-primary-foreground/60"
-                              : "bg-primary/10 text-primary",
-                          )}
-                        >
-                          <Icon className="h-6 w-6" aria-hidden="true" />
-                        </span>
-                        <span className="font-semibold">{consoleItem.label}</span>
-                        <span className="text-xs text-muted-foreground">{consoleItem.tagline}</span>
-                        {avail && (
-                          <span
-                            className={cn(
-                              "mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium",
-                              soldOut
-                                ? "bg-destructive/15 text-destructive"
-                                : selected
-                                  ? "bg-primary-foreground text-primary"
-                                  : "bg-primary/10 text-primary",
-                            )}
-                          >
-                            {soldOut ? "ناموجود" : "موجود"}
-                          </span>
-                        )}
-                      </OptionButton>
-                    );
-                  })}
-                </div>
+                <StepConsole
+                  consoles={consoles}
+                  value={values.consoleType}
+                  remainingBySlug={remainingBySlug}
+                  onSelect={(slug) =>
+                    form.setValue("consoleType", slug, { shouldValidate: true })
+                  }
+                />
               )}
 
               {step === 1 && (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {packages.map((packageItem) => {
-                    const badge = PACKAGE_BADGE[packageItem.value];
-                    const days = Math.max(1, Math.ceil(packageItem.hours / 24));
-                    return (
-                      <OptionButton
-                        key={packageItem.value}
-                        selected={values.packageType === packageItem.value}
-                        onClick={() =>
-                          form.setValue("packageType", packageItem.value, { shouldValidate: true })
-                        }
-                      >
-                        {badge && (
-                          <span className={cn(
-                            "absolute top-2 left-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium",
-                            values.packageType === packageItem.value
-                              ? "bg-primary-foreground text-primary"
-                              : "bg-primary/15 text-primary",
-                          )}>
-                            <Sparkles className="h-3 w-3" aria-hidden="true" />
-                            {badge}
-                          </span>
-                        )}
-                        <span className="text-base font-semibold">{packageItem.label}</span>
-                        <span className="text-sm text-muted-foreground">{packageItem.desc}</span>
-                        <span className="text-[11px] text-muted-foreground/80">
-                          {toFaDigits(days)} روز
-                        </span>
-                      </OptionButton>
-                    );
-                  })}
-                </div>
+                <StepPackage
+                  packages={packages}
+                  value={values.packageType}
+                  onSelect={(slug) =>
+                    form.setValue("packageType", slug, { shouldValidate: true })
+                  }
+                />
               )}
 
               {step === 2 && (
-                <div className="space-y-4">
-                  <div className="flex flex-wrap items-center justify-center gap-2 rounded-md border border-border bg-muted px-3 py-2 text-sm text-muted-foreground">
-                    <CalendarCheck2 className="h-4 w-4 text-primary" aria-hidden="true" />
-                    <span>مدت رزرو: {toFaDigits(packageDays)} روز</span>
-                    {loadingAvailability && (
-                      <span className="inline-flex items-center gap-1">
-                        <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-                        بررسی موجودی
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="flex justify-center overflow-x-auto pb-1">
-                    <Calendar
-                      mode="single"
-                      selected={selectedDate}
-                      onSelect={(date) => {
-                        if (date) form.setValue("startDate", date, { shouldValidate: true });
-                      }}
-                      disabled={isDayDisabled}
-                      startMonth={startOfToday()}
-                      endMonth={addDays(startOfToday(), 90)}
-                      locale={dayPickerFaIR}
-                      dateLib={PERSIAN_DATE_LIB}
-                      numerals="arabext"
-                      formatters={{
-                        formatCaption: (month) => PERSIAN_DATE_LIB.format(month, "LLLL yyyy"),
-                        formatDay: (day) => PERSIAN_DATE_LIB.format(day, "d"),
-                        formatWeekdayName: (day) => PERSIAN_DATE_LIB.format(day, "EEEEEE"),
-                      }}
-                      modifiers={
-                        selectedDate && endDate
-                          ? {
-                              pkgStart: selectedDate,
-                              pkgEnd: endDate,
-                              pkgMiddle: { after: selectedDate, before: endDate },
-                            }
-                          : undefined
-                      }
-                      modifiersClassNames={{
-                        pkgStart: "bg-primary text-primary-foreground rounded-md",
-                        pkgEnd: "bg-primary text-primary-foreground rounded-md",
-                        pkgMiddle: "bg-primary/30 text-foreground rounded-md",
-                      }}
-                      className="rounded-md border border-border bg-card text-card-foreground"
-                    />
-                  </div>
-
-                  {selectedDate && endDate && (
-                    <div className="rounded-md border border-border bg-card p-3 text-center text-sm text-card-foreground">
-                      از <span className="font-semibold">{formatDisplayDate(selectedDate)}</span>
-                      {" تا "}
-                      <span className="font-semibold">{formatDisplayDate(endDate)}</span>
-                      {" — "}
-                      {toFaDigits(differenceInCalendarDays(endDate, selectedDate) + 1)} روز
-                    </div>
-                  )}
-
-                  {form.formState.errors.startDate && (
-                    <p className="text-center text-sm text-destructive">
-                      {form.formState.errors.startDate.message as string}
-                    </p>
-                  )}
-                </div>
+                <StepDate
+                  packageDays={packageDays}
+                  loading={loadingAvailability}
+                  fullyBooked={fullyBooked}
+                  selectedDate={selectedDate}
+                  onSelect={(date) =>
+                    form.setValue("startDate", date, { shouldValidate: true })
+                  }
+                  errorMessage={form.formState.errors.startDate?.message as string | undefined}
+                />
               )}
 
               {step === 3 && (
-                <div className="grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor="booking-name">نام و نام خانوادگی</Label>
-                    <Input
-                      id="booking-name"
-                      {...form.register("name")}
-                      autoComplete="name"
-                      placeholder="مثلاً علی رضایی"
-                      aria-invalid={!!form.formState.errors.name}
-                      className="bg-background"
-                    />
-                    {form.formState.errors.name && (
-                      <p className="text-sm text-destructive">{form.formState.errors.name.message}</p>
-                    )}
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="booking-phone">شماره تماس</Label>
-                    <Input
-                      id="booking-phone"
-                      {...form.register("phone", {
-                        onChange: (event) => {
-                          event.target.value = toAsciiDigits(event.target.value);
-                        },
-                      })}
-                      autoComplete="tel"
-                      dir="ltr"
-                      inputMode="tel"
-                      placeholder="09121234567"
-                      aria-invalid={!!form.formState.errors.phone}
-                      className="bg-background text-left"
-                    />
-                    {form.formState.errors.phone && (
-                      <p className="text-sm text-destructive">{form.formState.errors.phone.message}</p>
-                    )}
-                  </div>
-
-                  <div className="grid gap-2">
-                    <Label htmlFor="booking-notes">توضیحات (اختیاری)</Label>
-                    <Textarea
-                      id="booking-notes"
-                      {...form.register("notes")}
-                      placeholder="آدرس تحویل، زمان مناسب تماس یا بازی‌های مورد علاقه..."
-                      rows={3}
-                      className="bg-background"
-                    />
-                    {form.formState.errors.notes && (
-                      <p className="text-sm text-destructive">{form.formState.errors.notes.message}</p>
-                    )}
-                  </div>
-
-                  <dl className="grid gap-2 rounded-md border border-border bg-muted p-3 text-sm">
-                    <SummaryRow label="کنسول" value={selectedConsole?.label ?? "—"} />
-                    <SummaryRow label="پکیج" value={selectedPackage?.label ?? "—"} />
-                    {selectedDate && endDate && (
-                      <SummaryRow
-                        label="تاریخ"
-                        value={`${formatDisplayDate(selectedDate)} تا ${formatDisplayDate(endDate)}`}
-                      />
-                    )}
-                  </dl>
-                </div>
+                <StepContact
+                  form={form}
+                  selectedConsoleLabel={selectedConsole?.label ?? "—"}
+                  selectedPackageLabel={selectedPackage?.label ?? "—"}
+                  selectedDate={selectedDate}
+                  endDate={endDate}
+                />
               )}
 
               <div className="sticky bottom-0 -mx-5 -mb-5 space-y-3 border-t border-border bg-popover/95 px-5 py-4 backdrop-blur sm:-mx-7 sm:-mb-5 sm:px-7">
@@ -764,7 +351,7 @@ export function BookingDialog({
                   size="lg"
                   className="w-full font-semibold sm:w-auto sm:min-w-40"
                 >
-                  {step === steps.length - 1 ? (
+                  {step === STEPS.length - 1 ? (
                     form.formState.isSubmitting ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
@@ -800,52 +387,5 @@ export function BookingDialog({
         )}
       </DialogContent>
     </Dialog>
-  );
-}
-
-function OptionButton({
-  children,
-  onClick,
-  selected,
-  disabled,
-}: {
-  children: ReactNode;
-  onClick: () => void;
-  selected: boolean;
-  disabled?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      disabled={disabled}
-      aria-pressed={selected}
-      className={cn(
-        "group relative flex min-h-28 flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border p-4 text-center transition-all duration-200",
-        disabled && "opacity-50 cursor-not-allowed hover:translate-y-0 hover:shadow-none",
-        selected
-          ? "border-primary !bg-primary !text-primary-foreground shadow-lg shadow-primary/40 ring-2 ring-primary ring-offset-2 ring-offset-background scale-[1.02] [&_.text-muted-foreground]:text-primary-foreground/80"
-          : "border-border bg-card text-card-foreground hover:-translate-y-0.5 hover:border-primary/60 hover:bg-accent hover:shadow-sm",
-      )}
-    >
-      {selected && (
-        <span
-          className="absolute top-2 right-2 grid h-5 w-5 place-items-center rounded-full bg-primary-foreground text-primary shadow"
-          aria-hidden="true"
-        >
-          <Check className="h-3 w-3" />
-        </span>
-      )}
-      {children}
-    </button>
-  );
-}
-
-function SummaryRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between gap-3">
-      <dt className="text-muted-foreground">{label}</dt>
-      <dd className="text-left font-medium text-foreground">{value}</dd>
-    </div>
   );
 }
