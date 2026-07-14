@@ -10,10 +10,10 @@ const QUICK_LINKS = [
 ];
 
 const LEGAL_LINKS = [
-  { href: "#", label: "شرایط استفاده" },
-  { href: "#", label: "حریم خصوصی" },
-  { href: "#", label: "قوانین اجاره" },
-  { href: "#", label: "سیاست بازگشت" },
+  { href: "/terms", label: "شرایط استفاده" },
+  { href: "/privacy", label: "حریم خصوصی" },
+  { href: "/rental-terms", label: "قوانین اجاره" },
+  { href: "/refund", label: "سیاست بازگشت" },
 ];
 
 const SOCIALS = [
