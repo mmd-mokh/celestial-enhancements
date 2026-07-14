@@ -130,6 +130,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "apple-touch-icon", href: "/assets/logo/logo1.png" },
       { rel: "manifest", href: "/manifest.webmanifest" },
       { rel: "stylesheet", href: "/css/index.css" },
+      // Preconnect + preload Vazirmatn to eliminate Persian-text FOUT.
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
     ],
     scripts: [
       ...(GA4_ID

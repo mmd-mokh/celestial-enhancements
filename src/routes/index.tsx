@@ -21,9 +21,15 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: absUrl("/assets/images/home/dashboard.png") },
       { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
     ],
-    links: [{ rel: "canonical", href: SITE_URL + "/" }],
-    // Preload the LCP hero graphic so it renders on first paint.
-    // (Duplicated as a link with rel=preload as=image.)
+    links: [
+      { rel: "canonical", href: SITE_URL + "/" },
+      {
+        rel: "preload",
+        as: "image",
+        href: "/assets/images/home/dashboard.png",
+        fetchpriority: "high",
+      },
+    ],
   }),
   component: () => <LandingPage />,
 });
