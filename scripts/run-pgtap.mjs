@@ -14,7 +14,10 @@ if (!url) {
   process.exit(0);
 }
 
-const RUNNERS = ["tests.run_has_role_tests"];
+const RUNNERS = [
+  "tests.run_has_role_tests",
+  "tests.run_create_booking_tests",
+];
 
 const client = new pg.Client({ connectionString: url });
 await client.connect();
