@@ -7,7 +7,7 @@ export type SubscribeResult =
   | { ok: false; code: "captcha_required" | "rate_limited" | "unknown"; message: string };
 
 export const subscribeNewsletter = createServerFn({ method: "POST" })
-  .inputValidator((input) =>
+  .validator((input) =>
     z
       .object({
         email: z.string().trim().toLowerCase().email(),

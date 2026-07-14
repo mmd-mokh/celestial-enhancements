@@ -109,3 +109,53 @@ export const CONSOLE_CONTENT: Record<string, ConsoleContent> = {
 };
 
 export const CONSOLE_SLUGS = Object.keys(CONSOLE_CONTENT);
+
+export type FallbackConsoleRow = {
+  slug: string;
+  name: string;
+  tagline: string | null;
+  features: string[];
+  icon: string | null;
+  accent_from: string | null;
+  accent_to: string | null;
+  sort_order: number;
+};
+
+/**
+ * Static console catalogue used when a local checkout is pointed at an empty
+ * or un-migrated backend. The live backend remains the source of truth.
+ */
+export const FALLBACK_PUBLIC_CONSOLES: FallbackConsoleRow[] = [
+  {
+    slug: "ps5",
+    name: "PlayStation 5",
+    tagline: "نسل جدید بازی با گرافیک 4K و سرعت فوق‌العاده",
+    features: ["۲ دسته بی‌سیم", "بازی‌های انحصاری", "تحویل رایگان در تهران"],
+    icon: "bi-playstation",
+    accent_from: "#0070d1",
+    accent_to: "#00b4d8",
+    sort_order: 1,
+  },
+  {
+    slug: "xbox",
+    name: "Xbox Series X",
+    tagline: "قدرتمندترین کنسول با Game Pass نامحدود",
+    features: ["Game Pass یک ماهه", "سازگاری با نسل قبل", "۴K واقعی با ۱۲۰ فریم"],
+    icon: "bi-xbox",
+    accent_from: "#107c10",
+    accent_to: "#00b894",
+    sort_order: 2,
+  },
+  {
+    slug: "switch",
+    name: "Nintendo Switch",
+    tagline: "بازی خانوادگی و قابل حمل برای هر جا",
+    features: ["قابل حمل و خانگی", "بازی‌های خانوادگی", "۴ دسته Joy-Con"],
+    icon: "bi-nintendo-switch",
+    accent_from: "#e60012",
+    accent_to: "#ff6b6b",
+    sort_order: 3,
+  },
+];
+
+export const FALLBACK_CONSOLE_CAPACITY = 1;

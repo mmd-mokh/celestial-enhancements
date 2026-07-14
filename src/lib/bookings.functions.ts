@@ -23,7 +23,7 @@ const SQLSTATE_TO_CODE: Record<string, string> = {
 };
 
 export const createBooking = createServerFn({ method: "POST" })
-  .inputValidator((input) =>
+  .validator((input) =>
     BookingSchema.extend({ captchaToken: z.string().optional() }).parse(input),
   )
   .handler(async ({ data }): Promise<CreateBookingResult> => {
@@ -83,7 +83,7 @@ export type GetBookingByTokenResult =
 // Public route: verify HMAC token server-side, then read via service role.
 // The token binds the caller to a specific booking id, so no session needed.
 export const getBookingByToken = createServerFn({ method: "GET" })
-  .inputValidator((input) =>
+  .validator((input) =>
     z.object({ id: z.string().uuid(), token: z.string().min(10) }).parse(input),
   )
   .handler(async ({ data }): Promise<GetBookingByTokenResult> => {
