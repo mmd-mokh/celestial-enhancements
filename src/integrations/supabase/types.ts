@@ -344,6 +344,22 @@ export type Database = {
           slug: string
         }[]
       }
+      get_consoles_with_remaining: {
+        Args: never
+        Returns: {
+          accent_from: string
+          accent_to: string
+          booked: number
+          capacity: number
+          features: Json
+          icon: string
+          name: string
+          remaining: number
+          slug: string
+          sort_order: number
+          tagline: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
