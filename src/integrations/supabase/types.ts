@@ -311,6 +311,21 @@ export type Database = {
         }
         Returns: string
       }
+      get_booking_summary: {
+        Args: { _booking_id: string }
+        Returns: {
+          console_type: string
+          created_at: string
+          end_date: string
+          id: string
+          name: string
+          notes: string
+          package_type: string
+          phone: string
+          start_date: string
+          status: string
+        }[]
+      }
       get_console_availability: {
         Args: { _console_slug: string; _from: string; _to: string }
         Returns: {
