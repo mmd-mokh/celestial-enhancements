@@ -1,3 +1,5 @@
+import { BsIcon } from "@/components/BsIcon";
+
 const CTA_STATS = [
   "بیش از ۵۰۰۰ اجاره موفق",
   "رضایت ۹۸٪ مشتریان",
@@ -33,7 +35,7 @@ export function FinalCtaSection() {
         <div className="flex flex-wrap justify-center gap-6 md:gap-8 mt-6 text-sm md:text-base">
           {CTA_STATS.map((label) => (
             <div key={label} className="flex items-center gap-2">
-              <i className="bi bi-check-circle-fill" />
+              <BsIcon name="bi-check-circle-fill" size={16} />
               <span>{label}</span>
             </div>
           ))}

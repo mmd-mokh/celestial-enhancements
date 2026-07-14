@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { BsIcon } from "@/components/BsIcon";
 
 type Pkg = {
   slug: string;
@@ -109,7 +110,7 @@ export function PricingList({ onReserve }: Props) {
                 <span className="pricing-card-featured-glow" aria-hidden="true" />
               </>
             )}
-            <i className={`bi ${p.icon} text-primary text-5xl icon-standard`} />
+            <BsIcon name={p.icon} size={48} className="text-primary icon-standard" />
             <h4 className="text-2xl font-bold text-gray-800">{p.name}</h4>
             <p className="text-center text-gray-700 text-sm">{p.description}</p>
             <div className="text-center my-2">
@@ -132,7 +133,7 @@ export function PricingList({ onReserve }: Props) {
             <ul className="flex flex-col gap-3 text-right w-full text-sm">
               {p.features.map((f, k) => (
                 <li key={k} className="flex items-start gap-2">
-                  <i className="bi bi-check-circle-fill text-primary mt-1 text-base" />
+                  <BsIcon name="bi-check-circle-fill" size={16} className="text-primary mt-1" />
                   <span className="text-gray-700">{f}</span>
                 </li>
               ))}

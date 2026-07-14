@@ -1,4 +1,5 @@
 import { SectionHeading, SectionShell, FadeInUp } from "./primitives";
+import { BsIcon } from "@/components/BsIcon";
 
 type Testimonial = { name: string; meta: string; img: string; quote: string };
 
@@ -32,7 +33,7 @@ function TestimonialCard({ name, meta, img, quote, index }: Testimonial & { inde
       index={index}
       className="testimonial-enhanced flex flex-col rounded-lg p-6 shadow-lg bg-white"
     >
-      <i className="bi bi-chat-quote-fill testimonial-quote" aria-hidden="true" />
+      <BsIcon name="bi-chat-quote-fill" className="testimonial-quote" size={40} aria-hidden />
       <div className="flex place-items-center gap-3">
         <div className="testimonial-avatar h-[50px] w-[50px] overflow-hidden rounded-full border-[2px] border-solid border-primary">
           <img

@@ -6,6 +6,7 @@ import { consolesQueryOptions } from "@/lib/queries";
 import { CONSOLE_CONTENT } from "@/lib/console-content";
 import { absUrl } from "@/lib/seo";
 import { RouteErrorFallback } from "@/components/RouteBoundaries";
+import { BsIcon } from "@/components/BsIcon";
 
 export const Route = createFileRoute("/consoles/$slug")({
   loader: async ({ context, params }) => {
@@ -160,7 +161,7 @@ function ConsoleDetailPage() {
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {content.popularGames.map((g) => (
                 <li key={g} className="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm">
-                  <i className="bi bi-controller text-primary text-xl" />
+                  <BsIcon name="bi-controller" size={20} className="text-primary" />
                   <span className="text-gray-900 font-medium">{g}</span>
                 </li>
               ))}
@@ -177,7 +178,7 @@ function ConsoleDetailPage() {
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {dbRow.features.map((f, i) => (
                   <li key={i} className="flex items-start gap-3 bg-white border border-gray-200 rounded-lg p-5">
-                    <i className="bi bi-check-circle-fill text-primary mt-1" />
+                    <BsIcon name="bi-check-circle-fill" size={16} className="text-primary mt-1" />
                     <span className="text-gray-700">{f}</span>
                   </li>
                 ))}

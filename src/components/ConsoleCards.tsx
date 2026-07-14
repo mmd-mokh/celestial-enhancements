@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { BsIcon } from "@/components/BsIcon";
 
 export type ConsoleRow = {
   slug: string;
@@ -34,14 +35,14 @@ export function ConsoleList({ items }: { items: ConsoleRow[] }) {
           }
         >
           <div className="console-card-icon" aria-hidden="true">
-            <i className={`bi ${c.icon ?? "bi-joystick"}`} />
+            <BsIcon name={c.icon ?? "bi-joystick"} size={40} />
           </div>
           <h3 className="console-card-title">{c.name}</h3>
           {c.tagline && <p className="console-card-tagline">{c.tagline}</p>}
           <ul className="console-card-features" aria-label={`ویژگی‌های ${c.name}`}>
             {(c.features ?? []).map((f, i) => (
               <li key={i} className="console-card-feature">
-                <i className="bi bi-check-circle-fill" aria-hidden="true" />
+                <BsIcon name="bi-check-circle-fill" size={16} aria-hidden />
                 <span>{f}</span>
               </li>
             ))}
