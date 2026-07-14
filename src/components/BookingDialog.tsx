@@ -43,6 +43,7 @@ import { StepPackage } from "./booking/StepPackage";
 import { StepDate, formatDisplayDate } from "./booking/StepDate";
 import { StepContact } from "./booking/StepContact";
 import { SuccessView } from "./booking/SuccessView";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 
 type Props = {
   open: boolean;
@@ -60,6 +61,7 @@ export function BookingDialog({
   const [step, setStep] = useState(0);
   const [reservationId, setReservationId] = useState<string | null>(null);
   const [icalToken, setIcalToken] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const optionsQuery = useConsoleOptions(open);
   const consoles = optionsQuery.data?.consoles ?? FALLBACK_CONSOLES;
@@ -176,6 +178,7 @@ export function BookingDialog({
           startDate: format(start, "yyyy-MM-dd"),
           endDate: format(end, "yyyy-MM-dd"),
           notes: data.notes?.trim() || undefined,
+          captchaToken: captchaToken ?? undefined,
         },
       });
     } catch (err) {
@@ -189,7 +192,9 @@ export function BookingDialog({
 
     if (!result.ok) {
       const code = result.code;
-      if (code === "no_availability") {
+      if (code === "captcha_required") {
+        toast.error("لطفاً کپچا را تأیید کنید.");
+      } else if (code === "no_availability") {
         toast.error("این کنسول در تاریخ انتخابی رزرو شده. لطفاً تاریخ دیگری انتخاب کنید.");
         setStep(2);
       } else if (code === "past_date") {
@@ -303,13 +308,18 @@ export function BookingDialog({
               )}
 
               {step === 3 && (
-                <StepContact
-                  form={form}
-                  selectedConsoleLabel={selectedConsole?.label ?? "—"}
-                  selectedPackageLabel={selectedPackage?.label ?? "—"}
-                  selectedDate={selectedDate}
-                  endDate={endDate}
-                />
+                <>
+                  <StepContact
+                    form={form}
+                    selectedConsoleLabel={selectedConsole?.label ?? "—"}
+                    selectedPackageLabel={selectedPackage?.label ?? "—"}
+                    selectedDate={selectedDate}
+                    endDate={endDate}
+                  />
+                  <div className="mt-2 flex justify-center">
+                    <TurnstileWidget onToken={setCaptchaToken} />
+                  </div>
+                </>
               )}
 
               <div className="sticky bottom-0 -mx-5 -mb-5 space-y-3 border-t border-border bg-popover/95 px-5 py-4 backdrop-blur sm:-mx-7 sm:-mb-5 sm:px-7">

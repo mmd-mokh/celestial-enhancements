@@ -1,5 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { BookingSchema } from "@/lib/booking-validation";
+import { z } from "zod";
+import { verifyTurnstileToken } from "@/lib/turnstile.functions";
 
 export type CreateBookingResult =
   | { ok: true; id: string; icalToken: string }
@@ -21,8 +23,18 @@ const SQLSTATE_TO_CODE: Record<string, string> = {
 };
 
 export const createBooking = createServerFn({ method: "POST" })
-  .inputValidator((input) => BookingSchema.parse(input))
+  .inputValidator((input) =>
+    BookingSchema.extend({ captchaToken: z.string().optional() }).parse(input),
+  )
   .handler(async ({ data }): Promise<CreateBookingResult> => {
+    // Anonymous submissions must pass Turnstile. Signed-in users bypass.
+    // (Auth context is not attached to this fn today — future improvement:
+    // add requireSupabaseAuth-lite that only skips captcha when a session
+    // is present. For now, always require the token when configured.)
+    const captchaOk = await verifyTurnstileToken(data.captchaToken);
+    if (!captchaOk) {
+      return { ok: false, code: "captcha_required", message: "captcha_required" };
+    }
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: newId, error } = await supabaseAdmin.rpc("create_booking", {
       _name: data.name,
@@ -67,8 +79,6 @@ export type BookingSummary = {
 export type GetBookingByTokenResult =
   | { ok: true; booking: BookingSummary }
   | { ok: false; code: "invalid_token" | "not_found" };
-
-import { z } from "zod";
 
 // Public route: verify HMAC token server-side, then read via service role.
 // The token binds the caller to a specific booking id, so no session needed.
