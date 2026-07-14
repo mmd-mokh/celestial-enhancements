@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as RentalTermsRouteImport } from './routes/rental-terms'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as McpRouteImport } from './routes/mcp'
@@ -41,6 +42,11 @@ const TermsRoute = TermsRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RentalTermsRoute = RentalTermsRouteImport.update({
+  id: '/rental-terms',
+  path: '/rental-terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyRoute = PrivacyRouteImport.update({
@@ -163,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/mcp': typeof McpRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/rental-terms': typeof RentalTermsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -187,6 +194,7 @@ export interface FileRoutesByTo {
   '/mcp': typeof McpRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/rental-terms': typeof RentalTermsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/mcp': typeof McpRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/rental-terms': typeof RentalTermsRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -240,6 +249,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/pricing'
     | '/privacy'
+    | '/rental-terms'
     | '/sitemap.xml'
     | '/terms'
     | '/.mcp/list-tools'
@@ -264,6 +274,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/pricing'
     | '/privacy'
+    | '/rental-terms'
     | '/sitemap.xml'
     | '/terms'
     | '/.mcp/list-tools'
@@ -289,6 +300,7 @@ export interface FileRouteTypes {
     | '/mcp'
     | '/pricing'
     | '/privacy'
+    | '/rental-terms'
     | '/sitemap.xml'
     | '/terms'
     | '/.mcp/list-tools'
@@ -315,6 +327,7 @@ export interface RootRouteChildren {
   McpRoute: typeof McpRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  RentalTermsRoute: typeof RentalTermsRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -341,6 +354,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rental-terms': {
+      id: '/rental-terms'
+      path: '/rental-terms'
+      fullPath: '/rental-terms'
+      preLoaderRoute: typeof RentalTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy': {
@@ -528,6 +548,7 @@ const rootRouteChildren: RootRouteChildren = {
   McpRoute: McpRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  RentalTermsRoute: RentalTermsRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
