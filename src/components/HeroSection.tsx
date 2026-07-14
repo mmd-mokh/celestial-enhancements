@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { BsIcon } from "@/components/BsIcon";
 
 /**
  * Landing hero — big headline, dual CTAs, trust-badge chips, and the
@@ -36,7 +37,7 @@ export function HeroSection() {
 
             <div className="mt-6 flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full bg-primary-100 dark:bg-primary-500/15 px-4 py-2 text-sm font-semibold text-primary-700 dark:text-primary-200 border border-primary-200 dark:border-primary-400/40">
-                <i className="bi bi-star-fill text-primary-600" />
+                <BsIcon name="bi-star-fill" className="text-primary-600" size={16} />
                 گیمیو = دنیای گیمینگ بدون محدودیت مالی
               </span>
             </div>
@@ -57,9 +58,9 @@ export function HeroSection() {
                 className="btn-secondary-enhanced whitespace-nowrap rounded-full border-2 border-primary bg-transparent px-6 py-3 text-base font-semibold text-primary"
                 href="#pricing"
               >
-                <span>
-                  <i className="bi bi-tag-fill" aria-hidden="true" /> مشاهده
-                  تعرفه‌ها
+                <span className="inline-flex items-center gap-1">
+                  <BsIcon name="bi-tag-fill" size={16} aria-hidden />
+                  مشاهده تعرفه‌ها
                 </span>
               </a>
             </div>
@@ -70,15 +71,15 @@ export function HeroSection() {
               aria-label="مزایای سریع"
             >
               <span className="hero-trust-badge" role="listitem">
-                <i className="bi bi-truck" aria-hidden="true" />
+                <BsIcon name="bi-truck" size={18} aria-hidden />
                 <span>تحویل رایگان در تهران</span>
               </span>
               <span className="hero-trust-badge" role="listitem">
-                <i className="bi bi-shield-check" aria-hidden="true" />
+                <BsIcon name="bi-shield-check" size={18} aria-hidden />
                 <span>بدون نیاز به ضمانت</span>
               </span>
               <span className="hero-trust-badge" role="listitem">
-                <i className="bi bi-headset" aria-hidden="true" />
+                <BsIcon name="bi-headset" size={18} aria-hidden />
                 <span>پشتیبانی ۲۴/۷</span>
               </span>
             </div>
@@ -113,7 +114,7 @@ export function HeroSection() {
                 className="flex flex-col items-center gap-3 p-4 min-w-[140px] trust-badge"
               >
                 <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center">
-                  <i className={`bi ${m.icon} text-2xl text-primary icon-standard`} />
+                  <BsIcon name={m.icon} size={28} className="text-primary icon-standard" />
                 </div>
                 <div className="text-4xl font-bold text-primary">
                   {m.value}

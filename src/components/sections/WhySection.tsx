@@ -1,4 +1,5 @@
 import { SectionHeading, SectionShell, FadeInUp } from "./primitives";
+import { BsIcon } from "@/components/BsIcon";
 
 const BENEFITS: Array<{ icon: string; title: string; body: string }> = [
   {
@@ -56,7 +57,7 @@ function BenefitCard({
       step={0.06}
       className="card-standard flex flex-col gap-4 text-center"
     >
-      <i className={`bi ${icon} text-5xl text-primary icon-standard`} />
+      <BsIcon name={icon} size={48} className="text-primary icon-standard" />
       <h4 className="text-lg md:text-xl font-bold">{title}</h4>
       <p className="text-gray-700 leading-relaxed">{body}</p>
     </FadeInUp>
