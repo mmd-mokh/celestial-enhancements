@@ -229,3 +229,37 @@ footer[role="contentinfo"] .text-primary,
 footer[role="contentinfo"] svg.text-primary {
   color: var(--color-primary) !important;
 }
+
+/* Fade-in-up reveal used by section cards (replaces framer-motion). */
+.reveal-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 500ms ease-out,
+    transform 500ms ease-out;
+  will-change: opacity, transform;
+}
+.reveal-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up,
+  .reveal-up.is-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Hero mount fade (runs once at load, no observer). */
+@keyframes hero-fade-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-fade-in {
+  animation: hero-fade-in 600ms ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-fade-in { animation: none; }
+}
