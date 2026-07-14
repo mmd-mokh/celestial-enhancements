@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { consolesQueryOptions } from "@/lib/queries";
+import { consoleBySlugQueryOptions } from "@/lib/queries";
 import { CONSOLE_CONTENT } from "@/lib/console-content";
 import { absUrl } from "@/lib/seo";
 import { RouteErrorFallback } from "@/components/RouteBoundaries";
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/consoles/$slug")({
   loader: async ({ context, params }) => {
     const content = CONSOLE_CONTENT[params.slug];
     if (!content) throw notFound();
-    await context.queryClient.ensureQueryData(consolesQueryOptions());
+    await context.queryClient.ensureQueryData(consoleBySlugQueryOptions(params.slug));
     return { content };
   },
   head: ({ loaderData, params }) => {
@@ -96,8 +96,7 @@ export const Route = createFileRoute("/consoles/$slug")({
 function ConsoleDetailPage() {
   const { slug } = Route.useParams();
   const content = CONSOLE_CONTENT[slug]!;
-  const { data: consoles } = useSuspenseQuery(consolesQueryOptions());
-  const dbRow = consoles.find((c) => c.slug === slug);
+  const { data: dbRow } = useSuspenseQuery(consoleBySlugQueryOptions(slug));
 
   return (
     <>
