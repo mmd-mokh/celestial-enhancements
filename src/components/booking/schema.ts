@@ -22,6 +22,9 @@ export type BookingFormValues = z.infer<typeof bookingFormSchema>;
 
 export function toAsciiDigits(value: string) {
   return value
+    // Strip zero-width, bidi, and other invisible marks users paste from
+    // messaging apps; then normalize Persian/Arabic-Indic digits to ASCII.
+    .replace(/[\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g, "")
     .replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)))
     .replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)));
 }

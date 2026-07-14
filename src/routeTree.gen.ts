@@ -19,6 +19,7 @@ import { Route as ConsolesRouteImport } from './routes/consoles'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as RentSlugRouteImport } from './routes/rent.$slug'
 import { Route as ConsolesSlugRouteImport } from './routes/consoles.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -77,6 +78,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BlogRoute,
 } as any)
 const RentSlugRoute = RentSlugRouteImport.update({
   id: '/rent/$slug',
@@ -138,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
   '/rent/$slug': typeof RentSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
@@ -145,7 +152,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/blog': typeof BlogRouteWithChildren
   '/consoles': typeof ConsolesRouteWithChildren
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
@@ -158,6 +164,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
   '/rent/$slug': typeof RentSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
@@ -179,6 +186,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
   '/rent/$slug': typeof RentSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
@@ -201,6 +209,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/consoles/$slug'
     | '/rent/$slug'
+    | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/booking-ical/$id'
@@ -208,7 +217,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/blog'
     | '/consoles'
     | '/contact'
     | '/faq'
@@ -221,6 +229,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/consoles/$slug'
     | '/rent/$slug'
+    | '/blog'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/booking-ical/$id'
@@ -241,6 +250,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/consoles/$slug'
     | '/rent/$slug'
+    | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/booking-ical/$id'
@@ -337,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof BlogRoute
+    }
     '/rent/$slug': {
       id: '/rent/$slug'
       path: '/rent/$slug'
@@ -398,10 +415,12 @@ declare module '@tanstack/react-router' {
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 const BlogRouteChildren: BlogRouteChildren = {
   BlogSlugRoute: BlogSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 
 const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)

@@ -34,6 +34,13 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:url", content: url },
         ...(image ? [{ property: "og:image" as const, content: image }] : []),
         ...(image ? [{ name: "twitter:image" as const, content: image }] : []),
+        ...(p.published_at
+          ? [{ property: "article:published_time" as const, content: p.published_at }]
+          : []),
+        ...((p.tags ?? []).map((tag) => ({
+          property: "article:tag" as const,
+          content: tag,
+        }))),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [

@@ -21,7 +21,15 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: absUrl("/assets/images/home/dashboard.png") },
       { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
     ],
-    links: [{ rel: "canonical", href: SITE_URL + "/" }],
+    links: [
+      { rel: "canonical", href: SITE_URL + "/" },
+      {
+        rel: "preload",
+        as: "image",
+        href: "/assets/images/home/dashboard.png",
+        fetchpriority: "high",
+      },
+    ],
   }),
   component: () => <LandingPage />,
 });
