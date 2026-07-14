@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { BsIcon } from "@/components/BsIcon";
 
 /**
@@ -20,12 +19,7 @@ export function HeroSection() {
         id="hero"
         className="relative flex min-h-[100vh] w-full flex-col overflow-hidden px-6 py-16 md:px-12 lg:px-20 max-md:mt-[50px] bg-white"
       >
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex h-full min-h-[100vh] w-full flex-col place-content-center gap-6 p-[5%] max-xl:place-items-center"
-        >
+        <div className="hero-fade-in flex h-full min-h-[100vh] w-full flex-col place-content-center gap-6 p-[5%] max-xl:place-items-center">
           <div className="flex flex-col place-content-center items-center">
             <h1
               id="hero-heading"
@@ -84,7 +78,7 @@ export function HeroSection() {
               </span>
             </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <section
