@@ -34,8 +34,8 @@ export const Route = createFileRoute("/consoles/$slug")({
         { property: "og:description", content: c.seoDescription },
         { property: "og:url", content: url },
         { property: "og:type", content: "product" },
-        { property: "og:image", content: absUrl("/assets/images/home/dashboard.png") },
-        { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
+        // No console-specific image yet — omit rather than share a generic
+        // dashboard graphic that misrepresents the product page.
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
