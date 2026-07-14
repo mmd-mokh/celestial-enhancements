@@ -31,8 +31,8 @@ export const Route = createFileRoute("/rent/$slug")({
         { property: "og:description", content: c.seoDescription },
         { property: "og:url", content: url },
         { property: "og:type", content: "website" },
-        { property: "og:image", content: absUrl("/assets/images/home/dashboard.png") },
-        { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
+        // No landing-specific image — omit rather than share a generic
+        // dashboard graphic that misrepresents this page.
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
