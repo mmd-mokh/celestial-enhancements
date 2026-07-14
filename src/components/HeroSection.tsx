@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { BsIcon } from "@/components/BsIcon";
+import { BookingDialog } from "@/components/BookingDialog";
 
 /**
  * Landing hero — big headline, dual CTAs, trust-badge chips, and the
  * decorative RGB mesh gradient behind the fold.
  */
 export function HeroSection() {
+  const [bookingOpen, setBookingOpen] = useState(false);
   return (
     <>
       <div className="mesh-gradient-container" aria-hidden="true">
@@ -42,12 +45,13 @@ export function HeroSection() {
             </p>
 
             <div className="mt-8 flex place-items-center gap-4 overflow-hidden p-2 max-md:flex-col">
-              <a
+              <button
+                type="button"
+                onClick={() => setBookingOpen(true)}
                 className="btn btn-enhanced whitespace-nowrap text-lg px-8 py-4 shadow-lg"
-                href="#pricing"
               >
                 همین الان رزرو کن
-              </a>
+              </button>
               <a
                 className="btn-secondary-enhanced whitespace-nowrap rounded-full border-2 border-primary bg-transparent px-6 py-3 text-base font-semibold text-primary"
                 href="#pricing"
@@ -80,6 +84,8 @@ export function HeroSection() {
           </div>
         </div>
       </section>
+
+      <BookingDialog open={bookingOpen} onOpenChange={setBookingOpen} />
 
       <section
         role="region"
