@@ -1,0 +1,68 @@
+import { useQuery } from "@tanstack/react-query";
+import { addDays, format } from "date-fns";
+import { getConsoles } from "@/lib/consoles.functions";
+import {
+  getConsolesRemaining,
+  getConsoleAvailability,
+} from "@/lib/availability.functions";
+import {
+  FALLBACK_CONSOLES,
+  type ConsoleAvailability,
+  type ConsoleOpt,
+} from "./constants";
+import { startOfToday } from "./schema";
+
+export function useConsoleOptions(enabled: boolean) {
+  return useQuery({
+    enabled,
+    queryKey: ["booking", "console-options"],
+    staleTime: 5 * 60 * 1000,
+    queryFn: async () => {
+      const [consoleRows, remainingRows] = await Promise.all([
+        getConsoles(),
+        getConsolesRemaining(),
+      ]);
+      const consoles: ConsoleOpt[] = consoleRows.length
+        ? consoleRows.map((row) => ({
+            value: row.slug,
+            label: row.name,
+            tagline:
+              FALLBACK_CONSOLES.find((item) => item.value === row.slug)?.tagline ??
+              "کنسول اختصاصی",
+          }))
+        : FALLBACK_CONSOLES;
+      const remainingBySlug: Record<string, ConsoleAvailability> = {};
+      for (const row of remainingRows) {
+        remainingBySlug[row.slug] = {
+          capacity: row.capacity,
+          booked: row.booked,
+          remaining: row.remaining,
+        };
+      }
+      return { consoles, remainingBySlug };
+    },
+  });
+}
+
+export function useConsoleAvailability(consoleSlug: string, enabled: boolean) {
+  return useQuery({
+    enabled: enabled && !!consoleSlug,
+    queryKey: ["booking", "availability", consoleSlug],
+    staleTime: 60 * 1000,
+    queryFn: async () => {
+      const today = startOfToday();
+      const rows = await getConsoleAvailability({
+        data: {
+          consoleSlug,
+          from: format(today, "yyyy-MM-dd"),
+          to: format(addDays(today, 90), "yyyy-MM-dd"),
+        },
+      });
+      const fullyBooked = new Set<string>();
+      for (const row of rows) {
+        if (row.capacity > 0 && row.booked >= row.capacity) fullyBooked.add(row.day);
+      }
+      return fullyBooked;
+    },
+  });
+}
