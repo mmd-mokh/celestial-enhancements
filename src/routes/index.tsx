@@ -22,6 +22,8 @@ export const Route = createFileRoute("/")({
       { name: "twitter:image", content: absUrl("/assets/images/home/dashboard.png") },
     ],
     links: [{ rel: "canonical", href: SITE_URL + "/" }],
+    // Preload the LCP hero graphic so it renders on first paint.
+    // (Duplicated as a link with rel=preload as=image.)
   }),
   component: () => <LandingPage />,
 });

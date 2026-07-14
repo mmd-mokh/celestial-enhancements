@@ -9,8 +9,8 @@ export const BookingSchema = z.object({
   phone: z.string().trim().min(6).max(30),
   consoleType: z.string().min(1),
   packageType: z.string().min(1),
-  startDate: z.string().min(1),
-  endDate: z.string().min(1),
+  startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "invalid_dates"),
+  endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "invalid_dates"),
   notes: z.string().max(1000).optional(),
 });
 
