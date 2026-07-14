@@ -22,6 +22,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as RentSlugRouteImport } from './routes/rent.$slug'
 import { Route as ConsolesSlugRouteImport } from './routes/consoles.$slug'
+import { Route as BookingIdRouteImport } from './routes/booking.$id'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -94,6 +95,11 @@ const ConsolesSlugRoute = ConsolesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ConsolesRoute,
 } as any)
+const BookingIdRoute = BookingIdRouteImport.update({
+  id: '/booking/$id',
+  path: '/booking/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -142,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -162,6 +169,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog': typeof BlogIndexRoute
@@ -184,6 +192,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
+    | '/booking/$id'
     | '/consoles/$slug'
     | '/rent/$slug'
     | '/blog/'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
+    | '/booking/$id'
     | '/consoles/$slug'
     | '/rent/$slug'
     | '/blog'
@@ -248,6 +259,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/blog/$slug'
+    | '/booking/$id'
     | '/consoles/$slug'
     | '/rent/$slug'
     | '/blog/'
@@ -269,6 +281,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  BookingIdRoute: typeof BookingIdRoute
   RentSlugRoute: typeof RentSlugRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -368,6 +381,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsolesSlugRouteImport
       parentRoute: typeof ConsolesRoute
     }
+    '/booking/$id': {
+      id: '/booking/$id'
+      path: '/booking/$id'
+      fullPath: '/booking/$id'
+      preLoaderRoute: typeof BookingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/$slug'
@@ -451,6 +471,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  BookingIdRoute: BookingIdRoute,
   RentSlugRoute: RentSlugRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
