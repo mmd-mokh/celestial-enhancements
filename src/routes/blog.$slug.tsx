@@ -18,7 +18,7 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!p) {
       return {
         meta: [
-          { title: "بلاگ گیمیو" },
+          { title: "بلاگ کنسولتو" },
           { name: "robots", content: "noindex" },
         ],
       };
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/blog/$slug")({
     const image = p.cover_url ? absUrl(p.cover_url) : undefined;
     return {
       meta: [
-        { title: `${p.title} | بلاگ گیمیو` },
+        { title: `${p.title} | بلاگ کنسولتو` },
         { name: "description", content: p.excerpt ?? p.title },
         { property: "og:title", content: p.title },
         { property: "og:description", content: p.excerpt ?? p.title },
@@ -52,10 +52,10 @@ export const Route = createFileRoute("/blog/$slug")({
           image: image ?? undefined,
           datePublished: p.published_at ?? undefined,
           dateModified: p.published_at ?? undefined,
-          author: { "@type": "Organization", name: "گیمیو" },
+          author: { "@type": "Organization", name: "کنسولتو" },
           publisher: {
             "@type": "Organization",
-            name: "گیمیو",
+            name: "کنسولتو",
             logo: { "@type": "ImageObject", url: absUrl("/assets/logo/logo1.png") },
           },
           mainEntityOfPage: { "@type": "WebPage", "@id": url },

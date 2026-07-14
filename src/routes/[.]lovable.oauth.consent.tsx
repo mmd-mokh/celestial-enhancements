@@ -109,10 +109,10 @@ function Consent() {
       <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-lg space-y-5">
         <div className="space-y-1">
           <h1 className="text-xl font-semibold text-foreground">
-            Connect {clientName} to Gamio
+            Connect {clientName} to Consoleto
           </h1>
           <p className="text-sm text-muted-foreground">
-            This lets {clientName} use Gamio as you — browsing consoles and managing your own bookings.
+            This lets {clientName} use Consoleto as you — browsing consoles and managing your own bookings.
           </p>
         </div>
 
@@ -131,7 +131,7 @@ function Consent() {
         )}
 
         <p className="text-xs text-muted-foreground">
-          This does not bypass Gamio's own permissions or backend policies.
+          This does not bypass Consoleto's own permissions or backend policies.
         </p>
 
         {error && (

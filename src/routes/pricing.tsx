@@ -13,13 +13,13 @@ const BookingDialog = lazy(() =>
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "قیمت اجاره کنسول بازی | پکیج‌های روزانه تا ماهانه | گیمیو" },
+      { title: "قیمت اجاره کنسول بازی | پکیج‌های روزانه تا ماهانه | کنسولتو" },
       {
         name: "description",
         content:
-          "تعرفه اجاره کنسول در گیمیو: پکیج روزانه، آخر هفته، هفتگی و ماهانه. بدون هزینه پنهان، شامل بیمه و ارسال رایگان در تهران.",
+          "تعرفه اجاره کنسول در کنسولتو: پکیج روزانه، آخر هفته، هفتگی و ماهانه. بدون هزینه پنهان، شامل بیمه و ارسال رایگان در تهران.",
       },
-      { property: "og:title", content: "قیمت اجاره کنسول در گیمیو" },
+      { property: "og:title", content: "قیمت اجاره کنسول در کنسولتو" },
       {
         property: "og:description",
         content: "پکیج‌های منعطف روزانه، آخر هفته، هفتگی و ماهانه — بدون هزینه پنهان.",
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/pricing")({
           "@context": "https://schema.org",
           "@type": "Service",
           serviceType: "اجاره کنسول بازی",
-          provider: { "@type": "Organization", name: "گیمیو" },
+          provider: { "@type": "Organization", name: "کنسولتو" },
           areaServed: { "@type": "City", name: "Tehran" },
           offers: [
             { "@type": "Offer", name: "اجاره روزانه", price: "250000", priceCurrency: "IRR" },

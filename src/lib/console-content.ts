@@ -21,7 +21,7 @@ export type ConsoleContent = {
 export const CONSOLE_CONTENT: Record<string, ConsoleContent> = {
   ps5: {
     slug: "ps5",
-    seoTitle: "اجاره PS5 در تهران | پلی‌استیشن ۵ با تحویل درب منزل | گیمیو",
+    seoTitle: "اجاره PS5 در تهران | پلی‌استیشن ۵ با تحویل درب منزل | کنسولتو",
     seoDescription:
       "اجاره PlayStation 5 در تهران با دو دسته DualSense، بازی‌های انحصاری و تحویل رایگان درب منزل. رزرو آنلاین در ۳ دقیقه.",
     hero: {
@@ -50,7 +50,7 @@ export const CONSOLE_CONTENT: Record<string, ConsoleContent> = {
   },
   "xbox-series-x": {
     slug: "xbox-series-x",
-    seoTitle: "اجاره Xbox Series X در تهران | ایکس‌باکس با Game Pass | گیمیو",
+    seoTitle: "اجاره Xbox Series X در تهران | ایکس‌باکس با Game Pass | کنسولتو",
     seoDescription:
       "اجاره Xbox Series X با دسترسی به Game Pass، دو دسته و تحویل رایگان در تهران. پکیج روزانه، هفتگی و ماهانه.",
     hero: {
@@ -79,7 +79,7 @@ export const CONSOLE_CONTENT: Record<string, ConsoleContent> = {
   },
   "nintendo-switch": {
     slug: "nintendo-switch",
-    seoTitle: "اجاره Nintendo Switch در تهران | نینتندو سوییچ خانوادگی | گیمیو",
+    seoTitle: "اجاره Nintendo Switch در تهران | نینتندو سوییچ خانوادگی | کنسولتو",
     seoDescription:
       "اجاره Nintendo Switch با بازی‌های خانوادگی مثل Mario Kart و Zelda، تحویل رایگان درب منزل در تهران و پکیج‌های منعطف.",
     hero: {

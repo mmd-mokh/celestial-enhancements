@@ -11,15 +11,15 @@
   },
   "mcp": {
     "server": {
-      "name": "gamio-mcp",
+      "name": "consoleto-mcp",
       "version": "0.1.0",
-      "title": "Gamio"
+      "title": "Consoleto"
     },
     "tools": [
       {
         "name": "list_consoles",
         "title": "List consoles",
-        "description": "List the game consoles Gamio currently rents, including slug, name, tagline, and daily capacity.",
+        "description": "List the game consoles Consoleto currently rents, including slug, name, tagline, and daily capacity.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,

@@ -13,13 +13,13 @@ export const Route = createFileRoute("/consoles")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: "اجاره کنسول PS5، Xbox و Nintendo Switch | گیمیو" },
+      { title: "اجاره کنسول PS5، Xbox و Nintendo Switch | کنسولتو" },
       {
         name: "description",
         content:
-          "کنسول‌های موجود برای اجاره در گیمیو: PlayStation 5، Xbox Series X، و Nintendo Switch. همه با دو دسته و کابل‌های اصلی، تحویل درب منزل در تهران.",
+          "کنسول‌های موجود برای اجاره در کنسولتو: PlayStation 5، Xbox Series X، و Nintendo Switch. همه با دو دسته و کابل‌های اصلی، تحویل درب منزل در تهران.",
       },
-      { property: "og:title", content: "کنسول‌های موجود در گیمیو" },
+      { property: "og:title", content: "کنسول‌های موجود در کنسولتو" },
       {
         property: "og:description",
         content: "PS5، Xbox Series X، و Nintendo Switch — اجاره روزانه تا ماهانه.",
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/consoles")({
             name: c.name,
             description: c.tagline ?? undefined,
             category: "Video Game Console",
-            brand: { "@type": "Organization", name: "گیمیو" },
+            brand: { "@type": "Organization", name: "کنسولتو" },
           })),
         }),
       },

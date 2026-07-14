@@ -35,7 +35,7 @@ export function HeroSection() {
             <div className="mt-6 flex justify-center">
               <span className="inline-flex items-center gap-2 rounded-full bg-primary-100 dark:bg-primary-500/15 px-4 py-2 text-sm font-semibold text-primary-700 dark:text-primary-200 border border-primary-200 dark:border-primary-400/40">
                 <BsIcon name="bi-star-fill" className="text-primary-600" size={16} />
-                گیمیو = دنیای گیمینگ بدون محدودیت مالی
+                کنسولتو = دنیای گیمینگ بدون محدودیت مالی
               </span>
             </div>
 

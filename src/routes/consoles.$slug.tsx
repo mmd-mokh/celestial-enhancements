@@ -21,7 +21,7 @@ export const Route = createFileRoute("/consoles/$slug")({
     if (!c) {
       return {
         meta: [
-          { title: "کنسول پیدا نشد | گیمیو" },
+          { title: "کنسول پیدا نشد | کنسولتو" },
           { name: "robots", content: "noindex" },
         ],
       };
@@ -47,7 +47,7 @@ export const Route = createFileRoute("/consoles/$slug")({
             name: c.hero.heading,
             description: c.seoDescription,
             category: "Video Game Console",
-            brand: { "@type": "Organization", name: "گیمیو" },
+            brand: { "@type": "Organization", name: "کنسولتو" },
             offers: {
               "@type": "Offer",
               price: c.priceIRR,
@@ -172,7 +172,7 @@ function ConsoleDetailPage() {
           <section className="px-4 md:px-8 lg:px-16 py-16">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-                چرا این کنسول را از گیمیو اجاره کنی؟
+                چرا این کنسول را از کنسولتو اجاره کنی؟
               </h2>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {dbRow.features.map((f, i) => (

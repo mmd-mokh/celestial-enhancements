@@ -7,7 +7,7 @@ export default defineTool({
   name: "list_consoles",
   title: "List consoles",
   description:
-    "List the game consoles Gamio currently rents, including slug, name, tagline, and daily capacity.",
+    "List the game consoles Consoleto currently rents, including slug, name, tagline, and daily capacity.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async () => {

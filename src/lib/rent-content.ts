@@ -15,7 +15,7 @@ export type RentContent = {
 export const RENT_CONTENT: Record<string, RentContent> = {
   party: {
     slug: "party",
-    seoTitle: "اجاره کنسول برای مهمانی | Nintendo Switch و PS5 | گیمیو",
+    seoTitle: "اجاره کنسول برای مهمانی | Nintendo Switch و PS5 | کنسولتو",
     seoDescription:
       "برای مهمانی، دورهمی و شب‌نشینی، کنسول اجاره کن. بازی‌های چندنفره Mario Kart، FIFA و Just Dance با تحویل سریع درب منزل در تهران.",
     hero: {
@@ -46,7 +46,7 @@ export const RENT_CONTENT: Record<string, RentContent> = {
   },
   nowruz: {
     slug: "nowruz",
-    seoTitle: "اجاره کنسول بازی برای نوروز ۱۴۰۴ | تعطیلات پرهیجان | گیمیو",
+    seoTitle: "اجاره کنسول بازی برای نوروز ۱۴۰۴ | تعطیلات پرهیجان | کنسولتو",
     seoDescription:
       "تعطیلات نوروز را با اجاره PS5، Xbox یا Nintendo Switch به یک تجربه فراموش‌نشدنی تبدیل کن. پکیج ویژه ۱۳ روزه با تحویل تهران.",
     hero: {
@@ -77,7 +77,7 @@ export const RENT_CONTENT: Record<string, RentContent> = {
   },
   birthday: {
     slug: "birthday",
-    seoTitle: "اجاره کنسول برای جشن تولد | هدیه غافلگیرکننده | گیمیو",
+    seoTitle: "اجاره کنسول برای جشن تولد | هدیه غافلگیرکننده | کنسولتو",
     seoDescription:
       "برای جشن تولد یک روز خاطره‌انگیز بساز — Nintendo Switch یا PS5 با تحویل رایگان در تهران، بدون نگرانی از هزینه خرید.",
     hero: {

@@ -18,7 +18,7 @@ export const Route = createFileRoute("/rent/$slug")({
     if (!c) {
       return {
         meta: [
-          { title: "پیدا نشد | گیمیو" },
+          { title: "پیدا نشد | کنسولتو" },
           { name: "robots", content: "noindex" },
         ],
       };
@@ -106,7 +106,7 @@ function RentPage() {
         <section className="px-4 md:px-8 lg:px-16 py-16">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-gray-900 mb-10 text-center">
-              چرا گیمیو برای این مناسبت؟
+              چرا کنسولتو برای این مناسبت؟
             </h2>
             <ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {c.benefits.map((b) => (

@@ -46,15 +46,15 @@ export const Route = createFileRoute("/api/public/booking-ical/$id")({
         const ics = [
           "BEGIN:VCALENDAR",
           "VERSION:2.0",
-          "PRODID:-//Gamio//Booking//FA",
+          "PRODID:-//Consoleto//Booking//FA",
           "CALSCALE:GREGORIAN",
           "METHOD:PUBLISH",
           "BEGIN:VEVENT",
-          `UID:${data.id}@gamio`,
+          `UID:${data.id}@consoleto`,
           `DTSTAMP:${now}`,
           `DTSTART;VALUE=DATE:${fmtDate(data.start_date)}`,
           `DTEND;VALUE=DATE:${dtend}`,
-          `SUMMARY:${esc(`رزرو گیمیو - ${consoleLabel}`)}`,
+          `SUMMARY:${esc(`رزرو کنسولتو - ${consoleLabel}`)}`,
           `DESCRIPTION:${esc(`پکیج: ${data.package_type ?? "-"}\nوضعیت: ${data.status}\n${data.notes ?? ""}`)}`,
           `STATUS:${data.status === "cancelled" ? "CANCELLED" : "CONFIRMED"}`,
           "END:VEVENT",
@@ -64,7 +64,7 @@ export const Route = createFileRoute("/api/public/booking-ical/$id")({
         return new Response(ics, {
           headers: {
             "Content-Type": "text/calendar; charset=utf-8",
-            "Content-Disposition": `attachment; filename="gamio-booking-${data.id.slice(0, 8)}.ics"`,
+            "Content-Disposition": `attachment; filename="consoleto-booking-${data.id.slice(0, 8)}.ics"`,
             "Cache-Control": "private, max-age=300",
             "X-Robots-Tag": "noindex",
           },

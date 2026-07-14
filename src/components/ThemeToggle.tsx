@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const KEY = "gamio-theme";
+const KEY = "consoleto-theme";
 
 export function ThemeToggle() {
   const [dark, setDark] = useState(false);

@@ -85,9 +85,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "theme-color", content: "#0f172a" },
       { name: "apple-mobile-web-app-capable", content: "yes" },
       { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
-      { name: "apple-mobile-web-app-title", content: "گیمیو" },
+      { name: "apple-mobile-web-app-title", content: "کنسولتو" },
       {
-        title: "گیمیو | اجاره کنسول PS5، Xbox و Nintendo Switch در تهران",
+        title: "کنسولتو | اجاره کنسول PS5، Xbox و Nintendo Switch در تهران",
       },
       {
         name: "description",
@@ -97,11 +97,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "keywords",
         content:
-          "اجاره کنسول بازی، اجاره PS5، اجاره پلی استیشن ۵، کرایه Xbox، اجاره Xbox Series X، اجاره نینتندو سوییچ، کرایه کنسول بازی تهران، اجاره کنسول برای مهمانی، اجاره تجهیزات گیمینگ، گیمیو",
+          "اجاره کنسول بازی، اجاره PS5، اجاره پلی استیشن ۵، کرایه Xbox، اجاره Xbox Series X، اجاره نینتندو سوییچ، کرایه کنسول بازی تهران، اجاره کنسول برای مهمانی، اجاره تجهیزات گیمینگ، کنسولتو",
       },
       {
         property: "og:title",
-        content: "گیمیو - اجاره کنسول بازی PS5 و Xbox در تهران",
+        content: "کنسولتو - اجاره کنسول بازی PS5 و Xbox در تهران",
       },
       {
         property: "og:description",
@@ -110,9 +110,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "fa_IR" },
-      { property: "og:site_name", content: "گیمیو" },
+      { property: "og:site_name", content: "کنسولتو" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "گیمیو - اجاره کنسول بازی" },
+      { name: "twitter:title", content: "کنسولتو - اجاره کنسول بازی" },
       {
         name: "twitter:description",
         content: "PS5، Xbox، Switch - اجاره کن، تجربه کن، لذت ببر!",
@@ -151,8 +151,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "Organization",
-          name: "گیمیو",
-          alternateName: "Gamio",
+          name: "کنسولتو",
+          alternateName: "Consoleto",
           url: SITE_URL,
           logo: absUrl("/assets/logo/logo1.png"),
           description:
@@ -173,7 +173,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "LocalBusiness",
-          name: "گیمیو",
+          name: "کنسولتو",
           image: absUrl("/assets/logo/logo1.png"),
           url: SITE_URL,
           priceRange: "$$",
@@ -208,7 +208,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
-          name: "گیمیو",
+          name: "کنسولتو",
           url: SITE_URL,
           inLanguage: "fa-IR",
           potentialAction: {
@@ -233,7 +233,7 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem('gamio-theme');if(s==='dark'){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`,
+            __html: `(function(){try{var s=localStorage.getItem('consoleto-theme');if(s==='dark'){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.setAttribute('data-theme','light');}}catch(e){}})();`,
           }}
         />
       </head>

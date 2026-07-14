@@ -34,7 +34,7 @@ function BlogIndex() {
     >
       <div className="mx-auto max-w-4xl space-y-6">
         <header className="text-center space-y-2 py-6">
-          <h1 className="text-4xl font-bold">بلاگ گیمیو</h1>
+          <h1 className="text-4xl font-bold">بلاگ کنسولتو</h1>
           <p className="text-muted-foreground">راهنما، اخبار و ترفندهای دنیای گیمینگ</p>
         </header>
         {posts.length === 0 ? (
