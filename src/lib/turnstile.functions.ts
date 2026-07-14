@@ -7,8 +7,8 @@ import { z } from "zod";
  */
 export const getTurnstileSiteKey = createServerFn({ method: "GET" }).handler(
   async (): Promise<{ siteKey: string | null }> => {
-    const siteKey = process.env.TURNSTILE_SITE_KEY ?? null;
-    return { siteKey };
+    // CAPTCHA temporarily disabled — return null so the widget renders nothing.
+    return { siteKey: null };
   },
 );
 
@@ -18,23 +18,10 @@ export const getTurnstileSiteKey = createServerFn({ method: "GET" }).handler(
  * Skips verification only if the site key is not configured at all (dev).
  */
 export async function verifyTurnstileToken(token: string | null | undefined): Promise<boolean> {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!secret) return true; // Turnstile not configured — do not block.
-  if (!token) return false;
-  try {
-    const form = new URLSearchParams();
-    form.set("secret", secret);
-    form.set("response", token);
-    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-      method: "POST",
-      body: form,
-    });
-    if (!res.ok) return false;
-    const json = (await res.json()) as { success?: boolean };
-    return json.success === true;
-  } catch {
-    return false;
-  }
+  // CAPTCHA temporarily disabled — always pass. Re-enable by restoring the
+  // Cloudflare siteverify exchange below.
+  void token;
+  return true;
 }
 
 // Zod helper for tokens passed by clients.
