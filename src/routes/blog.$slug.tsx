@@ -4,6 +4,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { blogPostQueryOptions } from "@/lib/queries";
 import { absUrl, SITE_URL } from "@/lib/seo";
+import { formatDateFa } from "@/lib/i18n";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ context, params }) => {
@@ -103,7 +104,7 @@ function PostPage() {
         <header className="space-y-3">
           <h1 className="text-4xl font-bold leading-tight">{post.title}</h1>
           {post.published_at && (
-            <p className="text-sm text-muted-foreground">{new Date(post.published_at).toLocaleDateString("fa-IR")}</p>
+            <p className="text-sm text-muted-foreground">{formatDateFa(post.published_at)}</p>
           )}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2">

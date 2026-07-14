@@ -11,5 +11,7 @@ export function formatDateFa(value: string | Date | null | undefined): string {
   if (!value) return "—";
   const d = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(d.getTime())) return String(value);
-  return d.toLocaleDateString("fa-IR");
+  // Force UTC so SSR (server, UTC) and CSR (browser, user TZ) render the same
+  // Persian calendar day and hydration matches.
+  return d.toLocaleDateString("fa-IR", { timeZone: "UTC" });
 }

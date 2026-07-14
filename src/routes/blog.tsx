@@ -3,6 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { blogListQueryOptions } from "@/lib/queries";
 import { absUrl } from "@/lib/seo";
+import { formatDateFa } from "@/lib/i18n";
 
 export const Route = createFileRoute("/blog")({
   head: () => ({
@@ -80,7 +81,7 @@ function BlogIndex() {
                   <CardHeader><CardTitle className="text-lg">{p.title}</CardTitle></CardHeader>
                   <CardContent className="space-y-2">
                     {p.excerpt && <p className="text-sm text-muted-foreground line-clamp-3">{p.excerpt}</p>}
-                    {p.published_at && <p className="text-xs text-muted-foreground">{new Date(p.published_at).toLocaleDateString("fa-IR")}</p>}
+                    {p.published_at && <p className="text-xs text-muted-foreground">{formatDateFa(p.published_at)}</p>}
                   </CardContent>
                 </Card>
               </Link>
