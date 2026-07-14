@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.create_booking(text, text, text, text, date, date, text) FROM PUBLIC, anon, authenticated;
