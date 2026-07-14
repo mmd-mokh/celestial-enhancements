@@ -17,10 +17,10 @@ const LEGAL_LINKS = [
 ];
 
 const SOCIALS = [
-  { href: "https://instagram.com/gamio.ir", label: "اینستاگرام", Icon: Instagram },
-  { href: "https://t.me/gamioofficial", label: "تلگرام", Icon: Send },
-  { href: "https://twitter.com/gamio_ir", label: "توییتر", Icon: Twitter },
-  { href: "https://youtube.com/@gamioiran", label: "یوتیوب", Icon: Youtube },
+  { href: "https://instagram.com/consoleto.ir", label: "اینستاگرام", Icon: Instagram },
+  { href: "https://t.me/consoletoofficial", label: "تلگرام", Icon: Send },
+  { href: "https://twitter.com/consoleto_ir", label: "توییتر", Icon: Twitter },
+  { href: "https://youtube.com/@consoletoiran", label: "یوتیوب", Icon: Youtube },
 ];
 
 export function SiteFooter() {
@@ -34,14 +34,14 @@ export function SiteFooter() {
           <div className="flex flex-col gap-4">
             <img
               src="/assets/logo/logo1.png"
-              alt="گیمیو - اجاره کنسول بازی"
+              alt="کنسولتو - اجاره کنسول بازی"
               className="max-w-[120px]"
               width={120}
               height={120}
               loading="lazy"
             />
             <p className="text-white leading-relaxed text-sm">
-              گیمیو اولین و بزرگ‌ترین سرویس اجاره کنسول بازی در ایرانه. ما با هدف
+              کنسولتو اولین و بزرگ‌ترین سرویس اجاره کنسول بازی در ایرانه. ما با هدف
               دموکراتیک‌کردن دسترسی به دنیای گیمینگ، امکان اجاره کنسول‌های نسل جدید
               رو با قیمت مناسب و کیفیت بالا فراهم کردیم.
             </p>
@@ -60,7 +60,7 @@ export function SiteFooter() {
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-primary" />
-                <span dir="ltr" className="placeholder-text">info@gamio.ir</span>
+                <span dir="ltr" className="placeholder-text">info@consoleto.ir</span>
                 <span className="placeholder-tag" title="این اطلاعات نمونه است">
                   <Info className="h-3 w-3" aria-hidden="true" />
                   <span>نمونه</span>
@@ -117,7 +117,7 @@ export function SiteFooter() {
       </footer>
 
       <div className="w-full bg-gray-800 text-white text-center py-4 text-sm">
-        <p>© ۱۴۰۳ گیمیو. تمامی حقوق محفوظ است.</p>
+        <p>© ۱۴۰۳ کنسولتو. تمامی حقوق محفوظ است.</p>
         <p className="mt-1 text-gray-400">طراحی و توسعه با ❤️ برای گیمرهای ایرانی</p>
       </div>
     </>

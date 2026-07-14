@@ -8,13 +8,13 @@ import { absUrl } from "@/lib/seo";
 export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: [
-      { title: "بلاگ گیمیو | راهنما و اخبار دنیای گیمینگ" },
+      { title: "بلاگ کنسولتو | راهنما و اخبار دنیای گیمینگ" },
       {
         name: "description",
         content:
-          "مقالات و راهنماهای گیمیو درباره کنسول‌های بازی، بازی‌های روز، و ترفندهای گیمینگ.",
+          "مقالات و راهنماهای کنسولتو درباره کنسول‌های بازی، بازی‌های روز، و ترفندهای گیمینگ.",
       },
-      { property: "og:title", content: "بلاگ گیمیو | راهنما و اخبار دنیای گیمینگ" },
+      { property: "og:title", content: "بلاگ کنسولتو | راهنما و اخبار دنیای گیمینگ" },
       {
         property: "og:description",
         content:

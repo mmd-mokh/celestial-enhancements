@@ -54,7 +54,7 @@ export function SiteHeader() {
     >
       <div className="header-gradient" aria-hidden="true" />
       <div className="site-header__inner">
-        <Link to="/" className="nav-logo" aria-label="گیمیو - صفحه اصلی">
+        <Link to="/" className="nav-logo" aria-label="کنسولتو - صفحه اصلی">
           <img
             src="/assets/logo/logo1.png"
             alt=""
@@ -121,7 +121,7 @@ export function SiteHeader() {
                     alt=""
                     className="h-9 w-9"
                   />
-                  <span>گیمیو</span>
+                  <span>کنسولتو</span>
                 </SheetTitle>
               </SheetHeader>
 

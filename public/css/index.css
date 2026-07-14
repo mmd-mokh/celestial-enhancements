@@ -1386,7 +1386,7 @@ body {
     /* Hero copy */
     #hero h1, #hero p, #hero span { color: var(--text-primary); }
 
-    /* Hero tagline badge (light-purple pill with "گیمیو = دنیای گیمینگ ...")
+    /* Hero tagline badge (light-purple pill with "کنسولتو = دنیای گیمینگ ...")
        uses tw-text-primary-700 (#5849C7) in light mode. In dark mode we bump
        the text up to the lighter primary accent (#6C5CE7) so it stays readable
        and harmonizes with the icon color (already tw-text-primary-600). */

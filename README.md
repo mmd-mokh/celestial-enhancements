@@ -1,4 +1,4 @@
-# Gamio — اجاره کنسول بازی
+# Consoleto — اجاره کنسول بازی
 
 A Persian/RTL landing page and booking platform for console rentals (PlayStation 5, Xbox Series X, Nintendo Switch). Built on TanStack Start with Lovable Cloud (Supabase) as the backend.
 
@@ -104,9 +104,9 @@ src/
     AnalyticsCharts.tsx
     ui/                      shadcn primitives
   integrations/supabase/     auto-generated client + auth middleware
-  gamio-body.html            ported static sections (portaled into by React)
+  consoleto-body.html            ported static sections (portaled into by React)
 public/
-  gamio.js                   legacy scroll animations
+  consoleto.js                   legacy scroll animations
   css/, assets/              ported styles + images
   manifest.webmanifest, robots.txt
 ```
@@ -227,7 +227,7 @@ audit through the current reservation-only build.
 - **Theme toggle** (`src/components/ThemeToggle.tsx`) — Sun/Moon toggle that
   writes `localStorage` and toggles both `html.dark` and `data-theme` in sync.
 - **No-flash init** in `__root.tsx` head applies the saved theme before paint.
-- **Legacy script sync** (`public/gamio.js`) — ported scroll animations updated
+- **Legacy script sync** (`public/consoleto.js`) — ported scroll animations updated
   to keep `dark` class and `data-theme` attribute consistent.
 - **Global dark overrides** (`src/styles.css`) — scoped `html.dark` rules
   remap hardcoded Tailwind utilities inside the ported HTML blob

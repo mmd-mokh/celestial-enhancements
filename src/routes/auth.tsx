@@ -11,7 +11,7 @@ export const Route = createFileRoute("/auth")({
   }),
   head: () => ({
     meta: [
-      { title: "ورود | گیمیو" },
+      { title: "ورود | کنسولتو" },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),
@@ -97,7 +97,7 @@ function AuthPage() {
       <div className="w-full max-w-md rounded-xl border border-border bg-card p-6 shadow-lg space-y-5">
         <div>
           <h1 className="text-xl font-semibold text-foreground">
-            {mode === "signin" ? "Sign in to Gamio" : "Create your Gamio account"}
+            {mode === "signin" ? "Sign in to Consoleto" : "Create your Consoleto account"}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
             Sign in to continue.

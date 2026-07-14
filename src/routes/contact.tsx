@@ -24,16 +24,16 @@ type FormValues = z.infer<typeof schema>;
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "تماس با ما | گیمیو" },
+      { title: "تماس با ما | کنسولتو" },
       {
         name: "description",
         content:
-          "با تیم پشتیبانی گیمیو در تماس باشید. سوال، پیشنهاد یا مشکل خود درباره اجاره کنسول را برای ما ارسال کنید.",
+          "با تیم پشتیبانی کنسولتو در تماس باشید. سوال، پیشنهاد یا مشکل خود درباره اجاره کنسول را برای ما ارسال کنید.",
       },
-      { property: "og:title", content: "تماس با گیمیو" },
+      { property: "og:title", content: "تماس با کنسولتو" },
       {
         property: "og:description",
-        content: "فرم تماس، شماره پشتیبانی و راه‌های ارتباط با گیمیو.",
+        content: "فرم تماس، شماره پشتیبانی و راه‌های ارتباط با کنسولتو.",
       },
       { property: "og:url", content: absUrl("/contact") },
       { property: "og:type", content: "website" },

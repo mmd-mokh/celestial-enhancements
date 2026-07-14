@@ -5,13 +5,13 @@ import { absUrl, SITE_URL } from "@/lib/seo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "گیمیو | اجاره کنسول PS5، Xbox و Nintendo Switch در تهران" },
+      { title: "کنسولتو | اجاره کنسول PS5، Xbox و Nintendo Switch در تهران" },
       {
         name: "description",
         content:
           "اجاره کنسول PS5، Xbox Series X و Nintendo Switch در تهران با تحویل درب منزل، پکیج روزانه تا ماهانه و رزرو آنلاین در ۳ دقیقه.",
       },
-      { property: "og:title", content: "گیمیو - اجاره کنسول بازی PS5 و Xbox در تهران" },
+      { property: "og:title", content: "کنسولتو - اجاره کنسول بازی PS5 و Xbox در تهران" },
       {
         property: "og:description",
         content:

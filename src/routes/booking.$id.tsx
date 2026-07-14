@@ -27,8 +27,8 @@ export const Route = createFileRoute("/booking/$id")({
   },
   head: () => ({
     meta: [
-      { title: "وضعیت رزرو | گیمیو" },
-      { name: "description", content: "مشاهدهٔ وضعیت رزرو کنسول در گیمیو." },
+      { title: "وضعیت رزرو | کنسولتو" },
+      { name: "description", content: "مشاهدهٔ وضعیت رزرو کنسول در کنسولتو." },
       { name: "robots", content: "noindex, nofollow" },
     ],
   }),

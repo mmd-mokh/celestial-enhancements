@@ -17,7 +17,7 @@ export function SuccessView({
       <div className="space-y-2">
         <DialogTitle className="text-center text-2xl">درخواست شما ثبت شد</DialogTitle>
         <DialogDescription className="text-center">
-          تیم گیمیو در کمتر از ۳۰ دقیقه برای هماهنگی نهایی تماس می‌گیرد.
+          تیم کنسولتو در کمتر از ۳۰ دقیقه برای هماهنگی نهایی تماس می‌گیرد.
         </DialogDescription>
       </div>
 
