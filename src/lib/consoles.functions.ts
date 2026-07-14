@@ -25,7 +25,7 @@ export const getConsoles = createServerFn({ method: "GET" }).handler(
         .eq("active", true)
         .order("sort_order");
       if (error) throw error;
-      return (data ?? []) as ConsoleRow[];
+      return data && data.length > 0 ? (data as ConsoleRow[]) : FALLBACK_PUBLIC_CONSOLES;
     } catch (error) {
       if (isLocalBackendUnavailableError(error)) {
         warnLocalFallback("getConsoles", error);
@@ -49,7 +49,11 @@ export const getConsoleBySlug = createServerFn({ method: "GET" })
         .eq("slug", data.slug)
         .maybeSingle();
       if (error) throw error;
-      return (row ?? null) as ConsoleRow | null;
+      return (
+        (row as ConsoleRow | null) ??
+        FALLBACK_PUBLIC_CONSOLES.find((consoleItem) => consoleItem.slug === data.slug) ??
+        null
+      );
     } catch (error) {
       if (isLocalBackendUnavailableError(error)) {
         warnLocalFallback("getConsoleBySlug", error);

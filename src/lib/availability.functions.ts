@@ -18,7 +18,14 @@ export const getConsolesRemaining = createServerFn({ method: "GET" }).handler(
       const supabase = getPublicSupabase();
       const { data, error } = await supabase.rpc("get_consoles_remaining");
       if (error) throw error;
-      return (data ?? []).map((r) => ({
+      const rows = data && data.length > 0 ? data : FALLBACK_PUBLIC_CONSOLES.map((consoleItem) => ({
+        slug: consoleItem.slug,
+        name: consoleItem.name,
+        capacity: FALLBACK_CONSOLE_CAPACITY,
+        booked: 0,
+        remaining: FALLBACK_CONSOLE_CAPACITY,
+      }));
+      return rows.map((r) => ({
         slug: r.slug,
         name: r.name,
         capacity: r.capacity ?? 0,
@@ -66,7 +73,13 @@ export const getConsolesWithRemaining = createServerFn({ method: "GET" }).handle
       const supabase = getPublicSupabase();
       const { data, error } = await supabase.rpc("get_consoles_with_remaining");
       if (error) throw error;
-      return (data ?? []).map((r: Record<string, unknown>) => ({
+      const rows = data && data.length > 0 ? data : FALLBACK_PUBLIC_CONSOLES.map((consoleItem) => ({
+        ...consoleItem,
+        capacity: FALLBACK_CONSOLE_CAPACITY,
+        booked: 0,
+        remaining: FALLBACK_CONSOLE_CAPACITY,
+      }));
+      return rows.map((r: Record<string, unknown>) => ({
         slug: r.slug as string,
         name: r.name as string,
         tagline: (r.tagline as string | null) ?? null,
