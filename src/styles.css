@@ -71,10 +71,23 @@
   --color-primary-700: oklch(0.46 0.20 278);
   --color-primary-800: oklch(0.38 0.16 278);
   --color-primary-900: oklch(0.30 0.12 278);
+  /* Extended design tokens exposed as Tailwind utilities. */
+  --color-primary-glow: var(--primary-glow);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --shadow-elegant: 0 12px 32px -12px color-mix(in oklab, var(--primary) 40%, transparent);
+  --shadow-glow: 0 0 40px -8px color-mix(in oklab, var(--primary-glow, var(--primary)) 55%, transparent);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px -12px rgba(15, 23, 42, 0.12);
+  --ease-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 :root {
   --radius: 0.625rem;
+  --primary-glow: oklch(0.78 0.16 290);
+  --surface-1: oklch(1 0 0);
+  --surface-2: oklch(0.985 0.005 260);
+  --surface-3: oklch(0.965 0.008 260);
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
@@ -111,6 +124,10 @@
 
 .dark {
   --background: oklch(0.129 0.042 264.695);
+  --primary-glow: oklch(0.72 0.18 290);
+  --surface-1: oklch(0.19 0.035 265);
+  --surface-2: oklch(0.22 0.038 265);
+  --surface-3: oklch(0.26 0.04 265);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
@@ -262,4 +279,118 @@ footer[role="contentinfo"] svg.text-primary {
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-fade-in { animation: none; }
+}
+
+/* -------- New UI utilities (modern refresh) -------- */
+
+/* Premium gradient button. Use with the shadcn <Button variant="premium"> or
+   as a raw class when replacing legacy .btn-enhanced instances. */
+@utility btn-premium {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  color: var(--color-primary-foreground);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-glow) 100%
+  );
+  box-shadow: var(--shadow-elegant);
+  font-weight: 600;
+  transition:
+    transform 200ms var(--ease-emphasized),
+    box-shadow 200ms var(--ease-emphasized),
+    filter 200ms var(--ease-emphasized);
+  will-change: transform;
+  &:hover {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: var(--shadow-elegant), var(--shadow-glow);
+    filter: saturate(1.05);
+  }
+  &:active { transform: translateY(0) scale(0.99); }
+  &:focus-visible {
+    outline: 3px solid color-mix(in oklab, var(--color-primary) 65%, white);
+    outline-offset: 3px;
+  }
+}
+
+/* Ghost/outline pair for the premium button. */
+@utility btn-ghost-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  border: 2px solid color-mix(in oklab, var(--color-primary) 55%, transparent);
+  color: var(--color-primary);
+  background: color-mix(in oklab, var(--color-primary) 6%, transparent);
+  font-weight: 600;
+  transition:
+    transform 200ms var(--ease-emphasized),
+    background 200ms var(--ease-emphasized),
+    border-color 200ms var(--ease-emphasized);
+  &:hover {
+    transform: translateY(-1px);
+    background: color-mix(in oklab, var(--color-primary) 12%, transparent);
+    border-color: var(--color-primary);
+  }
+  &:active { transform: translateY(0); }
+}
+
+/* Card surface used by pricing / console / faq / testimonial cards. */
+@utility surface-card {
+  background-color: var(--color-card);
+  color: var(--color-card-foreground);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 250ms var(--ease-emphasized),
+    box-shadow 250ms var(--ease-emphasized),
+    border-color 250ms var(--ease-emphasized);
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-elegant);
+    border-color: color-mix(in oklab, var(--color-primary) 35%, var(--color-border));
+  }
+}
+
+/* Gradient text used for hero headline emphasis. */
+@utility text-gradient-primary {
+  background-image: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-glow) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Underline sweep for header nav links. */
+@utility nav-underline {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: -6px;
+    height: 2px;
+    border-radius: 2px;
+    background-image: linear-gradient(
+      90deg,
+      var(--color-primary) 0%,
+      var(--color-primary-glow) 100%
+    );
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 300ms var(--ease-emphasized);
+  }
+  &:hover::after,
+  &.is-active::after { transform: scaleX(1); }
 }
