@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, X, ChevronLeft, Gamepad2, Zap, Tag, HelpCircle, type LucideIcon } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { cn } from "@/lib/utils";
 
@@ -102,67 +101,56 @@ export function SiteHeader() {
         </a>
 
         <div className="nav-actions">
-          <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger asChild>
-              <button
-                type="button"
-                className="nav-hamburger"
-                aria-label="باز کردن منو"
-                aria-expanded={open}
-              >
-                {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
-            </SheetTrigger>
-            <SheetContent side="right" className="flex flex-col gap-6" dir="rtl">
-              <SheetHeader className="text-right">
-                <SheetTitle className="flex items-center gap-2">
-                  <img
-                    src="/assets/logo/logo1.png"
-                    alt=""
-                    className="h-9 w-9"
-                  />
-                  <span>کنسولتو</span>
-                </SheetTitle>
-              </SheetHeader>
-
-              <nav aria-label="منوی موبایل">
-                <ul className="flex flex-col gap-1" role="list">
-                  {NAV.map((item) => (
-                    <li key={item.href}>
-                      <SheetClose asChild>
-                        <a
-                          href={item.href}
-                          className="flex items-center gap-3 rounded-md px-3 py-3 text-base font-semibold hover:bg-muted"
-                        >
-                          <item.Icon className="h-5 w-5 text-primary" aria-hidden="true" />
-                          <span>{item.label}</span>
-                        </a>
-                      </SheetClose>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-
-              <div className="mt-auto">
-                <SheetClose asChild>
-                  <a
-                    href="#pricing"
-                    className="btn btn-enhanced flex items-center justify-center gap-2 w-full"
-                    onClick={() => {
-                      void import("@/lib/analytics").then((m) =>
-                        m.trackEvent("cta_click", { location: "header_mobile" }),
-                      );
-                    }}
-                  >
-                    <span>همین الان رزرو کن</span>
-                    <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-                  </a>
-                </SheetClose>
-              </div>
-            </SheetContent>
-          </Sheet>
+          <button
+            type="button"
+            className="nav-hamburger"
+            aria-label={open ? "بستن منو" : "باز کردن منو"}
+            aria-expanded={open}
+            aria-controls="mobile-navigation"
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
       </div>
+      {open && (
+        <div
+          id="mobile-navigation"
+          className="absolute inset-x-4 top-full z-50 mt-3 rounded-xl border border-gray-200 bg-white p-4 shadow-xl lg:hidden"
+          dir="rtl"
+        >
+          <nav aria-label="منوی موبایل">
+            <ul className="flex flex-col gap-1" role="list">
+              {NAV.map((item) => (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    className="flex items-center gap-3 rounded-md px-3 py-3 text-base font-semibold hover:bg-muted"
+                    onClick={() => setOpen(false)}
+                  >
+                    <item.Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+                    <span>{item.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <a
+            href="#pricing"
+            className="btn btn-enhanced mt-4 flex w-full items-center justify-center gap-2"
+            onClick={() => {
+              setOpen(false);
+              void import("@/lib/analytics").then((m) =>
+                m.trackEvent("cta_click", { location: "header_mobile" }),
+              );
+            }}
+          >
+            <span>همین الان رزرو کن</span>
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+          </a>
+        </div>
+      )}
     </header>
   );
 }
