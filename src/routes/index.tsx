@@ -1,8 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LandingPage } from "@/components/LandingPage";
 import { absUrl, SITE_URL } from "@/lib/seo";
+import { consolesQueryOptions } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
+  loader: ({ context }) => {
+    // Prime the consoles cache during SSR so cards render in initial HTML.
+    context.queryClient.ensureQueryData(consolesQueryOptions());
+  },
   head: () => ({
     meta: [
       { title: "کنسولتو | اجاره کنسول PS5، Xbox و Nintendo Switch در تهران" },
@@ -23,12 +28,6 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: SITE_URL + "/" },
-      {
-        rel: "preload",
-        as: "image",
-        href: "/assets/images/home/dashboard.png",
-        fetchPriority: "high",
-      },
     ],
   }),
   component: () => <LandingPage />,
