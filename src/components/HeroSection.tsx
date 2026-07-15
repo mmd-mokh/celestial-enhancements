@@ -29,10 +29,10 @@ export function HeroSection() {
           <div className="flex flex-col place-content-center items-center">
             <h1
               id="hero-heading"
-              className="text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight sm:leading-snug md:leading-tight tracking-tight"
+              className="text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight sm:leading-snug md:leading-tight"
             >
               <span className="block">تجربه PS و Xbox از امشب،</span>
-              <span className="block text-gradient-primary">بدون پرداخت میلیون‌ها تومان</span>
+              <span className="block text-primary">بدون پرداخت میلیون‌ها تومان</span>
             </h1>
 
             <div className="mt-6 flex justify-center">
