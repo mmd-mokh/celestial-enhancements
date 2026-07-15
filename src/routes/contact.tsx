@@ -3,7 +3,6 @@ import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -74,6 +73,7 @@ function ContactPage() {
   });
 
   const onSubmit = async (v: FormValues) => {
+    const { supabase } = await import("@/integrations/supabase/client");
     const { error } = await supabase.from("contact_messages").insert({
       name: v.name,
       email: v.email,

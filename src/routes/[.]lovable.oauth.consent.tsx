@@ -1,8 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { supabase } from "@/integrations/supabase/client";
-
 type OAuthClient = { name?: string; client_name?: string; redirect_uri?: string };
 type AuthorizationDetails = {
   client?: OAuthClient;
@@ -18,7 +16,8 @@ type OAuthNamespace = {
   denyAuthorization: (id: string) => Promise<{ data: AuthorizationDetails | null; error: { message: string } | null }>;
 };
 
-function oauth(): OAuthNamespace {
+async function oauth(): Promise<OAuthNamespace> {
+  const { supabase } = await import("@/integrations/supabase/client");
   const authAny = supabase.auth as unknown as { oauth: OAuthNamespace };
   return authAny.oauth;
 }
@@ -42,6 +41,7 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
   }),
   beforeLoad: async ({ search, location }) => {
     if (!search.authorization_id) throw new Error("Missing authorization_id");
+    const { supabase } = await import("@/integrations/supabase/client");
     const { data } = await supabase.auth.getSession();
     if (!data.session) {
       const next = location.pathname + location.searchStr;
@@ -51,7 +51,7 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
   loader: async ({ location }) => {
     const authorizationId =
       new URLSearchParams(location.searchStr).get("authorization_id") ?? "";
-    const { data, error } = await oauth().getAuthorizationDetails(authorizationId);
+    const { data, error } = await (await oauth()).getAuthorizationDetails(authorizationId);
     if (error) throw new Error(error.message);
     const immediate = data?.redirect_url ?? data?.redirect_to;
     if (immediate && !data?.client) {
@@ -86,7 +86,7 @@ function Consent() {
   async function decide(approve: boolean) {
     setBusy(true);
     setError(null);
-    const api = oauth();
+    const api = await oauth();
     const { data, error: err } = approve
       ? await api.approveAuthorization(authorization_id)
       : await api.denyAuthorization(authorization_id);

@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
-
 export const Route = createFileRoute("/auth")({
   ssr: false,
   validateSearch: (s: Record<string, unknown>) => ({
@@ -35,22 +32,28 @@ function AuthPage() {
 
   useEffect(() => {
     let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
+    let unsubscribe: (() => void) | undefined;
+    void import("@/integrations/supabase/client").then(({ supabase }) => {
       if (!mounted) return;
-      if (data.session) window.location.replace(target);
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_IN" && session) window.location.replace(target);
+      supabase.auth.getSession().then(({ data }) => {
+        if (!mounted) return;
+        if (data.session) window.location.replace(target);
+      });
+      const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_IN" && session) window.location.replace(target);
+      });
+      unsubscribe = () => sub.subscription.unsubscribe();
     });
     return () => {
       mounted = false;
-      sub.subscription.unsubscribe();
+      unsubscribe?.();
     };
   }, [target]);
 
   async function signInGoogle() {
     setError(null);
     const redirectUri = `${window.location.origin}/auth?next=${encodeURIComponent(target)}`;
+    const { lovable } = await import("@/integrations/lovable");
     const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: redirectUri });
     if (result.error) {
       setError(result.error.message ?? "Google sign-in failed");
@@ -68,11 +71,13 @@ function AuthPage() {
     setNotice(null);
     try {
       if (mode === "signin") {
+        const { supabase } = await import("@/integrations/supabase/client");
         const { error: err } = await supabase.auth.signInWithPassword({ email, password });
         if (err) throw err;
         window.location.replace(target);
       } else {
         const emailRedirectTo = `${window.location.origin}/auth?next=${encodeURIComponent(target)}`;
+        const { supabase } = await import("@/integrations/supabase/client");
         const { data, error: err } = await supabase.auth.signUp({
           email,
           password,
