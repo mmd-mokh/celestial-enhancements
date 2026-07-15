@@ -1,76 +1,49 @@
-# Performance Optimization Plan
+# UI Modernization Plan — branch `new_ui`
 
-## Status
+## Branching note
+I can't run git commands directly. Create the `new_ui` branch from the Lovable **GitHub / Git sync** panel (or your local clone) before I start committing, so every change below lands on that branch instead of `main`.
 
-- [x] 1. Cards primed in route loaders (`/`, `/consoles`, `/consoles/$slug`, `/blog`, `/blog/$slug`) via `ensureQueryData` + `useSuspenseQuery`.
-- [x] 2. Skeleton grid with reserved height in `ConsolesSection` via `Suspense` fallback.
-- [x] 3. LCP preload removed — hero is text-based; `dashboard.png` was not the LCP.
-- [x] 4. Below-fold sections lazy-loaded (`Testimonials`, `Faq`, `FinalCta`, `Newsletter`, `Toaster`, `BookingDialog`).
-- [x] 5. HTTP `Cache-Control` (s-maxage + SWR) on `getConsoles`, `getConsoleBySlug`, `listPublishedPosts`, `getPublishedPost`.
-- [x] 7. Icon audit — `BsIcon` already renders Lucide SVGs; no bootstrap-icons bundle ships.
-- [x] 8. Router `defaultPreloadStaleTime: 0` already set.
-- [x] 9. `Toaster` deferred to idle; `BookingDialog` mounts on demand.
-- [ ] 6. Image pipeline (`vite-imagetools` / AVIF) — deferred. Assets are already WebP and small (heaviest rendered ≈20 KB); no meaningful win without new artwork.
+## Goals
+1. Modern, cohesive visual language (not generic AI purple-on-white).
+2. Fully responsive from 360px → 1440px+ with no clipped/overflowing rows.
+3. WCAG AA: contrast, focus, landmarks, labels, tap targets.
 
-Focus: eliminate the "cards appear late / blink in" behavior on the landing page, then apply broader wins for LCP, TBT and bundle size.
+---
 
-## Findings
+## 1. Design system refresh (`src/styles.css`)
+- Replace the current flat `#6C5CE7` primary with a richer OKLCH palette + `--primary-glow`, `--gradient-primary`, `--gradient-hero`, `--shadow-elegant`, `--shadow-glow` semantic tokens.
+- Introduce surface tokens (`--surface-1/2/3`) so cards, header, and hero share a layered depth system in light & dark.
+- Type scale: keep `Vazirmatn` for FA body, pair with a distinctive display weight for headings (variable weight already loaded — add `--font-display` and use `font-feature-settings` for tabular numerals in pricing).
+- Motion tokens: `--ease-out-emphasized`, `--dur-fast/med/slow` used by reveals, hovers, header shrink.
+- Remove the `html.dark .bg-white / .text-gray-*` override hacks and migrate the offending components to semantic tokens (`bg-card`, `text-muted-foreground`) so dark mode is real, not patched.
 
-### 1. Cards fetch is client-only (biggest offender)
-`ConsolesSection` calls `useQuery(consolesQueryOptions())` with no route loader priming it. On first paint the grid is empty; the request only starts after hydration + JS execution. Same pattern on `/consoles` and `/rent/$slug`.
+## 2. Component modernization
+- **SiteHeader**: replace the hand-rolled mobile panel with shadcn `Sheet` (accessible focus trap, ESC handling). Add active-link underline animation. Ensure 44×44 tap target on hamburger.
+- **HeroSection**: apply the new gradient + subtle grain, restructure to `grid-cols-[minmax(0,1fr)_auto]` on mobile per responsive-layout rules; add a secondary "چطور کار می‌کنه" ghost CTA next to primary.
+- **ConsoleCards / PricingCards / FaqAccordion**: unify radius (`rounded-2xl`), elevation (`shadow-elegant`), hover lift, and use `aspect-video` wrappers for images. Featured pricing card gets `--gradient-primary` border via `bg-clip`.
+- **SectionHeading**: allow an optional icon eyebrow; tighten spacing scale (`gap-2 md:gap-3`).
+- **Buttons**: add `variant="premium"` (gradient + glow) and `variant="ghost-outline"` via `cva`; retire ad-hoc `btn-enhanced` CSS.
+- **FaqSection / NewsletterSection / FinalCtaSection**: swap raw `<a>` styled buttons for shadcn `<Button asChild>` so focus rings and disabled states are consistent.
 
-### 2. No skeleton / reserved space for cards
-`items && <ConsoleList />` renders nothing until data arrives, causing layout shift (CLS) and a visible "pop-in".
+## 3. Responsive audit
+- Apply the `grid-cols-[minmax(0,1fr)_auto]` + `min-w-0` + `shrink-0` + `truncate` recipe to every header-style row (SiteHeader inner, booking dialog headers, console card headers).
+- Convert any `h-screen` → `h-dvh`.
+- Verify with Playwright at 360, 414, 768, 1024, 1440; screenshot each landing section.
 
-### 3. LCP preload likely wrong
-`src/routes/index.tsx` preloads `/assets/images/home/dashboard.png` with `fetchpriority=high`. The actual LCP element on mobile is the hero headline/image in `HeroSection`. Preloading the wrong asset wastes bandwidth and delays the real LCP.
+## 4. Accessibility pass
+- Run the accessibility skill checklist across `/`, `/pricing`, `/consoles`, `/how-it-works`, `/faq`, `/contact`, `/blog`.
+- Fixes expected: icon-only buttons missing `aria-label` (theme toggle, hamburger already OK — verify others), single `<main>` per route (move into `__root.tsx` layout if duplicated), skipped heading levels in sections, focus-visible rings on all interactive tokens, ensure form inputs in booking dialog have associated `<Label>`.
+- Re-run `tests/a11y/smoke.spec.ts` — target zero critical/serious axe violations (currently the CI gate).
 
-### 4. Everything below the fold ships in the initial bundle
-`LandingPage` eagerly imports 8 sections + `Toaster`. Below-fold (`Testimonials`, `Faq`, `FinalCta`, `Newsletter`, `SiteFooter`) can be lazy / deferred.
-
-### 5. No HTTP cache on public server functions
-`getConsoles`, `listPublishedPosts` etc. return no `Cache-Control`. Every SSR/refresh re-hits Postgres.
-
-### 6. Icons + images
-- `BsIcon` likely pulls the full Bootstrap Icons font/sprite. Verify and switch to per-icon SVG or subset.
-- Hero / dashboard images are PNG. Convert to AVIF/WebP via `vite-imagetools` and serve with `<picture>`.
-
-### 7. Query defaults
-`consolesQueryOptions` staleTime 30m is fine, but router's `defaultPreloadStaleTime` should be `0` so Query owns freshness (per tanstack-query-integration).
-
-### 8. Third-party / analytics on critical path
-Confirm Turnstile, analytics, sonner Toaster don't block first paint; defer to idle.
-
-## Changes
-
-1. **Prime cards in the route loader** (`src/routes/index.tsx`, `consoles.tsx`, `rent.$slug.tsx`):
-   ```ts
-   loader: ({ context }) =>
-     context.queryClient.ensureQueryData(consolesQueryOptions())
-   ```
-   Convert `ConsolesSection` to `useSuspenseQuery` so SSR HTML already contains cards.
-
-2. **Add a skeleton grid** rendered whenever cards data isn't ready (pendingComponent + Suspense fallback). Fixed heights → zero CLS.
-
-3. **Fix LCP preload**: measure current LCP with Playwright + `PerformanceObserver`; either remove the dashboard preload or repoint it to the actual hero asset. Set `fetchpriority="high"` on the hero `<img>` and add `loading="eager"`, `decoding="async"`.
-
-4. **Lazy below-fold sections**: `React.lazy` for `Testimonials`, `Faq`, `FinalCta`, `Newsletter`. Wrap in `Suspense` with a min-height placeholder. Keep above-fold (Hero, Consoles, Why, HowItWorks, Pricing) eager.
-
-5. **HTTP caching on public server fns**: return a `Response` with `Cache-Control: public, s-maxage=300, stale-while-revalidate=86400` from `getConsoles`, `listPublishedPosts`, `getPublishedPost`, `getConsoleBySlug`.
-
-6. **Image pipeline**: add `vite-imagetools`, generate AVIF+WebP for hero/dashboard/testimonial images, render via `<picture>` with `width`/`height` attributes.
-
-7. **Icons audit**: inspect `BsIcon` and `public/css/index.css`. If a full icon font ships, replace the icons actually used (≈8) with inline SVGs and drop the font.
-
-8. **Router config**: set `defaultPreloadStaleTime: 0` in `src/router.tsx` if not already.
-
-9. **Defer non-critical**: mount `Toaster` after first idle (`requestIdleCallback`). Load Turnstile only when the booking dialog opens (already lazy — verify).
-
-10. **Verification**:
-    - `bun run build` → inspect chunk sizes before/after.
-    - Playwright: navigate `/`, capture `PerformanceObserver` LCP/CLS/TBT, screenshot to confirm cards render in initial HTML (view-source check).
-    - Run existing Lighthouse CI (`lighthouserc.json`) and compare scores.
+## 5. Verification
+- `tsgo` typecheck.
+- `bunx vitest run` for unit tests.
+- Playwright: capture before/after screenshots for hero, consoles, pricing at mobile + desktop; run the a11y smoke suite.
 
 ## Out of scope
-- Backend query optimization (no slow-query reports yet; will run `slow_queries` only if LCP work doesn't hit targets).
-- Redesign of card visuals.
+- No backend, data-model, routing, or business-logic changes.
+- No new dependencies beyond what shadcn already provides.
+- Copy/content stays the same (Persian text untouched).
+
+## Deliverable
+A single PR on `new_ui` with the design-system diff, refactored components, and green a11y + type + unit checks.
