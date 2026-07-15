@@ -74,11 +74,11 @@ export function LandingPage({ scrollTo }: Props) {
     const schedule = w.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 1200));
     const id = schedule(() => setShowToaster(true));
     return () => {
-      if ("cancelIdleCallback" in window) {
-        (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(id);
-      } else {
-        window.clearTimeout(id);
-      }
+      const anyWin = window as unknown as {
+        cancelIdleCallback?: (id: number) => void;
+      };
+      if (anyWin.cancelIdleCallback) anyWin.cancelIdleCallback(id);
+      else window.clearTimeout(id);
     };
   }, []);
 
