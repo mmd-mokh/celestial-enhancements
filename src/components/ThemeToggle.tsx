@@ -7,10 +7,16 @@ const KEY = "consoleto-theme";
 export function ThemeToggle() {
   const [dark, setDark] = useState(false);
   useEffect(() => {
-    const isDark =
-      typeof document !== "undefined" &&
-      document.documentElement.classList.contains("dark");
-    setDark(isDark);
+    if (typeof document === "undefined") return;
+    let stored: string | null = null;
+    try { stored = localStorage.getItem(KEY); } catch { /* ignore */ }
+    const prefersDark =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+    const shouldDark = stored ? stored === "dark" : prefersDark;
+    document.documentElement.classList.toggle("dark", shouldDark);
+    document.documentElement.setAttribute("data-theme", shouldDark ? "dark" : "light");
+    setDark(shouldDark);
   }, []);
   const toggle = () => {
     const next = !dark;
