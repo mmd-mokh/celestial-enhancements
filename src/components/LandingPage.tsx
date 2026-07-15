@@ -47,8 +47,16 @@ const BookingDialog = lazy(() =>
   import("@/components/BookingDialog").then((m) => ({ default: m.BookingDialog })),
 );
 
-function SectionFallback({ id, minHeight }: { id?: string; minHeight: number }) {
-  return <div id={id} style={{ minHeight }} aria-hidden />;
+function SectionFallback({
+  id,
+  minHeight,
+  markerRef,
+}: {
+  id?: string;
+  minHeight: number;
+  markerRef?: React.Ref<HTMLDivElement>;
+}) {
+  return <div ref={markerRef} id={id} style={{ minHeight }} aria-hidden />;
 }
 
 function LazyOnVisible({
@@ -83,7 +91,7 @@ function LazyOnVisible({
     return () => observer.disconnect();
   }, [visible]);
 
-  if (!visible) return <SectionFallback id={id} minHeight={minHeight} />;
+  if (!visible) return <SectionFallback markerRef={ref} id={id} minHeight={minHeight} />;
 
   return (
     <Suspense fallback={<SectionFallback id={id} minHeight={minHeight} />}>
