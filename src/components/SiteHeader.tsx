@@ -116,7 +116,7 @@ export function SiteHeader() {
       {open && (
         <div
           id="mobile-navigation"
-          className="absolute inset-x-4 top-full z-50 mt-3 rounded-xl border border-gray-200 bg-white p-4 shadow-xl lg:hidden"
+          className="absolute inset-x-4 top-full z-50 mt-3 rounded-2xl border border-border bg-card p-4 shadow-[var(--shadow-elegant)] lg:hidden"
           dir="rtl"
         >
           <nav aria-label="منوی موبایل">
@@ -125,7 +125,7 @@ export function SiteHeader() {
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className="flex items-center gap-3 rounded-md px-3 py-3 text-base font-semibold hover:bg-muted"
+                    className="flex min-h-11 items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold hover:bg-muted focus-visible:bg-muted"
                     onClick={() => setOpen(false)}
                   >
                     <item.Icon className="h-5 w-5 text-primary" aria-hidden="true" />
@@ -138,7 +138,7 @@ export function SiteHeader() {
 
           <a
             href="#pricing"
-            className="btn btn-enhanced mt-4 flex w-full items-center justify-center gap-2"
+            className="btn-premium mt-4 flex min-h-12 w-full items-center justify-center gap-2"
             onClick={() => {
               setOpen(false);
               void import("@/lib/analytics").then((m) =>

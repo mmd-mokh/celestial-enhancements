@@ -94,10 +94,10 @@ export function PricingList({ onReserve }: Props) {
             data-package={p.slug}
             index={i}
             className={cn(
-              "pricing-card-enhanced flex flex-col place-items-center gap-4 rounded-xl p-4 md:p-6 lg:p-8 bg-white transition-transform duration-200 hover:-translate-y-2",
+              "surface-card flex flex-col place-items-center gap-4 p-4 md:p-6 lg:p-8",
               featured
-                ? "pricing-card-featured shadow-2xl bg-gradient-to-br from-primary-50 to-white border-[3px] border-primary relative lg:scale-105"
-                : "shadow-lg",
+                ? "pricing-card-featured relative border-2 border-primary shadow-[0_20px_60px_-20px_color-mix(in_oklab,var(--color-primary)_45%,transparent)] lg:scale-105"
+                : "",
             )}
           >
             {featured && (
@@ -107,37 +107,37 @@ export function PricingList({ onReserve }: Props) {
               </>
             )}
             <BsIcon name={p.icon} size={48} className="text-primary icon-standard" />
-            <h4 className="text-2xl font-bold text-gray-800">{p.name}</h4>
-            <p className="text-center text-gray-700 text-sm">{p.description}</p>
+            <h4 className="text-2xl font-bold text-foreground">{p.name}</h4>
+            <p className="text-center text-muted-foreground text-sm">{p.description}</p>
             <div className="text-center my-2">
               <div
                 className={cn(
-                  "font-bold text-primary",
+                  "font-bold text-primary tabular-nums",
                   featured ? "pricing-featured-price text-6xl" : "text-5xl",
                 )}
               >
                 {p.price}
               </div>
-              <div className="text-gray-700 text-base mt-1">{p.unit}</div>
+              <div className="text-muted-foreground text-base mt-1">{p.unit}</div>
               {p.badge && (
-                <div className="inline-block text-xs text-white bg-green-600 px-3 py-1 rounded-full font-semibold mt-3">
+                <div className="inline-block text-xs text-white bg-emerald-600 px-3 py-1 rounded-full font-semibold mt-3 shadow-sm">
                   {p.badge}
                 </div>
               )}
             </div>
-            <hr className="w-full border-gray-200" />
+            <hr className="w-full border-border" />
             <ul className="flex flex-col gap-3 text-right w-full text-sm">
               {p.features.map((f, k) => (
                 <li key={k} className="flex items-start gap-2">
                   <BsIcon name="bi-check-circle-fill" size={16} className="text-primary mt-1" />
-                  <span className="text-gray-700">{f}</span>
+                  <span className="text-muted-foreground">{f}</span>
                 </li>
               ))}
             </ul>
             <button
               type="button"
               onClick={() => onReserve(p.slug)}
-              className="btn btn-enhanced mt-4 !w-full"
+              className="btn-premium mt-4 w-full min-h-11"
             >
               رزرو کن
             </button>
