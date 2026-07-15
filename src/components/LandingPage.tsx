@@ -77,7 +77,7 @@ function LazyOnVisible({
         setVisible(true);
         observer.disconnect();
       },
-      { rootMargin: "700px 0px" },
+      { rootMargin: "160px 0px" },
     );
     observer.observe(node);
     return () => observer.disconnect();
