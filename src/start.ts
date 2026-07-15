@@ -1,7 +1,23 @@
 import { createStart, createMiddleware, createCsrfMiddleware } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
-import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
+
+// Project-local replacement for the generated `attachSupabaseAuth` middleware.
+// The generated version imports `@/integrations/supabase/client` eagerly, which
+// pulls the entire supabase-js bundle (auth + realtime + postgrest + storage)
+// into the main client chunk. By lazy-importing inside the middleware body we
+// keep supabase-js out of the initial bundle: it only loads when a serverFn is
+// actually invoked from the browser.
+const attachSupabaseAuth = createMiddleware({ type: "function" }).client(
+  async ({ next }) => {
+    const { supabase } = await import("@/integrations/supabase/client");
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    return next({
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+  },
+);
 
 // Content-Security-Policy in report-only mode. Kept as a constant so it is
 // easy to review and later flip to enforcing. Includes Supabase Data API,
