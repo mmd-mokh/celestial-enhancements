@@ -12,12 +12,35 @@ export function StepConsole({
   value,
   remainingBySlug,
   onSelect,
+  loading = false,
 }: {
   consoles: ConsoleOpt[];
   value: string;
   remainingBySlug: Record<string, ConsoleAvailability>;
   onSelect: (slug: string) => void;
+  loading?: boolean;
 }) {
+  if (loading) {
+    return (
+      <div
+        className="grid gap-3 sm:grid-cols-3"
+        aria-busy="true"
+        aria-label="در حال بارگذاری کنسول‌ها"
+      >
+        {Array.from({ length: consoles.length || 3 }).map((_, i) => (
+          <div
+            key={i}
+            className="flex min-h-28 flex-col items-center justify-center gap-2 rounded-xl border border-border bg-card p-4"
+          >
+            <div className="h-12 w-12 animate-pulse rounded-full bg-muted" />
+            <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+            <div className="h-3 w-16 animate-pulse rounded bg-muted" />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="grid gap-3 sm:grid-cols-3">
       {consoles.map((consoleItem) => {

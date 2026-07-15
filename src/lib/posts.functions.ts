@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { setResponseHeader } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { isLocalBackendUnavailableError, throwLogged, warnLocalFallback } from "@/lib/server-errors";
 
@@ -17,7 +16,6 @@ export type PostDetail = PostSummary & { content: string };
 export const listPublishedPosts = createServerFn({ method: "GET" }).handler(
   async (): Promise<PostSummary[]> => {
     try {
-      try { setResponseHeader("Cache-Control", "public, s-maxage=300, stale-while-revalidate=86400"); } catch { /* no ctx */ }
       const { getPublicSupabase } = await import("@/lib/public-supabase.server");
       const supabase = getPublicSupabase();
       const { data, error } = await supabase
@@ -41,7 +39,6 @@ export const getPublishedPost = createServerFn({ method: "GET" })
   .validator((input) => z.object({ slug: z.string().min(1) }).parse(input))
   .handler(async ({ data }): Promise<PostDetail | null> => {
     try {
-      try { setResponseHeader("Cache-Control", "public, s-maxage=600, stale-while-revalidate=86400"); } catch { /* no ctx */ }
       const { getPublicSupabase } = await import("@/lib/public-supabase.server");
       const supabase = getPublicSupabase();
       const { data: row, error } = await supabase

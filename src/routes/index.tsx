@@ -4,9 +4,12 @@ import { absUrl, SITE_URL } from "@/lib/seo";
 import { consolesQueryOptions } from "@/lib/queries";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => {
-    // Prime the consoles cache during SSR so cards render in initial HTML.
-    context.queryClient.ensureQueryData(consolesQueryOptions());
+  // Prefetch the console catalogue during SSR (and dehydrate it) so the
+  // landing page renders the console cards immediately — without a loader the
+  // useQuery in ConsolesSection only runs on the client and silently leaves
+  // the grid empty.
+  loader: async ({ context }) => {
+    await context.queryClient.ensureQueryData(consolesQueryOptions());
   },
   head: () => ({
     meta: [
@@ -28,6 +31,12 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: SITE_URL + "/" },
+      {
+        rel: "preload",
+        as: "image",
+        href: "/assets/images/home/dashboard.png",
+        fetchPriority: "high",
+      },
     ],
   }),
   component: () => <LandingPage />,

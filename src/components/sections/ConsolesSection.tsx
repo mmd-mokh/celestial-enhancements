@@ -1,32 +1,16 @@
-import { Suspense } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { ConsoleList } from "@/components/ConsoleCards";
 import { consolesQueryOptions } from "@/lib/queries";
+import { FALLBACK_PUBLIC_CONSOLES } from "@/lib/console-content";
 import { SectionShell } from "./primitives";
 
 const HIDDEN_CONSOLES = new Set(["ps4", "xbox-series-s", "xbox-one"]);
 
-function CardsSkeleton() {
-  return (
-    <>
-      {Array.from({ length: 3 }).map((_, i) => (
-        <div
-          key={i}
-          className="console-card animate-pulse min-h-[280px] bg-gray-100 rounded-xl"
-          aria-hidden="true"
-        />
-      ))}
-    </>
-  );
-}
-
-function ConsoleCardsInner() {
-  const { data } = useSuspenseQuery(consolesQueryOptions());
-  const items = data.filter((r) => !HIDDEN_CONSOLES.has(r.slug));
-  return <ConsoleList items={items} />;
-}
-
 export function ConsolesSection() {
+  const { data } = useQuery(consolesQueryOptions());
+  const source = data && data.length > 0 ? data : FALLBACK_PUBLIC_CONSOLES;
+  const items = source.filter((r) => !HIDDEN_CONSOLES.has(r.slug));
+
   return (
     <SectionShell id="consoles" ariaLabelledBy="consoles-heading">
       <div className="mx-auto flex max-w-[850px] flex-col gap-5 text-center">
@@ -57,9 +41,7 @@ export function ConsolesSection() {
         role="list"
         aria-label="کنسول‌های موجود"
       >
-        <Suspense fallback={<CardsSkeleton />}>
-          <ConsoleCardsInner />
-        </Suspense>
+        {items && <ConsoleList items={items} />}
       </div>
     </SectionShell>
   );

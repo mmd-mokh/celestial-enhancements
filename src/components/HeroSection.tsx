@@ -1,9 +1,6 @@
-import { lazy, Suspense, useState } from "react";
+import { useState } from "react";
 import { BsIcon } from "@/components/BsIcon";
-
-const BookingDialog = lazy(() =>
-  import("@/components/BookingDialog").then((m) => ({ default: m.BookingDialog })),
-);
+import { BookingDialog } from "@/components/BookingDialog";
 
 /**
  * Landing hero — big headline, dual CTAs, trust-badge chips, and the
@@ -88,11 +85,7 @@ export function HeroSection() {
         </div>
       </section>
 
-      {bookingOpen && (
-        <Suspense fallback={null}>
-          <BookingDialog open={bookingOpen} onOpenChange={setBookingOpen} />
-        </Suspense>
-      )}
+      <BookingDialog open={bookingOpen} onOpenChange={setBookingOpen} />
 
       <section
         role="region"

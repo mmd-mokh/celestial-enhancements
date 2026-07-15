@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start";
-import { setResponseHeader } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { isLocalBackendUnavailableError, throwLogged, warnLocalFallback } from "@/lib/server-errors";
 import { FALLBACK_PUBLIC_CONSOLES } from "@/lib/console-content";
@@ -15,19 +14,9 @@ export type ConsoleRow = {
   sort_order: number | null;
 };
 
-const PUBLIC_CACHE = "public, s-maxage=300, stale-while-revalidate=86400";
-function setPublicCache() {
-  try {
-    setResponseHeader("Cache-Control", PUBLIC_CACHE);
-  } catch {
-    /* no request context (e.g. direct call) */
-  }
-}
-
 export const getConsoles = createServerFn({ method: "GET" }).handler(
   async (): Promise<ConsoleRow[]> => {
     try {
-      setPublicCache();
       const { getPublicSupabase } = await import("@/lib/public-supabase.server");
       const supabase = getPublicSupabase();
       const { data, error } = await supabase
@@ -51,7 +40,6 @@ export const getConsoleBySlug = createServerFn({ method: "GET" })
   .validator((input) => z.object({ slug: z.string().min(1) }).parse(input))
   .handler(async ({ data }): Promise<ConsoleRow | null> => {
     try {
-      setPublicCache();
       const { getPublicSupabase } = await import("@/lib/public-supabase.server");
       const supabase = getPublicSupabase();
       const { data: row, error } = await supabase

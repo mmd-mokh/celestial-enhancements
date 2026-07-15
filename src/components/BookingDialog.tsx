@@ -66,6 +66,7 @@ export function BookingDialog({
   const optionsQuery = useConsoleOptions(open);
   const consoles = optionsQuery.data?.consoles ?? FALLBACK_CONSOLES;
   const remainingBySlug = optionsQuery.data?.remainingBySlug ?? {};
+  const loadingOptions = optionsQuery.isPending;
   const packages = FALLBACK_PACKAGES;
 
   const form = useForm<BookingFormValues>({
@@ -278,6 +279,7 @@ export function BookingDialog({
                   consoles={consoles}
                   value={values.consoleType}
                   remainingBySlug={remainingBySlug}
+                  loading={loadingOptions}
                   onSelect={(slug) =>
                     form.setValue("consoleType", slug, { shouldValidate: true })
                   }
