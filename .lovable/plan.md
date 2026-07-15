@@ -1,5 +1,17 @@
 # Performance Optimization Plan
 
+## Status
+
+- [x] 1. Cards primed in route loaders (`/`, `/consoles`, `/consoles/$slug`, `/blog`, `/blog/$slug`) via `ensureQueryData` + `useSuspenseQuery`.
+- [x] 2. Skeleton grid with reserved height in `ConsolesSection` via `Suspense` fallback.
+- [x] 3. LCP preload removed — hero is text-based; `dashboard.png` was not the LCP.
+- [x] 4. Below-fold sections lazy-loaded (`Testimonials`, `Faq`, `FinalCta`, `Newsletter`, `Toaster`, `BookingDialog`).
+- [x] 5. HTTP `Cache-Control` (s-maxage + SWR) on `getConsoles`, `getConsoleBySlug`, `listPublishedPosts`, `getPublishedPost`.
+- [x] 7. Icon audit — `BsIcon` already renders Lucide SVGs; no bootstrap-icons bundle ships.
+- [x] 8. Router `defaultPreloadStaleTime: 0` already set.
+- [x] 9. `Toaster` deferred to idle; `BookingDialog` mounts on demand.
+- [ ] 6. Image pipeline (`vite-imagetools` / AVIF) — deferred. Assets are already WebP and small (heaviest rendered ≈20 KB); no meaningful win without new artwork.
+
 Focus: eliminate the "cards appear late / blink in" behavior on the landing page, then apply broader wins for LCP, TBT and bundle size.
 
 ## Findings
