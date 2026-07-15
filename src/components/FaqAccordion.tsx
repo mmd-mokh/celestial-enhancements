@@ -56,12 +56,12 @@ export function FaqList() {
         <AccordionItem
           key={i}
           value={`item-${i}`}
-          className="bg-white rounded-lg shadow-md border border-transparent data-[state=open]:border-primary/30"
+          className="surface-card rounded-xl border data-[state=open]:border-primary/40 data-[state=open]:shadow-[var(--shadow-elegant)]"
         >
-          <AccordionTrigger className="px-6 py-5 font-bold text-lg text-gray-800 hover:text-primary text-right">
+          <AccordionTrigger className="px-6 py-5 font-bold text-lg text-foreground hover:text-primary text-right">
             {item.q}
           </AccordionTrigger>
-          <AccordionContent className="px-6 pb-5 text-gray-700 leading-relaxed">
+          <AccordionContent className="px-6 pb-5 text-muted-foreground leading-relaxed">
             {item.a}
           </AccordionContent>
         </AccordionItem>

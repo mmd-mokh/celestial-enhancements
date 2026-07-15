@@ -22,7 +22,7 @@ export function ConsoleList({ items }: { items: ConsoleRow[] }) {
           key={c.slug}
           index={i}
           className={cn(
-            "console-card transition-transform duration-200 hover:-translate-y-1.5",
+            "console-card surface-card p-6",
           )}
           role="listitem"
           data-console={c.slug}

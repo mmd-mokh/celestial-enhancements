@@ -23,16 +23,16 @@ export function HeroSection() {
         role="region"
         aria-labelledby="hero-heading"
         id="hero"
-        className="relative flex min-h-[100vh] w-full flex-col overflow-hidden px-6 py-16 md:px-12 lg:px-20 max-md:mt-[50px] bg-white"
+        className="relative flex min-h-[100dvh] w-full flex-col overflow-hidden px-6 py-16 md:px-12 lg:px-20 max-md:mt-[50px] bg-background"
       >
-        <div className="hero-fade-in flex h-full min-h-[100vh] w-full flex-col place-content-center gap-6 p-[5%] max-xl:place-items-center">
+        <div className="hero-fade-in flex h-full min-h-[100dvh] w-full flex-col place-content-center gap-6 p-[5%] max-xl:place-items-center">
           <div className="flex flex-col place-content-center items-center">
             <h1
               id="hero-heading"
-              className="text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight sm:leading-snug md:leading-tight"
+              className="text-center text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight sm:leading-snug md:leading-tight tracking-tight"
             >
               <span className="block">تجربه PS و Xbox از امشب،</span>
-              <span className="block">بدون پرداخت میلیون‌ها تومان</span>
+              <span className="block text-gradient-primary">بدون پرداخت میلیون‌ها تومان</span>
             </h1>
 
             <div className="mt-6 flex justify-center">
@@ -42,21 +42,21 @@ export function HeroSection() {
               </span>
             </div>
 
-            <p className="mt-6 max-w-full sm:max-w-[500px] md:max-w-[650px] mx-auto px-4 text-center text-base sm:text-lg leading-relaxed text-[#020618] dark:text-white">
+            <p className="mt-6 max-w-full sm:max-w-[500px] md:max-w-[650px] mx-auto px-4 text-center text-base sm:text-lg leading-relaxed text-foreground/85">
               اجاره کنسول‌های نسل جدید با چند کلیک. انعطاف کامل، بازی‌های
               انحصاری، و تحویل سریع به درب منزل.
             </p>
 
-            <div className="mt-8 flex place-items-center gap-4 overflow-hidden p-2 max-md:flex-col">
+            <div className="mt-8 flex place-items-center gap-4 p-2 max-md:w-full max-md:flex-col">
               <button
                 type="button"
                 onClick={() => setBookingOpen(true)}
-                className="btn btn-enhanced whitespace-nowrap text-lg px-8 py-4 shadow-lg"
+                className="btn-premium min-h-12 whitespace-nowrap text-lg max-md:w-full"
               >
                 همین الان رزرو کن
               </button>
               <a
-                className="btn-secondary-enhanced whitespace-nowrap rounded-full border-2 border-primary bg-transparent px-6 py-3 text-base font-semibold text-primary"
+                className="btn-ghost-outline min-h-12 whitespace-nowrap text-base max-md:w-full"
                 href="#pricing"
               >
                 <span className="inline-flex items-center gap-1">
