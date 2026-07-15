@@ -1,7 +1,6 @@
 import { createStart, createMiddleware, createCsrfMiddleware } from "@tanstack/react-start";
 
 import { renderErrorPage } from "./lib/error-page";
-import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 
 // Content-Security-Policy in report-only mode. Kept as a constant so it is
 // easy to review and later flip to enforcing. Includes Supabase Data API,
@@ -66,6 +65,5 @@ const csrfMiddleware = createCsrfMiddleware({
 });
 
 export const startInstance = createStart(() => ({
-  functionMiddleware: [attachSupabaseAuth],
   requestMiddleware: [csrfMiddleware, errorMiddleware, securityHeadersMiddleware],
 }));
