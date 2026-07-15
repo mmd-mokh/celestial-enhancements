@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode, type Ref } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { HeroSection } from "@/components/HeroSection";
 import { ConsolesSection } from "@/components/sections/ConsolesSection";
@@ -54,7 +54,7 @@ function SectionFallback({
 }: {
   id?: string;
   minHeight: number;
-  markerRef?: React.Ref<HTMLDivElement>;
+  markerRef?: Ref<HTMLDivElement>;
 }) {
   return <div ref={markerRef} id={id} style={{ minHeight }} aria-hidden />;
 }
