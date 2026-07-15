@@ -1,4 +1,5 @@
-import { createServerFn, setResponseHeader } from "@tanstack/react-start";
+import { createServerFn } from "@tanstack/react-start";
+import { setResponseHeader } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { isLocalBackendUnavailableError, throwLogged, warnLocalFallback } from "@/lib/server-errors";
 import { FALLBACK_PUBLIC_CONSOLES } from "@/lib/console-content";
