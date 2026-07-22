@@ -60,8 +60,8 @@ export function BookingDialog({
   defaultConsole,
 }: Props) {
   const [step, setStep] = useState(0);
-  const [reservationId] = useState<string | null>(null);
-  const [icalToken] = useState<string | null>(null);
+  const [reservationId, setReservationId] = useState<string | null>(null);
+  const [icalToken, setIcalToken] = useState<string | null>(null);
   const [, setCaptchaToken] = useState<string | null>(null);
 
   const optionsQuery = useConsoleOptions(open);
