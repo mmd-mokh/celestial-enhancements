@@ -25,6 +25,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as RentSlugRouteImport } from './routes/rent.$slug'
+import { Route as PaymentFailedRouteImport } from './routes/payment.failed'
 import { Route as ConsolesSlugRouteImport } from './routes/consoles.$slug'
 import { Route as BookingIdRouteImport } from './routes/booking.$id'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -116,6 +117,11 @@ const RentSlugRoute = RentSlugRouteImport.update({
   path: '/rent/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaymentFailedRoute = PaymentFailedRouteImport.update({
+  id: '/payment/failed',
+  path: '/payment/failed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsolesSlugRoute = ConsolesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -191,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
+  '/payment/failed': typeof PaymentFailedRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -218,6 +225,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
+  '/payment/failed': typeof PaymentFailedRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -247,6 +255,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
+  '/payment/failed': typeof PaymentFailedRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -277,6 +286,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/booking/$id'
     | '/consoles/$slug'
+    | '/payment/failed'
     | '/rent/$slug'
     | '/blog/'
     | '/.lovable/oauth/consent'
@@ -304,6 +314,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/booking/$id'
     | '/consoles/$slug'
+    | '/payment/failed'
     | '/rent/$slug'
     | '/blog'
     | '/.lovable/oauth/consent'
@@ -332,6 +343,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/booking/$id'
     | '/consoles/$slug'
+    | '/payment/failed'
     | '/rent/$slug'
     | '/blog/'
     | '/.lovable/oauth/consent'
@@ -359,6 +371,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BookingIdRoute: typeof BookingIdRoute
+  PaymentFailedRoute: typeof PaymentFailedRoute
   RentSlugRoute: typeof RentSlugRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
@@ -481,6 +494,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RentSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/payment/failed': {
+      id: '/payment/failed'
+      path: '/payment/failed'
+      fullPath: '/payment/failed'
+      preLoaderRoute: typeof PaymentFailedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/consoles/$slug': {
       id: '/consoles/$slug'
       path: '/$slug'
@@ -597,6 +617,7 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BookingIdRoute: BookingIdRoute,
+  PaymentFailedRoute: PaymentFailedRoute,
   RentSlugRoute: RentSlugRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
