@@ -218,6 +218,56 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_intents: {
+        Row: {
+          amount_toman: number
+          authority: string
+          booking_id: string | null
+          booking_payload: Json
+          created_at: string
+          error_code: string | null
+          id: string
+          provider: string
+          ref_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount_toman: number
+          authority: string
+          booking_id?: string | null
+          booking_payload: Json
+          created_at?: string
+          error_code?: string | null
+          id?: string
+          provider?: string
+          ref_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount_toman?: number
+          authority?: string
+          booking_id?: string | null
+          booking_payload?: Json
+          created_at?: string
+          error_code?: string | null
+          id?: string
+          provider?: string
+          ref_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_intents_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           author_id: string | null
