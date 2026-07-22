@@ -25,6 +25,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as RentSlugRouteImport } from './routes/rent.$slug'
+import { Route as PaymentFailedRouteImport } from './routes/payment.failed'
 import { Route as ConsolesSlugRouteImport } from './routes/consoles.$slug'
 import { Route as BookingIdRouteImport } from './routes/booking.$id'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -34,6 +35,7 @@ import { Route as ApiPublicCspReportRouteImport } from './routes/api/public/csp-
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicBookingIcalIdRouteImport } from './routes/api/public/booking-ical.$id'
+import { Route as ApiPublicPaymentsZarinpalCallbackRouteImport } from './routes/api/public/payments.zarinpal.callback'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -115,6 +117,11 @@ const RentSlugRoute = RentSlugRouteImport.update({
   path: '/rent/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PaymentFailedRoute = PaymentFailedRouteImport.update({
+  id: '/payment/failed',
+  path: '/payment/failed',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsolesSlugRoute = ConsolesSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -163,6 +170,12 @@ const ApiPublicBookingIcalIdRoute = ApiPublicBookingIcalIdRouteImport.update({
   path: '/api/public/booking-ical/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaymentsZarinpalCallbackRoute =
+  ApiPublicPaymentsZarinpalCallbackRouteImport.update({
+    id: '/api/public/payments/zarinpal/callback',
+    path: '/api/public/payments/zarinpal/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -184,12 +197,14 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
+  '/payment/failed': typeof PaymentFailedRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/csp-report': typeof ApiPublicCspReportRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
+  '/api/public/payments/zarinpal/callback': typeof ApiPublicPaymentsZarinpalCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -210,12 +225,14 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
+  '/payment/failed': typeof PaymentFailedRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/csp-report': typeof ApiPublicCspReportRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
+  '/api/public/payments/zarinpal/callback': typeof ApiPublicPaymentsZarinpalCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -238,12 +255,14 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/booking/$id': typeof BookingIdRoute
   '/consoles/$slug': typeof ConsolesSlugRoute
+  '/payment/failed': typeof PaymentFailedRoute
   '/rent/$slug': typeof RentSlugRoute
   '/blog/': typeof BlogIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/csp-report': typeof ApiPublicCspReportRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
+  '/api/public/payments/zarinpal/callback': typeof ApiPublicPaymentsZarinpalCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -267,12 +286,14 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/booking/$id'
     | '/consoles/$slug'
+    | '/payment/failed'
     | '/rent/$slug'
     | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/csp-report'
     | '/api/public/booking-ical/$id'
+    | '/api/public/payments/zarinpal/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -293,12 +314,14 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/booking/$id'
     | '/consoles/$slug'
+    | '/payment/failed'
     | '/rent/$slug'
     | '/blog'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/csp-report'
     | '/api/public/booking-ical/$id'
+    | '/api/public/payments/zarinpal/callback'
   id:
     | '__root__'
     | '/'
@@ -320,12 +343,14 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/booking/$id'
     | '/consoles/$slug'
+    | '/payment/failed'
     | '/rent/$slug'
     | '/blog/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/csp-report'
     | '/api/public/booking-ical/$id'
+    | '/api/public/payments/zarinpal/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -346,11 +371,13 @@ export interface RootRouteChildren {
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   BookingIdRoute: typeof BookingIdRoute
+  PaymentFailedRoute: typeof PaymentFailedRoute
   RentSlugRoute: typeof RentSlugRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicCspReportRoute: typeof ApiPublicCspReportRoute
   ApiPublicBookingIcalIdRoute: typeof ApiPublicBookingIcalIdRoute
+  ApiPublicPaymentsZarinpalCallbackRoute: typeof ApiPublicPaymentsZarinpalCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -467,6 +494,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RentSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/payment/failed': {
+      id: '/payment/failed'
+      path: '/payment/failed'
+      fullPath: '/payment/failed'
+      preLoaderRoute: typeof PaymentFailedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/consoles/$slug': {
       id: '/consoles/$slug'
       path: '/$slug'
@@ -530,6 +564,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicBookingIcalIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/zarinpal/callback': {
+      id: '/api/public/payments/zarinpal/callback'
+      path: '/api/public/payments/zarinpal/callback'
+      fullPath: '/api/public/payments/zarinpal/callback'
+      preLoaderRoute: typeof ApiPublicPaymentsZarinpalCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -576,11 +617,14 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
   BookingIdRoute: BookingIdRoute,
+  PaymentFailedRoute: PaymentFailedRoute,
   RentSlugRoute: RentSlugRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicCspReportRoute: ApiPublicCspReportRoute,
   ApiPublicBookingIcalIdRoute: ApiPublicBookingIcalIdRoute,
+  ApiPublicPaymentsZarinpalCallbackRoute:
+    ApiPublicPaymentsZarinpalCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
