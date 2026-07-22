@@ -34,6 +34,7 @@ import { Route as ApiPublicCspReportRouteImport } from './routes/api/public/csp-
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as ApiPublicBookingIcalIdRouteImport } from './routes/api/public/booking-ical.$id'
+import { Route as ApiPublicPaymentsZarinpalCallbackRouteImport } from './routes/api/public/payments.zarinpal.callback'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -163,6 +164,12 @@ const ApiPublicBookingIcalIdRoute = ApiPublicBookingIcalIdRouteImport.update({
   path: '/api/public/booking-ical/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicPaymentsZarinpalCallbackRoute =
+  ApiPublicPaymentsZarinpalCallbackRouteImport.update({
+    id: '/api/public/payments/zarinpal/callback',
+    path: '/api/public/payments/zarinpal/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/csp-report': typeof ApiPublicCspReportRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
+  '/api/public/payments/zarinpal/callback': typeof ApiPublicPaymentsZarinpalCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -216,6 +224,7 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/csp-report': typeof ApiPublicCspReportRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
+  '/api/public/payments/zarinpal/callback': typeof ApiPublicPaymentsZarinpalCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -244,6 +253,7 @@ export interface FileRoutesById {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/api/public/csp-report': typeof ApiPublicCspReportRoute
   '/api/public/booking-ical/$id': typeof ApiPublicBookingIcalIdRoute
+  '/api/public/payments/zarinpal/callback': typeof ApiPublicPaymentsZarinpalCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -273,6 +283,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/csp-report'
     | '/api/public/booking-ical/$id'
+    | '/api/public/payments/zarinpal/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -299,6 +310,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/csp-report'
     | '/api/public/booking-ical/$id'
+    | '/api/public/payments/zarinpal/callback'
   id:
     | '__root__'
     | '/'
@@ -326,6 +338,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/api/public/csp-report'
     | '/api/public/booking-ical/$id'
+    | '/api/public/payments/zarinpal/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -351,6 +364,7 @@ export interface RootRouteChildren {
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
   ApiPublicCspReportRoute: typeof ApiPublicCspReportRoute
   ApiPublicBookingIcalIdRoute: typeof ApiPublicBookingIcalIdRoute
+  ApiPublicPaymentsZarinpalCallbackRoute: typeof ApiPublicPaymentsZarinpalCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -530,6 +544,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicBookingIcalIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/payments/zarinpal/callback': {
+      id: '/api/public/payments/zarinpal/callback'
+      path: '/api/public/payments/zarinpal/callback'
+      fullPath: '/api/public/payments/zarinpal/callback'
+      preLoaderRoute: typeof ApiPublicPaymentsZarinpalCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -581,6 +602,8 @@ const rootRouteChildren: RootRouteChildren = {
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
   ApiPublicCspReportRoute: ApiPublicCspReportRoute,
   ApiPublicBookingIcalIdRoute: ApiPublicBookingIcalIdRoute,
+  ApiPublicPaymentsZarinpalCallbackRoute:
+    ApiPublicPaymentsZarinpalCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
