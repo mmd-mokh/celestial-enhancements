@@ -22,9 +22,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toFaDigits } from "@/lib/i18n";
-import { createBooking } from "@/lib/bookings.functions";
+import { initiatePayment } from "@/lib/payments.functions";
 import { trackEvent } from "@/lib/analytics";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
+import { getPackagePriceToman } from "@/lib/pricing";
 
 import {
   FALLBACK_CONSOLES,
@@ -59,9 +60,9 @@ export function BookingDialog({
   defaultConsole,
 }: Props) {
   const [step, setStep] = useState(0);
-  const [reservationId, setReservationId] = useState<string | null>(null);
-  const [icalToken, setIcalToken] = useState<string | null>(null);
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [reservationId] = useState<string | null>(null);
+  const [icalToken] = useState<string | null>(null);
+  const [, setCaptchaToken] = useState<string | null>(null);
 
   const optionsQuery = useConsoleOptions(open);
   const consoles = optionsQuery.data?.consoles ?? FALLBACK_CONSOLES;
@@ -168,9 +169,16 @@ export function BookingDialog({
     const start = data.startDate;
     const end = addDays(start, packageDays - 1);
 
+    const price = getPackagePriceToman(data.packageType);
+    if (!price) {
+      toast.error("قیمت این پکیج پیدا نشد.");
+      setStep(1);
+      return;
+    }
+
     let result;
     try {
-      result = await createBooking({
+      result = await initiatePayment({
         data: {
           name: data.name.trim(),
           phone: toAsciiDigits(data.phone).trim(),
@@ -179,53 +187,37 @@ export function BookingDialog({
           startDate: format(start, "yyyy-MM-dd"),
           endDate: format(end, "yyyy-MM-dd"),
           notes: data.notes?.trim() || undefined,
-          captchaToken: captchaToken ?? undefined,
         },
       });
     } catch (err) {
-      console.error("[BookingDialog] createBooking failed", err);
+      console.error("[BookingDialog] initiatePayment failed", err);
       reportLovableError(err instanceof Error ? err : new Error(String(err)), {
         boundary: "booking_dialog_submit",
       });
-      toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
+      toast.error("اتصال به درگاه پرداخت ناموفق بود. لطفاً دوباره تلاش کنید.");
       return;
     }
 
     if (!result.ok) {
-      const code = result.code;
-      if (code === "captcha_required") {
-        toast.error("لطفاً کپچا را تأیید کنید.");
-      } else if (code === "no_availability") {
-        toast.error("این کنسول در تاریخ انتخابی رزرو شده. لطفاً تاریخ دیگری انتخاب کنید.");
-        setStep(2);
-      } else if (code === "past_date") {
-        toast.error("تاریخ شروع نمی‌تواند در گذشته باشد.");
-        setStep(2);
-      } else if (code === "rate_limited") {
-        toast.error("تعداد رزروهای اخیر شما زیاد است. لطفاً یک ساعت دیگر تلاش کنید.");
-      } else if (code === "console_unavailable") {
-        toast.error("این کنسول در حال حاضر در دسترس نیست.");
-        setStep(0);
-      } else if (code === "invalid_phone") {
-        toast.error("شماره تماس معتبر نیست.");
-        setStep(3);
-      } else if (code === "invalid_name") {
-        toast.error("نام وارد شده معتبر نیست.");
-        setStep(3);
+      if (result.code === "invalid_package") {
+        toast.error("پکیج انتخابی معتبر نیست.");
+        setStep(1);
+      } else if (result.code === "gateway_error") {
+        toast.error("درگاه پرداخت پاسخ نداد. لطفاً دوباره تلاش کنید.");
       } else {
-        toast.error("ارسال ناموفق بود. لطفاً دوباره تلاش کنید.");
+        toast.error("خطا در ایجاد تراکنش. لطفاً دوباره تلاش کنید.");
       }
       return;
     }
 
-    setReservationId(result.id);
-    setIcalToken(result.icalToken);
-    toast.success("درخواست رزرو ثبت شد!");
-    trackEvent("booking_submit", {
+    trackEvent("booking_payment_initiate", {
       console_type: data.consoleType,
       package_type: data.packageType,
       days: packageDays,
+      amount_toman: price,
     });
+    toast.success("در حال انتقال به درگاه پرداخت…");
+    window.location.href = result.url;
   };
 
   const close = () => {
